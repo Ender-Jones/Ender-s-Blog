@@ -1,0 +1,88 @@
+---
+type Props = {
+  src: string;
+  alt: string;
+  size?: 'default' | 'half' | 'wide' | 'full';
+  align?: 'center' | 'left' | 'right';
+  width?: number;
+  height?: number;
+  caption?: string;
+};
+
+const {
+  src,
+  alt,
+  size = 'default',
+  align = 'center',
+  width,
+  height,
+  caption,
+} = Astro.props;
+---
+
+<figure class:list={['content-figure', `content-figure--${size}`, `content-figure--${align}`]}>
+  <img src={src} alt={alt} width={width} height={height} loading="lazy" />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .content-figure {
+    display: block;
+    clear: both;
+    width: min(100%, 680px);
+    margin: var(--s-6) auto;
+  }
+
+  .content-figure--half {
+    width: min(50%, 520px);
+  }
+
+  .content-figure--wide {
+    width: min(80%, 820px);
+  }
+
+  .content-figure--full {
+    width: 100%;
+  }
+
+  .content-figure--right {
+    clear: right;
+    float: right;
+    margin: var(--s-2) 0 var(--s-5) var(--s-6);
+  }
+
+  .content-figure--left {
+    clear: left;
+    float: left;
+    margin: var(--s-2) var(--s-6) var(--s-5) 0;
+  }
+
+  .content-figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--r-md);
+  }
+
+  .content-figure figcaption {
+    margin-top: var(--s-2);
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.45;
+    text-align: center;
+  }
+
+  @media (max-width: 720px) {
+    .content-figure,
+    .content-figure--half,
+    .content-figure--wide,
+    .content-figure--full,
+    .content-figure--right,
+    .content-figure--left {
+      float: none;
+      width: 100%;
+      margin: var(--s-5) 0;
+    }
+  }
+</style>

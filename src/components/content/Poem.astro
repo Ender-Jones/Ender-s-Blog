@@ -1,0 +1,65 @@
+---
+type Props = {
+  title: string;
+  lines: string[];
+  closing?: string;
+};
+
+const { title, lines, closing } = Astro.props;
+---
+
+<div class="content-poem">
+  <h2>{title}</h2>
+  <p>
+    {lines.map((line) => <><span>{line}</span></>)}
+  </p>
+  {closing && <p class="content-poem__closing">“{closing}”</p>}
+</div>
+
+<style>
+  .content-poem {
+    width: max-content;
+    max-width: 100%;
+    margin: 1.8rem auto 2.2rem;
+    font-family: var(--font-serif);
+    font-size: 1.18rem;
+    font-style: italic;
+    line-height: 1.9;
+    text-align: center;
+  }
+
+  .content-poem h2 {
+    margin-bottom: 3rem;
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    font-style: normal;
+    font-weight: var(--fw-regular);
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .content-poem p {
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  .content-poem span {
+    display: block;
+  }
+
+  .content-poem__closing {
+    margin-top: 1.2rem;
+    color: var(--text);
+  }
+
+  @media (max-width: 720px) {
+    .content-poem {
+      width: auto;
+      font-size: 1.08rem;
+    }
+
+    .content-poem p {
+      white-space: normal;
+    }
+  }
+</style>

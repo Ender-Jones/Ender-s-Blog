@@ -1,0 +1,97 @@
+---
+type Props = {
+  lines: string[];
+  source?: string;
+  translationLines?: string[];
+  translationLabel?: string;
+};
+
+const {
+  lines,
+  source,
+  translationLines = [],
+  translationLabel = 'Show English Translation',
+} = Astro.props;
+const hasTranslation = translationLines.length > 0;
+---
+
+<blockquote class="content-epigraph">
+  <div class="content-epigraph__text">
+    {lines.map((line) => <span>{line}</span>)}
+  </div>
+  {source && <footer>{source}</footer>}
+  {
+    hasTranslation && (
+      <details class="content-epigraph__translation">
+        <summary>
+          <span aria-hidden="true">▶</span>
+          <em>{translationLabel}</em>
+        </summary>
+        <div>
+          {translationLines.map((line) => <span>{line}</span>)}
+        </div>
+      </details>
+    )
+  }
+</blockquote>
+
+<style>
+  .content-epigraph {
+    padding-left: var(--s-5);
+    color: #d4d8de;
+    font-family: var(--font-serif);
+    font-style: italic;
+    border-left: 3px solid var(--accent-pink);
+  }
+
+  .content-epigraph__text,
+  .content-epigraph__translation div {
+    display: grid;
+    gap: 0;
+  }
+
+  .content-epigraph__text span,
+  .content-epigraph__translation span {
+    display: block;
+  }
+
+  .content-epigraph footer {
+    margin-top: var(--s-4);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-style: normal;
+  }
+
+  .content-epigraph__translation {
+    margin-top: var(--s-5);
+  }
+
+  .content-epigraph__translation summary {
+    cursor: pointer;
+  }
+
+  .content-epigraph__translation summary span {
+    display: inline-block;
+    margin-right: 0.5em;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .content-epigraph__translation[open] summary span {
+    transform: rotate(90deg);
+  }
+
+  .content-epigraph__translation div {
+    margin-top: var(--s-4);
+    padding-left: var(--s-4);
+    border-left: 2px solid rgba(148, 163, 184, 0.22);
+    color: #8b95a1;
+    font-size: 0.86em;
+  }
+
+  @media (max-width: 720px) {
+    .content-epigraph {
+      padding-left: var(--s-4);
+    }
+  }
+</style>

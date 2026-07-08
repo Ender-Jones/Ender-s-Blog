@@ -1,0 +1,13 @@
+focus: Stress detection from multi-modal physiological signals.
+abstract: |
+  Reproducing CCT-LSTM on BP4D++ with EDA augmentation; exploring 3-class
+  severity classification and visual-physiological fusion. Considering
+  VLM/LLM directions for emotion recognition next.
+tags:
+  - affective computing
+  - multi-modal DL
+  - vision transformers
+  - stress detection
+  - VLM/LLM
+updated: 2026-05-01
+stale_after_days: 180

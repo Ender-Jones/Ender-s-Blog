@@ -1,0 +1,38 @@
+ai:
+  tone: research
+ai-models:
+  tone: research
+claude:
+  tone: research
+evaluation-metrics:
+  tone: research
+gemini:
+  tone: research
+gpt:
+  tone: research
+llm:
+  tone: research
+machine-learning:
+  tone: research
+mae:
+  tone: research
+mse:
+  tone: research
+prompt-engineering:
+  tone: research
+r-squared:
+  tone: research
+regression:
+  tone: research
+rmse:
+  tone: research
+study:
+  tone: research
+blogging:
+  tone: personal
+memory:
+  tone: personal
+others:
+  tone: personal
+poem:
+  tone: personal
