@@ -1,0 +1,20 @@
+# Coda 引文库(主页/文章页底部随机抽一条).
+# 手动加一条: 复制任意一段, 改字段即可. trans(译文)和 link_label 可省略.
+quotes:
+  - text: "« J'aime les nuages… les nuages qui passent… là-bas… là-bas… les merveilleux nuages ! »"
+    trans: "I love the clouds… the clouds that pass… up there… up there… the marvelous clouds!"
+    source: "Baudelaire, L'Étranger"
+    link_label: "Who Am I?"
+    lang: fr
+  - text: "Spring remembered every petal, but forgot who I was waiting for."
+    source: "What Distance Taught Us, 2026"
+    link_label: "read the poem"
+    lang: en
+  - text: "The seasons keep their faith — but we who swore to meet beneath each moon have let time break."
+    source: "What Distance Taught Us, 2026"
+    link_label: "read the poem"
+    lang: en
+  - text: "A kid wanted to be a scientist, but lost precious things on the road."
+    source: "Who Am I?, 2025"
+    link_label: "read the essay"
+    lang: en
