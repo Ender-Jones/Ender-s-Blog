@@ -1,0 +1,9 @@
+{
+  "quotes": [
+    { "text": "« J'aime les nuages… les nuages qui passent… là-bas… là-bas… les merveilleux nuages ! »", "trans": "I love the clouds… the clouds that pass… up there… up there… the marvelous clouds!", "source": "Baudelaire, L'Étranger", "link_label": "Who Am I?", "lang": "fr" },
+    { "text": "Spring remembered every petal, but forgot who I was waiting for.", "source": "What Distance Taught Us, 2026", "link_label": "read the poem", "lang": "en" },
+    { "text": "The seasons keep their faith — but we who swore to meet beneath each moon have let time break.", "source": "What Distance Taught Us, 2026", "link_label": "read the poem", "lang": "en" },
+    { "text": "A kid wanted to be a scientist, but lost precious things on the road.", "source": "Who Am I?, 2025", "link_label": "read the essay", "lang": "en" }
+  ],
+  "_note": "Coda 引文库。将来可迁移 sqlite;特定 post 可在 frontmatter 里固定自己的 coda,否则随机抽。"
+}

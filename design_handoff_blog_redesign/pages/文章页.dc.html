@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <style>
+    @import url("./styles/tokens.css");
+    html { scroll-behavior: smooth; }
+    html, body { margin: 0; padding: 0; background: #030305; }
+    * { box-sizing: border-box; }
+    ::selection { background: rgba(255,122,192,0.3); color: #fff; }
+    a { color: var(--ej-text-3); }
+    a:hover { color: var(--ej-text); }
+    @keyframes ej-caret { 0%, 52% { opacity: 1; } 53%, 100% { opacity: 0; } }
+    @keyframes ej-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+    @keyframes ej-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes ej-drift-a { 0% { transform: translate(0,0); } 25% { transform: translate(60px,-42px); } 50% { transform: translate(110px,24px); } 75% { transform: translate(40px,70px); } 100% { transform: translate(0,0); } }
+    @keyframes ej-drift-b { 0% { transform: translate(0,0); } 33% { transform: translate(-80px,52px); } 66% { transform: translate(-30px,-60px); } 100% { transform: translate(0,0); } }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; background:#030305; color:var(--ej-text); font-family:var(--ej-sans); -webkit-font-smoothing:antialiased;">
+
+  <div style="position:fixed; inset:0; z-index:0; pointer-events:none; background-image:linear-gradient(rgba(148,163,184,0.019) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.019) 1px, transparent 1px); background-size:56px 56px; background-position:0px {{ gridShift }};"></div>
+
+  <!-- ambient — two parallax orbs + two glow dots, extremely restrained -->
+  <div style="{{ orbA }}"></div>
+  <div style="{{ orbB }}"></div>
+  <div style="{{ dotA }}"><span style="{{ dotAIn }}"></span></div>
+  <div style="{{ dotB }}"><span style="{{ dotBIn }}"></span></div>
+
+  <!-- Route hint -->
+  <div style="{{ routeBarStyle }}">{{ route }}</div>
+
+  <!-- Nav -->
+  <nav style="position:sticky; top:0; z-index:40; background:rgba(4,4,7,0.5); backdrop-filter:blur(9px) saturate(1.4); -webkit-backdrop-filter:blur(9px) saturate(1.4); border-bottom:1px solid rgba(255,255,255,0.07); box-shadow:inset 0 1px 0 rgba(255,255,255,0.03), 0 14px 34px -22px rgba(0,0,0,0.85);">
+    <div style="position:relative; display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto; height:46px; padding:0 40px;">
+      <span style="position:absolute; bottom:-1px; left:40px; width:210px; height:1px; background:linear-gradient(90deg, rgba(255,255,255,0.30), transparent); pointer-events:none;"></span>
+      <a href="/" onMouseEnter="{{ logo.enter }}" onMouseLeave="{{ logo.leave }}" style="display:flex; align-items:baseline; gap:7px; text-decoration:none;">
+        <span style="color:var(--ej-text); font-family:var(--ej-serif); font-size:18px; font-style:italic; font-weight:500; letter-spacing:0.005em;">Ender Jones</span>
+        <span style="display:inline-block; width:9px; height:2px; border-radius:1px; background:var(--ej-pink); box-shadow:0 0 8px rgba(255,122,192,0.8), 0 0 20px rgba(255,122,192,0.35); animation:ej-caret 1.3s linear infinite;"></span>
+        <span style="margin-left:7px; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11px;">research notebook</span>
+      </a>
+      <div style="display:flex; align-items:center; gap:26px;">
+        <a href="./文章列表页.dc.html" onMouseEnter="{{ nav0.enter }}" onMouseLeave="{{ nav0.leave }}" style="{{ nav0.style }}">Writing</a>
+        <a href="./Worklog公开页.dc.html" onMouseEnter="{{ nav1.enter }}" onMouseLeave="{{ nav1.leave }}" style="{{ nav1.style }}">Worklog</a>
+        <a href="/research/" onMouseEnter="{{ nav2.enter }}" onMouseLeave="{{ nav2.leave }}" style="{{ nav2.style }}">Research</a>
+        <a href="/about/" onMouseEnter="{{ nav3.enter }}" onMouseLeave="{{ nav3.leave }}" style="{{ nav3.style }}">About</a>
+        <span style="width:1px; height:15px; background:rgba(255,255,255,0.12);"></span>
+        <span style="display:inline-flex; border:1px solid rgba(255,255,255,0.12); border-radius:999px; padding:2px; font-family:var(--ej-mono); font-size:10px; background:rgba(0,0,0,0.25);">
+          <span style="padding:3px 9px; border-radius:999px; background:rgba(255,255,255,0.08); color:var(--ej-text);">EN</span>
+          <span onMouseEnter="{{ zh.enter }}" onMouseLeave="{{ zh.leave }}" style="padding:3px 9px; border-radius:999px; color:var(--ej-mut-2); cursor:pointer; transition:color 120ms ease;" style-hover="color:var(--ej-text);">中</span>
+        </span>
+      </div>
+    </div>
+    <div style="{{ progressStyle }}"></div>
+  </nav>
+
+  <main style="position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:0 40px;">
+
+    <!-- Post header -->
+    <header id="post-top" data-screen-label="Post header" style="max-width:880px; padding:clamp(44px,7vh,72px) 0 0; animation:ej-rise 560ms cubic-bezier(0.2,0,0,1) both;">
+      <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+        <a href="./文章列表页.dc.html" onMouseEnter="{{ back.enter }}" onMouseLeave="{{ back.leave }}" style="{{ back.style }}">← writing</a>
+        <span style="width:1px; height:12px; background:rgba(255,255,255,0.12);"></span>
+        <span style="display:inline-flex; align-items:center; gap:7px; padding:3px 10px; border:1px solid rgba(76,194,255,0.30); border-radius:999px; color:var(--ej-blue-2); font-family:var(--ej-mono); font-size:10.5px; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; white-space:nowrap;"><span style="width:5px; height:5px; border-radius:999px; background:var(--ej-blue); box-shadow:0 0 7px rgba(76,194,255,0.8);"></span>research note</span>
+        <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11.5px; font-weight:500;">May 08, 2025 · EN · 7 min read</span>
+      </div>
+      <h1 style="margin:22px 0 0; color:var(--ej-text); font-family:var(--ej-serif); font-size:clamp(32px,3.6vw,44px); font-weight:400; letter-spacing:-0.015em; line-height:1.14; text-wrap:balance;">Regression Model Evaluation Metrics: MAE, MSE, RMSE, and R² Explained</h1>
+      <p style="margin:16px 0 0; max-width:64ch; color:var(--ej-text-3); font-family:var(--ej-serif); font-size:17.5px; font-style:italic; font-weight:300; line-height:1.55; text-wrap:pretty;">Understand the differences, advantages, and limitations of MAE, MSE, RMSE, and R² — and choose the right metric for your machine learning projects.</p>
+    </header>
+
+    <!-- Hero figure -->
+    <figure data-screen-label="Hero figure" style="margin:34px 0 0; animation:ej-rise 560ms cubic-bezier(0.2,0,0,1) 90ms both;">
+      <div style="height:clamp(220px,32vh,340px); border:1px solid rgba(255,255,255,0.09); border-radius:12px; background-image:url('assets/regression-title.png'); background-size:cover; background-position:50% 50%; filter:brightness(0.88); box-shadow:0 1px 2px rgba(0,0,0,0.7), 0 24px 60px -28px rgba(0,0,0,1), inset 0 1px 0 rgba(255,255,255,0.06);"></div>
+      <figcaption style="display:flex; justify-content:space-between; gap:16px; margin-top:9px; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:10.5px; font-weight:500;"><span>Abstract black and white architectural curves.</span><span>image · mood</span></figcaption>
+    </figure>
+
+    <!-- Body + TOC -->
+    <section data-screen-label="Article body" style="display:grid; grid-template-columns:minmax(0,1fr) {{ tocCol }}; gap:64px; padding:clamp(40px,6vh,60px) 0 0; animation:ej-rise 560ms cubic-bezier(0.2,0,0,1) 180ms both;">
+      <article style="max-width:720px; min-width:0;">
+
+        <!-- Epigraph — 原文 serif italic / 译文 sans / 出典 mono + hairline -->
+        <div style="position:relative; margin:6px 0 46px; padding:2px 0 2px 26px;">
+          <span style="position:absolute; left:0; top:2px; bottom:2px; width:2px; border-radius:2px; background:linear-gradient(180deg, rgba(255,122,192,0.55), rgba(255,122,192,0.06));"></span>
+          <p style="margin:0; color:#d6d6db; font-family:var(--ej-serif); font-size:17.5px; font-style:italic; font-weight:300; line-height:1.7; text-wrap:pretty;">Il n'y a qu'une loi en sentiment. C'est de faire le bonheur de ce qu'on aime.</p>
+          <p style="margin:9px 0 0; max-width:58ch; color:var(--ej-mut); font-family:var(--ej-sans); font-size:13.5px; font-weight:400; line-height:1.65;">There is only one law in emotion: to bring happiness to those we love.</p>
+          <div style="display:flex; align-items:center; gap:10px; margin-top:14px;">
+            <span style="width:18px; height:1px; background:rgba(255,255,255,0.22);"></span>
+            <span style="color:var(--ej-mut); font-family:var(--ej-mono); font-size:10px; font-weight:500; letter-spacing:0.16em;">STENDHAL</span>
+            <span style="color:var(--ej-mut-2); font-family:var(--ej-serif); font-size:13px; font-style:italic;">Diary, June 19, 1805</span>
+            <span style="padding:1px 6px; border:1px solid rgba(255,255,255,0.10); border-radius:4px; color:var(--ej-dim); font-family:var(--ej-mono); font-size:8.5px; font-weight:600; letter-spacing:0.14em;">FR</span>
+          </div>
+        </div>
+
+        <!-- §01 -->
+        <h2 id="intro" style="margin:0 0 16px; scroll-margin-top:84px; color:var(--ej-text); font-family:var(--ej-serif); font-size:28px; font-weight:400; letter-spacing:-0.01em; line-height:1.2;"><span style="display:block; margin-bottom:8px; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11px; font-weight:500; letter-spacing:0.2em;">§01</span>Introduction: The Essence of Regression Models</h2>
+        <p style="margin:0 0 16px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;">When we talk about prediction models, we're typically referring to one of two main types:</p>
+        <div style="display:grid; gap:9px; margin:0 0 16px;">
+          <div style="display:flex; gap:11px;"><span style="flex-shrink:0; color:var(--ej-mut-2);">–</span><p style="margin:0; color:#b8b8c0; font-size:15.5px; line-height:1.7;"><strong style="color:#f0f0f2; font-weight:600;">Regression models</strong>: continuous outputs — house prices, temperature, stock values.</p></div>
+          <div style="display:flex; gap:11px;"><span style="flex-shrink:0; color:var(--ej-mut-2);">–</span><p style="margin:0; color:#b8b8c0; font-size:15.5px; line-height:1.7;"><strong style="color:#f0f0f2; font-weight:600;">Classification models</strong>: categorical or binary outputs — yes/no, spam/not spam, image classes.</p></div>
+        </div>
+        <p style="margin:0 0 16px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;">Regression models attempt to find relationships between variables to predict continuous numeric values. But how do we know if our regression model is any good? This is where evaluation metrics come in.</p>
+
+        <!-- §02 -->
+        <h2 id="theory" style="margin:52px 0 16px; scroll-margin-top:84px; color:var(--ej-text); font-family:var(--ej-serif); font-size:28px; font-weight:400; letter-spacing:-0.01em; line-height:1.2;"><span style="display:block; margin-bottom:8px; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11px; font-weight:500; letter-spacing:0.2em;">§02</span>Theoretical Foundation of Evaluation Metrics</h2>
+        <h3 style="margin:26px 0 12px; color:#f0f0f2; font-family:var(--ej-serif); font-size:21px; font-weight:500;">Residuals: The Building Blocks</h3>
+        <p style="margin:0 0 14px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;">At the core of regression evaluation is the concept of <strong style="color:#f0f0f2; font-weight:600;">residuals</strong> — the differences between predicted values and actual observed values:</p>
+        <div style="display:flex; justify-content:center; margin:24px 0; overflow-x:auto;"><span data-tex="\text{Residual} = y_i - \hat{y}_i" data-display="1" style="color:#e8e8ea; font-size:17px; font-family:var(--ej-serif); font-style:italic;">Residual = yᵢ − ŷᵢ</span></div>
+        <p style="margin:0 0 14px; color:#b8b8c0; font-size:16px; line-height:1.75;">Where <span data-tex="y_i" style="color:#e8e8ea; font-family:var(--ej-serif); font-style:italic;">yᵢ</span> is the actual value and <span data-tex="\hat{y}_i" style="color:#e8e8ea; font-family:var(--ej-serif); font-style:italic;">ŷᵢ</span> is the predicted value.</p>
+        <h3 style="margin:26px 0 12px; color:#f0f0f2; font-family:var(--ej-serif); font-size:21px; font-weight:500;">Bias and Error</h3>
+        <p style="margin:0 0 14px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;"><strong style="color:#f0f0f2; font-weight:600;">Bias</strong> represents systematic errors in predictions. Ideally, the sum of residuals should be close to zero, indicating that your model isn't consistently over or under-predicting values.</p>
+        <h3 style="margin:26px 0 12px; color:#f0f0f2; font-family:var(--ej-serif); font-size:21px; font-weight:500;">The Modeling Cycle</h3>
+        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:0 0 16px; padding:14px 18px; border:1px solid rgba(255,255,255,0.08); border-radius:10px; background:linear-gradient(180deg, #0d0d10, #0a0a0c); font-family:var(--ej-mono); font-size:12px; color:var(--ej-text-2);">
+          <span>1 build</span><span style="color:var(--ej-blue);">→</span><span>2 evaluate</span><span style="color:var(--ej-blue);">→</span><span>3 improve</span><span style="color:var(--ej-blue);">→</span><span style="color:var(--ej-mut);">repeat until satisfactory</span>
+        </div>
+
+        <!-- §03 -->
+        <h2 id="quickref" style="margin:52px 0 16px; scroll-margin-top:84px; color:var(--ej-text); font-family:var(--ej-serif); font-size:28px; font-weight:400; letter-spacing:-0.01em; line-height:1.2;"><span style="display:block; margin-bottom:8px; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11px; font-weight:500; letter-spacing:0.2em;">§03</span>Quick Reference: Metrics Comparison</h2>
+        <div style="border:1px solid rgba(255,255,255,0.08); border-radius:10px; overflow:hidden; background:linear-gradient(180deg, #0d0d10, #0a0a0c);">
+          <table style="width:100%; border-collapse:collapse; font-size:12.5px;">
+            <thead><tr>
+              <th style="padding:10px 14px; text-align:left; color:var(--ej-mut); font-family:var(--ej-mono); font-size:10px; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.10);">Metric</th>
+              <th style="padding:10px 14px; text-align:left; color:var(--ej-mut); font-family:var(--ej-mono); font-size:10px; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.10);">Range</th>
+              <th style="padding:10px 14px; text-align:left; color:var(--ej-mut); font-family:var(--ej-mono); font-size:10px; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.10);">Interpretation</th>
+              <th style="padding:10px 14px; text-align:left; color:var(--ej-mut); font-family:var(--ej-mono); font-size:10px; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.10);">Best for</th>
+              <th style="padding:10px 14px; text-align:left; color:var(--ej-mut); font-family:var(--ej-mono); font-size:10px; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.10);">Limitations</th>
+            </tr></thead>
+            <tbody>
+              <tr><td style="padding:10px 14px; color:#f0f0f2; font-family:var(--ej-mono); font-weight:600; border-bottom:1px solid rgba(255,255,255,0.05);">MAE</td><td style="padding:10px 14px; color:var(--ej-text-3); font-family:var(--ej-mono); font-variant-numeric:tabular-nums; border-bottom:1px solid rgba(255,255,255,0.05);">[0, ∞)</td><td style="padding:10px 14px; color:#b4b4bc; border-bottom:1px solid rgba(255,255,255,0.05);">Average error magnitude</td><td style="padding:10px 14px; color:#b4b4bc; border-bottom:1px solid rgba(255,255,255,0.05);">General use, robust to outliers</td><td style="padding:10px 14px; color:var(--ej-mut); border-bottom:1px solid rgba(255,255,255,0.05);">Not differentiable</td></tr>
+              <tr><td style="padding:10px 14px; color:#f0f0f2; font-family:var(--ej-mono); font-weight:600; border-bottom:1px solid rgba(255,255,255,0.05);">MSE</td><td style="padding:10px 14px; color:var(--ej-text-3); font-family:var(--ej-mono); font-variant-numeric:tabular-nums; border-bottom:1px solid rgba(255,255,255,0.05);">[0, ∞)</td><td style="padding:10px 14px; color:#b4b4bc; border-bottom:1px solid rgba(255,255,255,0.05);">Average squared error</td><td style="padding:10px 14px; color:#b4b4bc; border-bottom:1px solid rgba(255,255,255,0.05);">Optimization</td><td style="padding:10px 14px; color:var(--ej-mut); border-bottom:1px solid rgba(255,255,255,0.05);">Sensitive to outliers</td></tr>
+              <tr><td style="padding:10px 14px; color:#f0f0f2; font-family:var(--ej-mono); font-weight:600; border-bottom:1px solid rgba(255,255,255,0.05);">RMSE</td><td style="padding:10px 14px; color:var(--ej-text-3); font-family:var(--ej-mono); font-variant-numeric:tabular-nums; border-bottom:1px solid rgba(255,255,255,0.05);">[0, ∞)</td><td style="padding:10px 14px; color:#b4b4bc; border-bottom:1px solid rgba(255,255,255,0.05);">Error in original units</td><td style="padding:10px 14px; color:#b4b4bc; border-bottom:1px solid rgba(255,255,255,0.05);">Easy interpretation</td><td style="padding:10px 14px; color:var(--ej-mut); border-bottom:1px solid rgba(255,255,255,0.05);">Sensitive to outliers</td></tr>
+              <tr><td style="padding:10px 14px; color:#f0f0f2; font-family:var(--ej-mono); font-weight:600; border-bottom:1px solid rgba(255,255,255,0.05);">R²</td><td style="padding:10px 14px; color:var(--ej-text-3); font-family:var(--ej-mono); font-variant-numeric:tabular-nums; border-bottom:1px solid rgba(255,255,255,0.05);">(−∞, 1]</td><td style="padding:10px 14px; color:#b4b4bc; border-bottom:1px solid rgba(255,255,255,0.05);">Explained variance</td><td style="padding:10px 14px; color:#b4b4bc; border-bottom:1px solid rgba(255,255,255,0.05);">Model comparison</td><td style="padding:10px 14px; color:var(--ej-mut); border-bottom:1px solid rgba(255,255,255,0.05);">Increases with features</td></tr>
+              <tr><td style="padding:10px 14px; color:#f0f0f2; font-family:var(--ej-mono); font-weight:600; border-bottom:1px solid rgba(255,255,255,0.05);">MAPE</td><td style="padding:10px 14px; color:var(--ej-text-3); font-family:var(--ej-mono); font-variant-numeric:tabular-nums; border-bottom:1px solid rgba(255,255,255,0.05);">[0, ∞)</td><td style="padding:10px 14px; color:#b4b4bc; border-bottom:1px solid rgba(255,255,255,0.05);">Percentage error</td><td style="padding:10px 14px; color:#b4b4bc; border-bottom:1px solid rgba(255,255,255,0.05);">Business contexts</td><td style="padding:10px 14px; color:var(--ej-mut); border-bottom:1px solid rgba(255,255,255,0.05);">Biased, undefined at zero</td></tr>
+              <tr><td style="padding:10px 14px; color:#f0f0f2; font-family:var(--ej-mono); font-weight:600;">SMAPE</td><td style="padding:10px 14px; color:var(--ej-text-3); font-family:var(--ej-mono); font-variant-numeric:tabular-nums;">[0, 2]</td><td style="padding:10px 14px; color:#b4b4bc;">Symmetric % error</td><td style="padding:10px 14px; color:#b4b4bc;">Forecasting</td><td style="padding:10px 14px; color:var(--ej-mut);">Unintuitive range</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- §04 -->
+        <h2 id="basic" style="margin:52px 0 16px; scroll-margin-top:84px; color:var(--ej-text); font-family:var(--ej-serif); font-size:28px; font-weight:400; letter-spacing:-0.01em; line-height:1.2;"><span style="display:block; margin-bottom:8px; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11px; font-weight:500; letter-spacing:0.2em;">§04</span>Basic Evaluation Metrics</h2>
+
+        <h3 id="basic-mae" style="margin:26px 0 12px; scroll-margin-top:84px; color:#f0f0f2; font-family:var(--ej-serif); font-size:21px; font-weight:500;">Mean Absolute Error (MAE)</h3>
+        <p style="margin:0 0 14px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;">Mean Absolute Error measures the average magnitude of errors without considering their direction.</p>
+        <div style="display:flex; justify-content:center; margin:24px 0; overflow-x:auto;"><span data-tex="\mathrm{MAE} = \frac{1}{n}\sum_{i=1}^{n}\lvert y_i - \hat{y}_i\rvert" data-display="1" style="color:#e8e8ea; font-size:17px; font-family:var(--ej-serif); font-style:italic;">MAE = (1/n) Σ |yᵢ − ŷᵢ|</span></div>
+        <p style="margin:18px 0 8px; color:var(--ej-mut); font-family:var(--ej-mono); font-size:11px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase;">Advantages</p>
+        <div style="display:grid; gap:8px; margin:0 0 14px;">
+          <div style="display:flex; gap:11px;"><span style="flex-shrink:0; color:var(--ej-mut-2);">–</span><p style="margin:0; color:#b8b8c0; font-size:15.5px; line-height:1.7;"><strong style="color:#f0f0f2; font-weight:600;">Intuitive</strong>: directly represents the average error magnitude, in the original unit.</p></div>
+          <div style="display:flex; gap:11px;"><span style="flex-shrink:0; color:var(--ej-mut-2);">–</span><p style="margin:0; color:#b8b8c0; font-size:15.5px; line-height:1.7;"><strong style="color:#f0f0f2; font-weight:600;">Robust to outliers</strong>: doesn't amplify their effect.</p></div>
+        </div>
+        <p style="margin:18px 0 8px; color:var(--ej-mut); font-family:var(--ej-mono); font-size:11px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase;">Limitations</p>
+        <div style="display:grid; gap:8px; margin:0 0 16px;">
+          <div style="display:flex; gap:11px;"><span style="flex-shrink:0; color:var(--ej-mut-2);">–</span><p style="margin:0; color:#b8b8c0; font-size:15.5px; line-height:1.7;"><strong style="color:#f0f0f2; font-weight:600;">Equal weighting</strong>: assumes all error magnitudes matter equally.</p></div>
+          <div style="display:flex; gap:11px;"><span style="flex-shrink:0; color:var(--ej-mut-2);">–</span><p style="margin:0; color:#b8b8c0; font-size:15.5px; line-height:1.7;"><strong style="color:#f0f0f2; font-weight:600;">Optimization</strong>: not easily differentiable at zero; scale-dependent across datasets.</p></div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px; margin:24px 0; padding:13px 17px 15px; border:1px solid rgba(255,255,255,0.07); border-radius:9px; background:linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.005));">
+          <span style="display:flex; align-items:center; gap:9px;"><span style="width:4px; height:4px; border-radius:999px; background:var(--ej-blue); box-shadow:0 0 7px rgba(76,194,255,0.85);"></span><span style="color:var(--ej-blue-2); font-family:var(--ej-mono); font-size:9px; font-weight:600; letter-spacing:0.24em;">INFO</span><span style="flex:1; height:1px; background:linear-gradient(90deg, rgba(76,194,255,0.16), transparent);"></span></span>
+          <p style="margin:0; color:#b4b4bc; font-size:14.5px; line-height:1.65;">MAE is like a ruler that measures the average distance between predictions and reality, without caring about the direction of the error.</p>
+        </div>
+
+        <h3 id="basic-mse" style="margin:34px 0 12px; scroll-margin-top:84px; color:#f0f0f2; font-family:var(--ej-serif); font-size:21px; font-weight:500;">MSE and RMSE</h3>
+        <p style="margin:0 0 14px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;">MSE calculates the average of squared differences between predicted and actual values. RMSE brings the metric back to the original units.</p>
+        <div style="display:flex; justify-content:center; margin:24px 0; overflow-x:auto;"><span data-tex="\mathrm{MSE} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2" data-display="1" style="color:#e8e8ea; font-size:17px; font-family:var(--ej-serif); font-style:italic;">MSE = (1/n) Σ (yᵢ − ŷᵢ)²</span></div>
+        <div style="display:flex; justify-content:center; margin:24px 0; overflow-x:auto;"><span data-tex="\mathrm{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2}" data-display="1" style="color:#e8e8ea; font-size:17px; font-family:var(--ej-serif); font-style:italic;">RMSE = √MSE</span></div>
+        <p style="margin:0 0 14px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;"><strong style="color:#f0f0f2; font-weight:600;">Advantages</strong> — penalizes larger errors via the squared term; differentiable, so easier to optimize; minimizing MSE leads to centered predictions. <strong style="color:#f0f0f2; font-weight:600;">Limitations</strong> — heavily influenced by outliers; MSE is not in original units (RMSE solves this); cannot directly compare across datasets.</p>
+        <div style="display:flex; flex-direction:column; gap:8px; margin:24px 0; padding:13px 17px 15px; border:1px solid rgba(255,255,255,0.07); border-radius:9px; background:linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.005));">
+          <span style="display:flex; align-items:center; gap:9px;"><span style="width:4px; height:4px; border-radius:999px; background:var(--ej-blue); box-shadow:0 0 7px rgba(76,194,255,0.85);"></span><span style="color:var(--ej-blue-2); font-family:var(--ej-mono); font-size:9px; font-weight:600; letter-spacing:0.24em;">INFO</span><span style="flex:1; height:1px; background:linear-gradient(90deg, rgba(76,194,255,0.16), transparent);"></span></span>
+          <p style="margin:0; color:#b4b4bc; font-size:14.5px; line-height:1.65;">If MAE is a ruler, then MSE is a magnifying glass that emphasizes larger errors. RMSE converts that magnified view back to the original scale.</p>
+        </div>
+
+        <h3 id="basic-r2" style="margin:34px 0 12px; scroll-margin-top:84px; color:#f0f0f2; font-family:var(--ej-serif); font-size:21px; font-weight:500;">Coefficient of Determination (R²)</h3>
+        <p style="margin:0 0 14px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;">R² represents the proportion of variance in the dependent variable that can be explained by the independent variables.</p>
+        <div style="display:flex; justify-content:center; margin:24px 0; overflow-x:auto;"><span data-tex="R^2 = 1 - \frac{\mathrm{RSS}}{\mathrm{TSS}}" data-display="1" style="color:#e8e8ea; font-size:17px; font-family:var(--ej-serif); font-style:italic;">R² = 1 − RSS / TSS</span></div>
+        <p style="margin:0 0 14px; color:#b8b8c0; font-size:16px; line-height:1.75;">Where RSS is the residual sum of squares <span data-tex="\sum(y_i - \hat{y}_i)^2" style="color:#e8e8ea; font-family:var(--ej-serif); font-style:italic;">Σ(yᵢ − ŷᵢ)²</span> and TSS the total sum of squares <span data-tex="\sum(y_i - \bar{y})^2" style="color:#e8e8ea; font-family:var(--ej-serif); font-style:italic;">Σ(yᵢ − ȳ)²</span>. An R² of 0.75 means the model explains 75% of the variance.</p>
+        <p style="margin:0 0 14px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;"><strong style="color:#f0f0f2; font-weight:600;">Advantages</strong> — scale-independent, so comparable across targets; intuitive as "percent of variance explained"; the standard reporting metric. <strong style="color:#f0f0f2; font-weight:600;">Limitations</strong> — always increases with additional features (even irrelevant ones); no penalty for complexity (unlike adjusted R²); misleading if model assumptions are violated; not ideal for time series.</p>
+        <div style="display:flex; flex-direction:column; gap:8px; margin:24px 0; padding:13px 17px 15px; border:1px solid rgba(255,255,255,0.07); border-radius:9px; background:linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.005));">
+          <span style="display:flex; align-items:center; gap:9px;"><span style="width:4px; height:4px; border-radius:999px; background:var(--ej-blue); box-shadow:0 0 7px rgba(76,194,255,0.85);"></span><span style="color:var(--ej-blue-2); font-family:var(--ej-mono); font-size:9px; font-weight:600; letter-spacing:0.24em;">INFO</span><span style="flex:1; height:1px; background:linear-gradient(90deg, rgba(76,194,255,0.16), transparent);"></span></span>
+          <p style="margin:0; color:#b4b4bc; font-size:14.5px; line-height:1.65;">R² is like a school grade for your model — it tells you what percentage of the test your model got right, but doesn't tell you where it made mistakes.</p>
+        </div>
+
+        <!-- §05 -->
+        <h2 id="advanced" style="margin:52px 0 16px; scroll-margin-top:84px; color:var(--ej-text); font-family:var(--ej-serif); font-size:28px; font-weight:400; letter-spacing:-0.01em; line-height:1.2;"><span style="display:block; margin-bottom:8px; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11px; font-weight:500; letter-spacing:0.2em;">§05</span>Advanced Evaluation Metrics</h2>
+
+        <h3 id="adv-pct" style="margin:26px 0 12px; scroll-margin-top:84px; color:#f0f0f2; font-family:var(--ej-serif); font-size:21px; font-weight:500;">Percentage-Based Errors</h3>
+        <p style="margin:0 0 14px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;"><strong style="color:#f0f0f2; font-weight:600;">MAPE</strong> measures the percentage difference between actual and predicted values. Business-friendly and scale-independent — but undefined when actual values are zero, and it penalizes over-forecasting more than under-forecasting.</p>
+        <div style="display:flex; justify-content:center; margin:24px 0; overflow-x:auto;"><span data-tex="\mathrm{MAPE} = \frac{1}{n}\sum_{i=1}^{n}\left\lvert\frac{y_i - \hat{y}_i}{y_i}\right\rvert \times 100\%" data-display="1" style="color:#e8e8ea; font-size:17px; font-family:var(--ej-serif); font-style:italic;">MAPE = (1/n) Σ |(yᵢ − ŷᵢ)/yᵢ| × 100%</span></div>
+        <p style="margin:0 0 14px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;"><strong style="color:#f0f0f2; font-weight:600;">SMAPE</strong> addresses MAPE's asymmetry: bounded to [0%, 200%], more balanced between over- and under-prediction, and better with zeros — though still problematic when both values are zero.</p>
+        <div style="display:flex; justify-content:center; margin:24px 0; overflow-x:auto;"><span data-tex="\mathrm{SMAPE} = \frac{1}{n}\sum_{i=1}^{n}\left\lvert\frac{y_i - \hat{y}_i}{(y_i + \hat{y}_i)/2}\right\rvert \times 100\%" data-display="1" style="color:#e8e8ea; font-size:17px; font-family:var(--ej-serif); font-style:italic;">SMAPE = (1/n) Σ |(yᵢ − ŷᵢ) / ((yᵢ+ŷᵢ)/2)| × 100%</span></div>
+
+        <h3 id="adv-log" style="margin:34px 0 12px; scroll-margin-top:84px; color:#f0f0f2; font-family:var(--ej-serif); font-size:21px; font-weight:500;">Logarithmic Error Metrics</h3>
+        <p style="margin:0 0 14px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;">MSLE applies a logarithmic transformation before calculating squared error; RMSLE is its square root.</p>
+        <div style="display:flex; justify-content:center; margin:24px 0; overflow-x:auto;"><span data-tex="\mathrm{MSLE} = \frac{1}{n}\sum_{i=1}^{n}\bigl(\log(y_i + 1) - \log(\hat{y}_i + 1)\bigr)^2" data-display="1" style="color:#e8e8ea; font-size:17px; font-family:var(--ej-serif); font-style:italic;">MSLE = (1/n) Σ (log(yᵢ+1) − log(ŷᵢ+1))²</span></div>
+        <p style="margin:0 0 14px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;">Particularly useful for data with exponential growth patterns, for penalizing errors at lower values more, and for datasets spanning a wide range.</p>
+
+        <h3 id="adv-ic" style="margin:34px 0 12px; scroll-margin-top:84px; color:#f0f0f2; font-family:var(--ej-serif); font-size:21px; font-weight:500;">Information Criteria: AIC and BIC</h3>
+        <p style="margin:0 0 14px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;">These balance model fit against complexity — penalizing models with more parameters to prevent overfitting. They cannot be compared across datasets.</p>
+        <div style="display:flex; justify-content:center; gap:44px; flex-wrap:wrap; margin:24px 0; overflow-x:auto;"><span data-tex="\mathrm{AIC} = 2k - 2\ln(L)" data-display="1" style="color:#e8e8ea; font-size:17px; font-family:var(--ej-serif); font-style:italic;">AIC = 2k − 2ln(L)</span><span data-tex="\mathrm{BIC} = \ln(n)k - 2\ln(L)" data-display="1" style="color:#e8e8ea; font-size:17px; font-family:var(--ej-serif); font-style:italic;">BIC = ln(n)k − 2ln(L)</span></div>
+        <p style="margin:0 0 14px; color:var(--ej-mut); font-size:14px; line-height:1.7;">Where <span style="font-family:var(--ej-mono); font-size:13px; color:var(--ej-text-3);">k</span> is the number of parameters, <span style="font-family:var(--ej-mono); font-size:13px; color:var(--ej-text-3);">L</span> the likelihood, <span style="font-family:var(--ej-mono); font-size:13px; color:var(--ej-text-3);">n</span> the number of observations.</p>
+
+        <!-- §06 -->
+        <h2 id="choose" style="margin:52px 0 16px; scroll-margin-top:84px; color:var(--ej-text); font-family:var(--ej-serif); font-size:28px; font-weight:400; letter-spacing:-0.01em; line-height:1.2;"><span style="display:block; margin-bottom:8px; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11px; font-weight:500; letter-spacing:0.2em;">§06</span>How to Choose the Right Metric?</h2>
+        <div style="display:grid; gap:10px; margin:0 0 18px;">
+          <div style="display:flex; gap:14px; padding:13px 16px; border:1px solid rgba(255,255,255,0.07); border-radius:10px; background:rgba(255,255,255,0.012);"><span style="flex-shrink:0; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:12px; font-weight:600;">01</span><p style="margin:0; color:#b8b8c0; font-size:15px; line-height:1.65;"><strong style="color:#f0f0f2; font-weight:600;">What is the impact of outliers?</strong> Heavily penalize them → MSE/RMSE. Don't let them dominate → MAE.</p></div>
+          <div style="display:flex; gap:14px; padding:13px 16px; border:1px solid rgba(255,255,255,0.07); border-radius:10px; background:rgba(255,255,255,0.012);"><span style="flex-shrink:0; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:12px; font-weight:600;">02</span><p style="margin:0; color:#b8b8c0; font-size:15px; line-height:1.65;"><strong style="color:#f0f0f2; font-weight:600;">Is over- or under-prediction more costly?</strong> Equally important → RMSE or MAE. One direction costs more → asymmetric measures or custom loss.</p></div>
+          <div style="display:flex; gap:14px; padding:13px 16px; border:1px solid rgba(255,255,255,0.07); border-radius:10px; background:rgba(255,255,255,0.012);"><span style="flex-shrink:0; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:12px; font-weight:600;">03</span><p style="margin:0; color:#b8b8c0; font-size:15px; line-height:1.65;"><strong style="color:#f0f0f2; font-weight:600;">Relative or absolute?</strong> Comparing across datasets → R², MAPE. Interpreting in original units → RMSE, MAE.</p></div>
+        </div>
+        <p style="margin:0 0 16px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;">In practice: <strong style="color:#f0f0f2; font-weight:600;">optimize one primary metric</strong> during training, <strong style="color:#f0f0f2; font-weight:600;">evaluate with several</strong>, respect domain conventions, and know each metric's blind spots in your context.</p>
+
+        <!-- §07 -->
+        <h2 id="conclusion" style="margin:52px 0 16px; scroll-margin-top:84px; color:var(--ej-text); font-family:var(--ej-serif); font-size:28px; font-weight:400; letter-spacing:-0.01em; line-height:1.2;"><span style="display:block; margin-bottom:8px; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11px; font-weight:500; letter-spacing:0.2em;">§07</span>Conclusion: Best Practices</h2>
+        <div style="display:grid; gap:8px; margin:0 0 16px;">
+          <div style="display:flex; gap:11px;"><span style="flex-shrink:0; color:var(--ej-mut-2);">–</span><p style="margin:0; color:#b8b8c0; font-size:15.5px; line-height:1.7;"><strong style="color:#f0f0f2; font-weight:600;">MAE</strong> — average error magnitude, plainly.</p></div>
+          <div style="display:flex; gap:11px;"><span style="flex-shrink:0; color:var(--ej-mut-2);">–</span><p style="margin:0; color:#b8b8c0; font-size:15.5px; line-height:1.7;"><strong style="color:#f0f0f2; font-weight:600;">MSE / RMSE</strong> — optimization, and when large errors matter most.</p></div>
+          <div style="display:flex; gap:11px;"><span style="flex-shrink:0; color:var(--ej-mut-2);">–</span><p style="margin:0; color:#b8b8c0; font-size:15.5px; line-height:1.7;"><strong style="color:#f0f0f2; font-weight:600;">R²</strong> — explained variance, model comparison.</p></div>
+          <div style="display:flex; gap:11px;"><span style="flex-shrink:0; color:var(--ej-mut-2);">–</span><p style="margin:0; color:#b8b8c0; font-size:15.5px; line-height:1.7;"><strong style="color:#f0f0f2; font-weight:600;">MAPE / SMAPE</strong> — business contexts needing percentages.</p></div>
+          <div style="display:flex; gap:11px;"><span style="flex-shrink:0; color:var(--ej-mut-2);">–</span><p style="margin:0; color:#b8b8c0; font-size:15.5px; line-height:1.7;"><strong style="color:#f0f0f2; font-weight:600;">MSLE / RMSLE</strong> — exponential data, relative errors.</p></div>
+        </div>
+        <p style="margin:0 0 16px; color:#b8b8c0; font-size:16px; line-height:1.75; text-wrap:pretty;">The ultimate goal isn't to optimize metrics but to build models that generalize to unseen data — and to understand what your data is telling you.</p>
+        <div style="display:flex; flex-direction:column; gap:8px; margin:24px 0; padding:13px 17px 15px; border:1px solid rgba(255,255,255,0.07); border-radius:9px; background:linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.005));">
+          <span style="display:flex; align-items:center; gap:9px;"><span style="width:4px; height:4px; border-radius:999px; background:var(--ej-amber); box-shadow:0 0 7px rgba(245,158,11,0.85);"></span><span style="color:var(--ej-amber-2); font-family:var(--ej-mono); font-size:9px; font-weight:600; letter-spacing:0.24em;">TIP</span><span style="flex:1; height:1px; background:linear-gradient(90deg, rgba(245,158,11,0.18), transparent);"></span></span>
+          <p style="margin:0; color:#b4b4bc; font-size:14.5px; line-height:1.65;">In regression modeling, metrics are your compass, guiding you toward better predictions and deeper understanding of your data's story.</p>
+        </div>
+
+        <!-- §08 References -->
+        <h2 id="refs" style="margin:52px 0 14px; scroll-margin-top:84px; color:var(--ej-text); font-family:var(--ej-serif); font-size:22px; font-weight:400;"><span style="display:block; margin-bottom:8px; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11px; font-weight:500; letter-spacing:0.2em;">§08</span>References</h2>
+        <div style="display:grid; gap:9px; margin:0 0 8px;">
+          <div style="display:flex; gap:12px;"><span style="flex-shrink:0; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11.5px; font-weight:500;">[1]</span><p style="margin:0; color:#9a9aa2; font-size:13.5px; line-height:1.65;">A Comprehensive Overview of Regression Evaluation Metrics, <a href="https://developer.nvidia.com/blog/a-comprehensive-overview-of-regression-evaluation-metrics/" target="_blank" onMouseEnter="{{ ref1.enter }}" onMouseLeave="{{ ref1.leave }}" style="{{ ref1.style }}">NVIDIA Developer</a>, by Eryk Lewinson.</p></div>
+          <div style="display:flex; gap:12px;"><span style="flex-shrink:0; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11.5px; font-weight:500;">[2]</span><p style="margin:0; color:#9a9aa2; font-size:13.5px; line-height:1.65;">James, G., Witten, D., Hastie, T., &amp; Tibshirani, R. (2013). <em>An Introduction to Statistical Learning</em>.</p></div>
+          <div style="display:flex; gap:12px;"><span style="flex-shrink:0; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11.5px; font-weight:500;">[3]</span><p style="margin:0; color:#9a9aa2; font-size:13.5px; line-height:1.65;">Chai, T., &amp; Draxler, R. R. (2014). <em>Root mean square error (RMSE) or mean absolute error (MAE)?</em></p></div>
+          <div style="display:flex; gap:12px;"><span style="flex-shrink:0; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11.5px; font-weight:500;">[4]</span><p style="margin:0; color:#9a9aa2; font-size:13.5px; line-height:1.65;">Willmott, C. J., &amp; Matsuura, K. (2005). <em>Advantages of the MAE over the RMSE</em>.</p></div>
+        </div>
+
+        <!-- Filed under -->
+        <div style="display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin:44px 0 0; padding:18px 0 0; border-top:1px solid rgba(255,255,255,0.06);">
+          <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:10px; font-weight:500; letter-spacing:0.2em;">FILED UNDER</span>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <sc-for list="{{ tags }}" as="tg" hint-placeholder-count="6">
+              <a href="{{ tg.href }}" onMouseEnter="{{ tg.onEnter }}" onMouseLeave="{{ tg.onLeave }}" style="{{ tg.style }}">{{ tg.label }}</a>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- Prev / Next -->
+        <nav data-screen-label="Prev next" style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:34px 0 0;">
+          <a href="./文章页.dc.html" onMouseEnter="{{ pvPrev.enter }}" onMouseLeave="{{ pvPrev.leave }}" style="{{ pvPrev.style }}">
+            <span style="{{ pvPrevArrow }}">← PREVIOUS</span>
+            <strong style="display:block; margin-top:9px; color:#e8e8ea; font-family:var(--ej-serif); font-size:19px; font-weight:500; line-height:1.25;">Who Am I?</strong>
+            <span style="display:block; margin-top:7px; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:10.5px; font-weight:500;">Apr 29, 2025 · essay</span>
+          </a>
+          <a href="/posts/prompt-engineering-and-major-model-takes/" onMouseEnter="{{ pvNext.enter }}" onMouseLeave="{{ pvNext.leave }}" style="{{ pvNext.style }}">
+            <span style="{{ pvNextArrow }}">NEXT →</span>
+            <strong style="display:block; margin-top:9px; color:#e8e8ea; font-family:var(--ej-serif); font-size:19px; font-weight:500; line-height:1.25;">My Take on Prompt Engineering and Major AI Models</strong>
+            <span style="display:block; margin-top:7px; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:10.5px; font-weight:500;">Sep 01, 2025 · study</span>
+          </a>
+        </nav>
+
+        <!-- Comments -->
+        <sc-if value="{{ showGiscus }}" hint-placeholder-val="{{ true }}">
+          <section data-screen-label="Comments" style="margin:34px 0 0;">
+            <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:12px;">
+              <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:10.5px; font-weight:500; letter-spacing:0.2em;">COMMENTS</span>
+              <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:10.5px; font-weight:500;">0 comments · 0 reactions</span>
+            </div>
+            <div style="display:grid; place-items:center; gap:12px; padding:34px 24px; border:1px dashed rgba(255,255,255,0.10); border-radius:12px; background:rgba(255,255,255,0.008);">
+              <p style="margin:0; color:var(--ej-mut); font-size:13.5px; text-align:center; line-height:1.6;">Comments live in GitHub Discussions via giscus.<br>Reactions and replies land in the repo — nothing else is stored.</p>
+              <button onMouseEnter="{{ gisBtn.enter }}" onMouseLeave="{{ gisBtn.leave }}" style="{{ gisBtn.style }}">Sign in with GitHub</button>
+            </div>
+          </section>
+        </sc-if>
+
+        <!-- Coda — 原文 / 译文 / 出典 三层 -->
+        <section data-screen-label="Coda" style="position:relative; margin:64px 0 0; padding:26px 0 8px 26px; border-top:1px solid rgba(255,255,255,0.06);">
+          <span style="position:absolute; left:0; top:34px; bottom:14px; width:2px; border-radius:2px; background:linear-gradient(180deg, rgba(255,122,192,0.5), rgba(76,194,255,0.10));"></span>
+          <blockquote style="margin:0; color:#d0d0d6; font-family:var(--ej-serif); font-size:20px; font-style:italic; font-weight:300; line-height:1.55; text-wrap:pretty; min-height:2.9em;">{{ quoteText }}</blockquote>
+          <sc-if value="{{ hasQuoteTrans }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:10px 0 0; max-width:58ch; color:var(--ej-mut); font-family:var(--ej-sans); font-size:13.5px; font-weight:400; line-height:1.65;">{{ quoteTrans }}</p>
+          </sc-if>
+          <div style="display:flex; align-items:center; gap:10px; margin-top:14px;">
+            <span style="width:18px; height:1px; background:rgba(255,255,255,0.22);"></span>
+            <span style="color:var(--ej-mut); font-family:var(--ej-mono); font-size:10.5px; font-weight:500; letter-spacing:0.08em;">{{ quoteSource }}</span>
+            <span style="padding:1px 6px; border:1px solid rgba(255,255,255,0.10); border-radius:4px; color:var(--ej-dim); font-family:var(--ej-mono); font-size:8.5px; font-weight:600; letter-spacing:0.14em;">{{ quoteLang }}</span>
+            <button onClick="{{ reroll }}" onMouseEnter="{{ rrB.enter }}" onMouseLeave="{{ rrB.leave }}" style="{{ rrB.style }}">⟳ another</button>
+          </div>
+        </section>
+      </article>
+
+      <!-- TOC rail -->
+      <sc-if value="{{ showToc }}" hint-placeholder-val="{{ true }}">
+        <aside data-screen-label="TOC" style="min-width:0;">
+          <div style="position:sticky; top:74px;">
+            <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px; padding-bottom:9px; border-bottom:1px solid rgba(255,255,255,0.06);">
+              <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:10px; font-weight:500; letter-spacing:0.2em;">ON THIS PAGE</span>
+              <span style="color:var(--ej-mut); font-family:var(--ej-mono); font-size:10px; font-weight:500; font-variant-numeric:tabular-nums;">READ {{ readPct }}%</span>
+            </div>
+            <div id="toc-rail" style="position:relative; border-left:1px solid rgba(255,255,255,0.07);">
+              <span style="{{ tocProgStyle }}"></span>
+              <sc-for list="{{ toc }}" as="t" hint-placeholder-count="8">
+                <a href="{{ t.href }}" onMouseEnter="{{ t.onEnter }}" onMouseLeave="{{ t.onLeave }}" style="{{ t.style }}"><span style="{{ t.markStyle }}"></span><span style="{{ t.numStyle }}">{{ t.num }}</span>{{ t.label }}</a>
+              </sc-for>
+            </div>
+            <a href="#post-top" onMouseEnter="{{ topL.enter }}" onMouseLeave="{{ topL.leave }}" style="{{ topL.style }}">↑ back to top</a>
+          </div>
+        </aside>
+      </sc-if>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer style="position:relative; z-index:1; margin-top:clamp(56px,9vh,88px); border-top:1px solid rgba(255,255,255,0.06);">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:20px; max-width:1200px; margin:0 auto; padding:26px 40px;">
+      <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11.5px;">© 2026 Ender Jones — still working.</span>
+      <div style="display:flex; gap:10px;">
+        <a href="https://github.com/Ender-Jones" target="_blank" onMouseEnter="{{ tG.enter }}" onMouseLeave="{{ tG.leave }}" style="{{ tG.style }}">GitHub</a>
+        <a href="https://x.com/EnderJones1872" target="_blank" onMouseEnter="{{ tX.enter }}" onMouseLeave="{{ tX.leave }}" style="{{ tX.style }}">X</a>
+        <a href="mailto:enderjones1872@gmail.com" target="_blank" onMouseEnter="{{ tE.enter }}" onMouseLeave="{{ tE.leave }}" style="{{ tE.style }}">Email</a>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showToc&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Layout&quot;}, &quot;showGiscus&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Layout&quot;}}">
+class Component extends DCLogic {
+  state = { h: '', route: '', prog: 0, active: 'intro', quotes: [], qi: 0, scrollY: 0, tocFill: 0 };
+
+  tocData = [
+    { id: 'intro', label: 'Introduction', sub: false },
+    { id: 'theory', label: 'Theoretical Foundation', sub: false },
+    { id: 'quickref', label: 'Metrics Comparison', sub: false },
+    { id: 'basic', label: 'Basic Metrics', sub: false },
+    { id: 'basic-mae', label: 'MAE', sub: true },
+    { id: 'basic-mse', label: 'MSE & RMSE', sub: true },
+    { id: 'basic-r2', label: 'R\u00b2', sub: true },
+    { id: 'advanced', label: 'Advanced Metrics', sub: false },
+    { id: 'adv-pct', label: 'Percentage errors', sub: true },
+    { id: 'adv-log', label: 'Log errors', sub: true },
+    { id: 'adv-ic', label: 'AIC & BIC', sub: true },
+    { id: 'choose', label: 'Choosing a Metric', sub: false },
+    { id: 'conclusion', label: 'Best Practices', sub: false },
+    { id: 'refs', label: 'References', sub: false }
+  ];
+
+  tagData = ['AI', 'study', 'machine learning', 'regression', 'evaluation metrics', 'MAE', 'MSE', 'RMSE', 'R-squared'];
+
+  componentDidMount() {
+    this._onScroll = () => {
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(() => {
+        this._raf = 0;
+        const d = document.documentElement;
+        const max = d.scrollHeight - window.innerHeight;
+        const p = max > 0 ? Math.max(0, Math.min(1, window.scrollY / max)) : 0;
+        let active = this.state.active;
+        if (this._els && this._els.length) {
+          active = this._els[0].id;
+          for (const el of this._els) {
+            if (el.getBoundingClientRect().top < 130) active = el.id;
+          }
+        }
+        const sy = window.scrollY || 0;
+        let fill = this.state.tocFill || 0;
+        const rail = document.getElementById('toc-rail');
+        if (rail) {
+          const link = rail.querySelector('a[href="#' + active + '"]');
+          if (link) fill = link.offsetTop + link.offsetHeight - 5;
+        }
+        if (Math.abs(p - this.state.prog) > 0.0015 || active !== this.state.active || Math.abs(sy - (this.state.scrollY || 0)) > 1 || fill !== this.state.tocFill) {
+          this.setState({ prog: p, active, scrollY: sy, tocFill: fill });
+        }
+      });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    this._elT = setTimeout(() => {
+      this._els = this.tocData.map(t => document.getElementById(t.id)).filter(Boolean);
+      this._onScroll();
+    }, 700);
+
+    // KaTeX
+    let tries = 0;
+    this._kt = setInterval(() => {
+      tries += 1;
+      if (window.katex) {
+        clearInterval(this._kt);
+        document.querySelectorAll('[data-tex]').forEach(el => {
+          try {
+            window.katex.render(el.getAttribute('data-tex'), el, {
+              displayMode: el.getAttribute('data-display') === '1',
+              throwOnError: false
+            });
+            el.style.fontStyle = 'normal';
+          } catch (e) {}
+        });
+      } else if (tries > 40) clearInterval(this._kt);
+    }, 250);
+
+    fetch('./data/quotes.json').then(r => r.json())
+      .then(j => {
+        const qs = j.quotes || [];
+        this.setState({ quotes: qs, qi: qs.length ? Math.floor(Math.random() * qs.length) : 0 });
+      }).catch(() => {});
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll);
+    if (this._raf) cancelAnimationFrame(this._raf);
+    clearTimeout(this._elT); clearInterval(this._kt);
+  }
+
+  mk(k, route) {
+    const r = route || '';
+    return {
+      enter: () => this.setState({ h: k, route: r }),
+      leave: () => this.setState(s => ({ h: s.h === k ? '' : s.h, route: s.route === r ? '' : s.route }))
+    };
+  }
+
+  renderVals() {
+    const { h, route, prog, active, quotes, qi, scrollY, tocFill } = this.state;
+    const E = 'cubic-bezier(0.2, 0, 0, 1)';
+    const showToc = this.props.showToc ?? true;
+    const showGiscus = this.props.showGiscus ?? true;
+
+    // route bar
+    const routeBarStyle = {
+      position: 'fixed', left: '18px', bottom: '16px', zIndex: 60, pointerEvents: 'none',
+      padding: '5px 12px', borderRadius: '7px',
+      background: 'rgba(6,6,8,0.85)', border: '1px solid rgba(255,255,255,0.09)',
+      backdropFilter: 'blur(10px)', boxShadow: '0 8px 24px -8px rgba(0,0,0,0.8)',
+      fontFamily: "var(--ej-mono)", fontSize: '10.5px', fontWeight: 500,
+      letterSpacing: '0.04em', color: 'var(--ej-text-3)', whiteSpace: 'nowrap',
+      opacity: route ? 1 : 0, transform: route ? 'translateY(0)' : 'translateY(4px)',
+      transition: 'opacity 140ms ' + E + ', transform 140ms ' + E
+    };
+
+    // progress — thin line pinned to the nav's bottom edge (repo-style: quiet, 2px)
+    const pc = Math.round(prog * 1000) / 10;
+    const on = pc > 0.4;
+    const progressStyle = {
+      position: 'absolute', left: 0, bottom: '-1px', height: '2px', width: pc + '%',
+      background: 'linear-gradient(90deg, rgba(255,122,192,0.85), rgba(76,194,255,0.85))',
+      boxShadow: '0 0 8px rgba(76,194,255,0.3)',
+      opacity: on ? 1 : 0, transition: 'opacity 200ms ease', pointerEvents: 'none'
+    };
+
+    // ambient orbs + dots — parallax at different ratios, extremely restrained
+    const orb = (size, color, pos, k) => Object.assign({
+      position: 'fixed', width: size + 'px', height: size + 'px', borderRadius: '999px',
+      zIndex: 0, pointerEvents: 'none',
+      background: 'radial-gradient(circle, ' + color + ', transparent 65%)',
+      transform: 'translate3d(0,' + (-scrollY * k) + 'px,0)'
+    }, pos);
+    const orbA = orb(520, 'rgba(255,122,192,0.05)', { top: '6%', right: '-180px' }, 0.05);
+    const orbB = orb(560, 'rgba(76,194,255,0.042)', { top: '58%', left: '-220px' }, 0.03);
+    const dot = (pos, k) => Object.assign({
+      position: 'fixed', zIndex: 0, pointerEvents: 'none',
+      transform: 'translate3d(0,' + (-scrollY * k) + 'px,0)'
+    }, pos);
+    const dotIn = (size, c, glow, anim) => ({
+      display: 'block', width: size + 'px', height: size + 'px', borderRadius: '999px',
+      background: c, boxShadow: glow, opacity: 0.38, filter: 'blur(0.5px)', animation: anim
+    });
+    const dotA = dot({ top: '30%', right: '9%' }, 0.09);
+    const dotAIn = dotIn(5, 'var(--ej-pink)', '0 0 10px rgba(255,122,192,0.6)', 'ej-drift-a 36s ease-in-out infinite');
+    const dotB = dot({ top: '74%', left: '5%' }, 0.06);
+    const dotBIn = dotIn(4, 'var(--ej-blue)', '0 0 9px rgba(76,194,255,0.55)', 'ej-drift-b 44s ease-in-out infinite');
+    const gridShift = (-(scrollY * 0.05)).toFixed(1) + 'px';
+
+    // nav
+    const navLink = (k, act) => ({
+      color: (h === k || act) ? 'var(--ej-text)' : 'var(--ej-text-3)', fontFamily: "var(--ej-mono)", fontSize: '12px',
+      fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none',
+      paddingBottom: '3px', borderBottom: act ? '2px solid rgba(255,122,192,0.55)' : '2px solid transparent',
+      transition: 'color 120ms ' + E
+    });
+    const navRoutes = ['\u2192 /posts/', '\u2192 /worklog/', '\u2192 /research/', '\u2192 /about/'];
+    const navs = {};
+    ['nav0', 'nav1', 'nav2', 'nav3'].forEach((k, i) => {
+      const m = this.mk(k, navRoutes[i]);
+      navs[k] = { enter: m.enter, leave: m.leave, style: navLink(k, i === 0) };
+    });
+    const logoM = this.mk('logo', '\u2192 / \u2014 home');
+    const zhM = this.mk('zh', '\u4e2d\u6587\u7248 \u2014 planned');
+
+    // back link
+    const backOn = h === 'back';
+    const backM = this.mk('back', '\u2192 /posts/ \u2014 the archive');
+    const back = {
+      enter: backM.enter, leave: backM.leave,
+      style: {
+        color: backOn ? 'var(--ej-text)' : '#9a9aa2', fontFamily: "var(--ej-mono)", fontSize: '11.5px',
+        fontWeight: 500, textDecoration: 'none', transition: 'color 120ms ' + E
+      }
+    };
+
+    // TOC — §numbers echo the article headings; rail fills with read progress
+    const tocProgStyle = {
+      position: 'absolute', left: '-1px', top: 0, width: '2px',
+      height: (tocFill || 0) + 'px', borderRadius: '2px',
+      background: 'linear-gradient(180deg, rgba(255,122,192,0.7), rgba(76,194,255,0.5))',
+      boxShadow: '0 0 7px rgba(255,122,192,0.25)',
+      transition: 'height 160ms ease', pointerEvents: 'none'
+    };
+    let tocN = 0;
+    const toc = this.tocData.map(t => {
+      const k = 'toc-' + t.id, hov = h === k, act = active === t.id;
+      if (!t.sub) tocN += 1;
+      const num = t.sub ? '' : String(tocN).padStart(2, '0');
+      const m = this.mk(k, '\u00a7 #' + t.id);
+      return {
+        href: '#' + t.id, label: t.label, num, onEnter: m.enter, onLeave: m.leave,
+        style: {
+          position: 'relative', display: 'block',
+          padding: t.sub ? '4px 0 4px 40px' : '5px 0 5px 14px',
+          color: act ? 'var(--ej-pink-2)' : hov ? '#e8e8ea' : t.sub ? 'var(--ej-mut-2)' : '#9a9aa2',
+          fontFamily: "var(--ej-mono)", fontSize: t.sub ? '10.5px' : '11px', fontWeight: 500,
+          letterSpacing: '0.03em', textDecoration: 'none', lineHeight: 1.45,
+          textShadow: act ? '0 0 12px rgba(255,122,192,0.45)' : 'none',
+          transform: hov && !act ? 'translateX(2px)' : 'translateX(0)',
+          transition: 'color 120ms ' + E + ', transform 140ms ' + E
+        },
+        numStyle: {
+          display: t.sub ? 'none' : 'inline-block', width: '26px',
+          color: act ? 'rgba(255,179,217,0.75)' : '#5f5f66',
+          fontSize: '9px', letterSpacing: '0.08em',
+          transition: 'color 120ms ease'
+        },
+        markStyle: {
+          position: 'absolute', left: '-1.5px', top: '5px', bottom: '5px', width: '3px', borderRadius: '2px',
+          background: 'var(--ej-pink)', boxShadow: '0 0 9px rgba(255,122,192,0.8)',
+          opacity: act ? 1 : 0, transition: 'opacity 140ms ease'
+        }
+      };
+    });
+    const topOn = h === 'topL';
+    const topM = this.mk('topL', '\u2191 #post-top');
+    const topL = {
+      enter: topM.enter, leave: topM.leave,
+      style: {
+        display: 'inline-block', marginTop: '14px', color: topOn ? 'var(--ej-text)' : 'var(--ej-mut-2)',
+        fontFamily: "var(--ej-mono)", fontSize: '10.5px', fontWeight: 500,
+        textDecoration: 'none', transition: 'color 120ms ' + E
+      }
+    };
+
+    // tags
+    const tags = this.tagData.map((label, i) => {
+      const k = 'tag' + i, hov = h === k;
+      const slug = label.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      const m = this.mk(k, '\u2192 /tags/' + slug + '/');
+      return {
+        label: '#' + label, href: '/tags/' + slug + '/', onEnter: m.enter, onLeave: m.leave,
+        style: {
+          padding: '2px 10px', border: '1px solid rgba(255,255,255,' + (hov ? '0.24' : '0.1') + ')',
+          borderRadius: '999px', color: hov ? '#e8e8ea' : '#9a9aa2', textDecoration: 'none',
+          fontFamily: "var(--ej-mono)", fontSize: '10.5px', fontWeight: 500,
+          whiteSpace: 'nowrap', transition: 'all 120ms ' + E
+        }
+      };
+    });
+
+    // prev/next cards
+    const pvCard = (k) => {
+      const hov = h === k;
+      return {
+        display: 'block', padding: '16px 20px', borderRadius: '12px', textDecoration: 'none',
+        border: '1px solid rgba(255,255,255,' + (hov ? '0.14' : '0.075') + ')',
+        background: 'linear-gradient(180deg, #0d0d10, #0a0a0c)',
+        boxShadow: hov
+          ? '0 2px 4px rgba(0,0,0,0.6), 0 20px 44px -22px rgba(0,0,0,1), inset 0 1px 0 rgba(255,255,255,0.07)'
+          : '0 1px 2px rgba(0,0,0,0.7), 0 14px 34px -20px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.055)',
+        transform: hov ? 'translateY(-2px)' : 'none',
+        transition: 'all 130ms ' + E
+      };
+    };
+    const pvArrow = (k) => {
+      const hov = h === k;
+      return {
+        color: hov ? 'var(--ej-pink-2)' : 'var(--ej-mut-2)', fontFamily: "var(--ej-mono)", fontSize: '10px',
+        fontWeight: 500, letterSpacing: '0.16em',
+        textShadow: hov ? '0 0 12px rgba(255,122,192,0.5)' : 'none',
+        transition: 'all 120ms ' + E
+      };
+    };
+    const pvPrevM = this.mk('pvPrev', '\u2192 /posts/who-am-i/');
+    const pvNextM = this.mk('pvNext', '\u2192 /posts/prompt-engineering-and-major-model-takes/');
+
+    // refs + giscus
+    const r1On = h === 'ref1';
+    const ref1M = this.mk('ref1', '\u2197 developer.nvidia.com');
+    const ref1 = {
+      enter: ref1M.enter, leave: ref1M.leave,
+      style: {
+        color: r1On ? 'var(--ej-pink-2)' : '#b4b4bc', textDecorationColor: 'rgba(255,255,255,0.3)',
+        textShadow: r1On ? '0 0 12px rgba(255,122,192,0.45)' : 'none', transition: 'all 120ms ' + E
+      }
+    };
+    const gbOn = h === 'gisBtn';
+    const gisBtnM = this.mk('gisBtn', 'giscus \u2014 GitHub Discussions OAuth');
+    const gisBtn = {
+      enter: gisBtnM.enter, leave: gisBtnM.leave,
+      style: {
+        padding: '8px 20px', borderRadius: '8px', cursor: 'pointer',
+        background: gbOn ? 'var(--ej-text)' : '#17171a',
+        border: '1px solid rgba(255,255,255,' + (gbOn ? '0' : '0.1') + ')',
+        color: gbOn ? '#0a0a0b' : '#e8e8ea',
+        fontFamily: "var(--ej-mono)", fontSize: '12px', fontWeight: 600, letterSpacing: '0.03em',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08)',
+        transition: 'all 120ms ' + E
+      }
+    };
+
+    // coda
+    const q = quotes[qi] || { text: '', source: '' };
+    const rrOn = h === 'rrB';
+    const rrM = this.mk('rrB', '\u27f3 another quote');
+    const rrB = {
+      enter: rrM.enter, leave: rrM.leave,
+      style: {
+        marginLeft: 'auto',
+        padding: '3px 12px', borderRadius: '999px', cursor: 'pointer',
+        border: '1px solid rgba(255,255,255,' + (rrOn ? '0.26' : '0.1') + ')',
+        background: rrOn ? 'rgba(255,255,255,0.04)' : 'transparent',
+        color: rrOn ? 'var(--ej-text)' : 'var(--ej-mut-2)',
+        fontFamily: "var(--ej-mono)", fontSize: '10.5px', fontWeight: 500, letterSpacing: '0.06em',
+        transition: 'all 120ms ' + E
+      }
+    };
+    const reroll = () => {
+      if (quotes.length < 2) return;
+      let n = Math.floor(Math.random() * (quotes.length - 1));
+      if (n >= qi) n += 1;
+      this.setState({ qi: n });
+    };
+
+    // footer
+    const tLink = (k, fill, dark) => {
+      const hov = h === k;
+      return {
+        padding: '4px 12px', borderRadius: '6px', textDecoration: 'none',
+        fontFamily: "var(--ej-mono)", fontSize: '11.5px', fontWeight: 500,
+        color: hov ? (dark ? '#0a0a0b' : 'var(--ej-text)') : '#9a9aa2',
+        background: hov ? fill : 'transparent',
+        boxShadow: hov && dark ? '0 6px 18px -6px ' + fill : 'none',
+        transition: 'all 120ms ' + E
+      };
+    };
+    const tGm = this.mk('tG', '\u2197 github.com/Ender-Jones');
+    const tXm = this.mk('tX', '\u2197 x.com/EnderJones1872');
+    const tEm = this.mk('tE', '\u2709 enderjones1872@gmail.com');
+
+    return {
+      route, routeBarStyle,
+      progressStyle, orbA, orbB, dotA, dotB, dotAIn, dotBIn, gridShift, tocProgStyle, readPct: Math.round(pc),
+      logo: { enter: logoM.enter, leave: logoM.leave },
+      zh: { enter: zhM.enter, leave: zhM.leave },
+      nav0: navs.nav0, nav1: navs.nav1, nav2: navs.nav2, nav3: navs.nav3,
+      back,
+      showToc: !!showToc, tocCol: showToc ? '230px' : '0px',
+      toc, topL,
+      tags,
+      pvPrev: { enter: pvPrevM.enter, leave: pvPrevM.leave, style: pvCard('pvPrev') },
+      pvNext: { enter: pvNextM.enter, leave: pvNextM.leave, style: pvCard('pvNext') },
+      pvPrevArrow: pvArrow('pvPrev'), pvNextArrow: pvArrow('pvNext'),
+      showGiscus: !!showGiscus, ref1, gisBtn,
+      quoteText: q.lang === 'fr' ? q.text : '\u201c' + q.text + '\u201d',
+      quoteSource: q.source,
+      quoteTrans: q.trans || '', hasQuoteTrans: !!q.trans,
+      quoteLang: (q.lang || 'en').toUpperCase(),
+      reroll, rrB,
+      tG: { enter: tGm.enter, leave: tGm.leave, style: tLink('tG', 'var(--ej-blue)', true) },
+      tX: { enter: tXm.enter, leave: tXm.leave, style: tLink('tX', 'rgba(255,255,255,0.08)', false) },
+      tE: { enter: tEm.enter, leave: tEm.leave, style: tLink('tE', 'var(--ej-pink)', true) }
+    };
+  }
+}
+</script>
+</body>
+</html>

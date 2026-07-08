@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&amp;family=Geist+Mono:wght@400;500;600&amp;family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&amp;display=swap" rel="stylesheet">
+  <style>
+    @import url("./styles/tokens.css");
+    html, body { margin: 0; padding: 0; background: #030305; }
+    * { box-sizing: border-box; }
+    ::selection { background: rgba(255,122,192,0.3); color: #fff; }
+    a { color: var(--ej-text-3); }
+    a:hover { color: var(--ej-text); }
+    @keyframes ej-caret { 0%, 52% { opacity: 1; } 53%, 100% { opacity: 0; } }
+    @keyframes ej-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes ej-drift-a { 0% { transform: translate(0,0); } 25% { transform: translate(80px,-52px); } 50% { transform: translate(150px,30px); } 75% { transform: translate(50px,90px); } 100% { transform: translate(0,0); } }
+    @keyframes ej-drift-b { 0% { transform: translate(0,0); } 33% { transform: translate(-100px,64px); } 66% { transform: translate(-40px,-76px); } 100% { transform: translate(0,0); } }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; background:#030305; color:var(--ej-text); font-family:var(--ej-sans); -webkit-font-smoothing:antialiased;">
+
+  <!-- 底层:微网格 + 两枚漂移光点,均慢速视差 -->
+  <div style="position:fixed; inset:0; z-index:0; pointer-events:none; background-image:linear-gradient(rgba(148,163,184,0.019) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.019) 1px, transparent 1px); background-size:56px 56px; background-position:0px {{ gridShift }};"></div>
+  <span style="position:fixed; top:26%; right:9%; z-index:0; pointer-events:none; transform:translate3d(0,{{ dotShiftA }},0);"><span style="display:block; width:4px; height:4px; border-radius:999px; background:var(--ej-pink); opacity:0.28; filter:blur(1px); box-shadow:0 0 10px rgba(255,122,192,0.5); animation:ej-drift-b 40s ease-in-out infinite;"></span></span>
+  <span style="position:fixed; bottom:22%; left:6%; z-index:0; pointer-events:none; transform:translate3d(0,{{ dotShiftB }},0);"><span style="display:block; width:3px; height:3px; border-radius:999px; background:var(--ej-blue); opacity:0.22; filter:blur(1px); box-shadow:0 0 9px rgba(76,194,255,0.45); animation:ej-drift-a 34s ease-in-out infinite;"></span></span>
+
+  <!-- Nav -->
+  <nav style="position:sticky; top:0; z-index:40; background:rgba(4,4,7,0.5); backdrop-filter:blur(9px) saturate(1.4); -webkit-backdrop-filter:blur(9px) saturate(1.4); border-bottom:1px solid rgba(255,255,255,0.07); box-shadow:inset 0 1px 0 rgba(255,255,255,0.03), 0 14px 34px -22px rgba(0,0,0,0.85);">
+    <div style="position:relative; display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto; height:46px; padding:0 40px;">
+      <span style="position:absolute; bottom:-1px; left:40px; width:210px; height:1px; background:linear-gradient(90deg, rgba(255,255,255,0.30), transparent); pointer-events:none;"></span>
+      <a href="./主页v3.dc.html" style="display:flex; align-items:baseline; gap:7px; text-decoration:none;">
+        <span style="color:var(--ej-text); font-family:var(--ej-serif); font-size:17px; font-style:italic; font-weight:500;">Ender Jones</span>
+        <span style="display:inline-block; width:9px; height:2px; border-radius:1px; background:var(--ej-pink); box-shadow:0 0 8px rgba(255,122,192,0.8); animation:ej-caret 1.3s linear infinite;"></span>
+        <span style="margin-left:7px; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11px;">research notebook</span>
+      </a>
+      <div style="display:flex; align-items:center; gap:26px;">
+        <a href="#" style="color:var(--ej-text); font-family:var(--ej-mono); font-size:12px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none;">Writing</a>
+        <a href="./Worklog公开页.dc.html" style="color:var(--ej-text-3); font-family:var(--ej-mono); font-size:12px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none; transition:color 120ms ease;" style-hover="color:var(--ej-text);">Worklog</a>
+        <a href="/research/" style="color:var(--ej-text-3); font-family:var(--ej-mono); font-size:12px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none; transition:color 120ms ease;" style-hover="color:var(--ej-text);">Research</a>
+        <a href="/about/" style="color:var(--ej-text-3); font-family:var(--ej-mono); font-size:12px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none; transition:color 120ms ease;" style-hover="color:var(--ej-text);">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <main style="position:relative; z-index:1; max-width:980px; margin:0 auto; padding:0 40px;">
+
+    <!-- Header -->
+    <section data-screen-label="Writing header" style="padding:clamp(48px,8vh,76px) 0 0; animation:ej-rise 560ms cubic-bezier(0.2,0,0,1) both;">
+      <p style="margin:0 0 18px; color:#82828c; font-family:var(--ej-mono); font-size:11.5px; font-weight:500; letter-spacing:0.24em;">WRITING — ESSAYS · POEMS · RESEARCH NOTES</p>
+      <h1 style="margin:0; color:var(--ej-text); font-family:var(--ej-serif); font-size:clamp(38px,4.6vw,58px); font-weight:400; letter-spacing:-0.015em; line-height:1.05;">Writing.<span style="display:inline-block; width:0.5em; height:0.07em; margin-left:0.14em; border-radius:1px; background:var(--ej-pink); box-shadow:0 0 18px rgba(255,122,192,0.55); animation:ej-caret 1.15s linear infinite;"></span></h1>
+      <div style="display:flex; align-items:baseline; justify-content:space-between; gap:20px; margin-top:18px;">
+        <p style="margin:0; max-width:58ch; color:var(--ej-text-3); font-size:15.5px; line-height:1.65; text-wrap:pretty;">Slow essays, occasional poems, and notes written to be checked against later.</p>
+      </div>
+    </section>
+
+    <!-- Filter -->
+    <section data-screen-label="Filter" style="padding:clamp(28px,4vh,40px) 0 0; animation:ej-rise 560ms cubic-bezier(0.2,0,0,1) 90ms both;">
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <sc-for list="{{ kindChips }}" as="kc" hint-placeholder-count="5">
+          <button onClick="{{ kc.onClick }}" onMouseEnter="{{ kc.onEnter }}" onMouseLeave="{{ kc.onLeave }}" style="{{ kc.style }}">{{ kc.label }}</button>
+        </sc-for>
+        <span style="margin-left:auto; color:var(--ej-dim); font-family:var(--ej-mono); font-size:10.5px; font-variant-numeric:tabular-nums;">{{ countLine }}</span>
+      </div>
+    </section>
+
+    <!-- Groups -->
+    <section data-screen-label="Post list" style="padding:clamp(20px,3vh,30px) 0 clamp(56px,8vh,72px); animation:ej-rise 560ms cubic-bezier(0.2,0,0,1) 160ms both;">
+      <sc-for list="{{ groups }}" as="g" hint-placeholder-count="2">
+        <div style="margin:0 0 14px;">
+          <div style="display:flex; align-items:baseline; gap:14px; padding:18px 2px 8px;">
+            <span style="color:var(--ej-mut); font-family:var(--ej-mono); font-size:11px; font-weight:600; letter-spacing:0.2em;">{{ g.year }}</span>
+            <span style="flex:1; height:1px; background:rgba(255,255,255,0.055); transform:translateY(-3px);"></span>
+            <span style="color:var(--ej-dim); font-family:var(--ej-mono); font-size:10px;">{{ g.count }}</span>
+          </div>
+          <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="3">
+            <a href="{{ r.href }}" onMouseEnter="{{ r.onEnter }}" onMouseLeave="{{ r.onLeave }}" style="{{ r.rowStyle }}">
+              <span style="{{ r.barStyle }}"></span>
+              <span style="{{ r.dateStyle }}">{{ r.date }}</span>
+              <span style="min-width:0; display:grid; gap:5px;">
+                <span style="min-width:0; display:flex; align-items:baseline; gap:12px;">
+                  <strong style="{{ r.titleStyle }}">{{ r.title }}</strong>
+                  <sc-if value="{{ r.hasBadge }}" hint-placeholder-val="{{ false }}">
+                    <span style="flex-shrink:0; color:var(--ej-mut); font-family:var(--ej-mono); font-size:10px; font-weight:500; letter-spacing:0.14em; border:1px solid rgba(255,255,255,0.1); border-radius:4px; padding:1px 7px;">{{ r.badge }}</span>
+                  </sc-if>
+                </span>
+                <sc-if value="{{ showDesc }}" hint-placeholder-val="{{ true }}">
+                  <span style="{{ r.descStyle }}">{{ r.desc }}</span>
+                </sc-if>
+              </span>
+              <span style="{{ r.metaStyle }}">{{ r.meta }}</span>
+              <span style="{{ r.thumbStyle }}"></span>
+            </a>
+          </sc-for>
+        </div>
+      </sc-for>
+      <p style="margin:26px 0 0; color:var(--ej-dim); font-family:var(--ej-mono); font-size:10.5px;">{{ tailLine }}</p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer style="position:relative; z-index:1; border-top:1px solid rgba(255,255,255,0.06);">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:20px; max-width:1200px; margin:0 auto; padding:26px 40px;">
+      <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11.5px;">© 2026 Ender Jones — still working.</span>
+      <div style="display:flex; gap:10px;">
+        <a href="https://github.com/Ender-Jones" target="_blank" style="padding:4px 12px; border-radius:6px; text-decoration:none; font-family:var(--ej-mono); font-size:11.5px; font-weight:500; color:#9a9aa2; transition:all 120ms ease;" style-hover="color:#0a0a0b; background:var(--ej-blue);">GitHub</a>
+        <a href="https://x.com/EnderJones1872" target="_blank" style="padding:4px 12px; border-radius:6px; text-decoration:none; font-family:var(--ej-mono); font-size:11.5px; font-weight:500; color:#9a9aa2; transition:all 120ms ease;" style-hover="color:var(--ej-text); background:rgba(255,255,255,0.08);">X</a>
+        <a href="mailto:enderjones1872@gmail.com" style="padding:4px 12px; border-radius:6px; text-decoration:none; font-family:var(--ej-mono); font-size:11.5px; font-weight:500; color:#9a9aa2; transition:all 120ms ease;" style-hover="color:#0a0a0b; background:var(--ej-pink);">Email</a>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showDescriptions&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;List&quot;}, &quot;showThumbs&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;List&quot;}}">
+class Component extends DCLogic {
+  state = { h: '', kind: 'all', scrollY: 0 };
+
+  postsData = [
+    {
+      slug: 'what-distance-taught-us', href: '/posts/what-distance-taught-us/',
+      title: 'What Distance Taught Us', desc: 'A short poem on seasons, distance, and memory.',
+      date: 'May 07, 2026', year: '2026', kind: 'poem', mins: 1,
+      tone: 'pink', img: 'assets/cherry-blossom-wide.jpg', badge: 'LATEST'
+    },
+    {
+      slug: 'prompt-engineering', href: '/posts/prompt-engineering-and-major-model-takes/',
+      title: 'My Take on Prompt Engineering and Major AI Models', desc: 'A pragmatic look at prompt engineering, plus a personal read on Claude, GPT, and Gemini.',
+      date: 'Sep 01, 2025', year: '2025', kind: 'study', mins: 6,
+      tone: 'blue', img: 'assets/chatgpt-plus.jpg', badge: ''
+    },
+    {
+      slug: 'regression-metrics', href: '/posts/regression-model-evaluation-metrics/',
+      title: 'Regression Model Evaluation Metrics, Explained', desc: 'MAE, MSE, RMSE and R\u00b2 \u2014 what each one hides, and how to choose.',
+      date: 'May 08, 2025', year: '2025', kind: 'note', mins: 7,
+      tone: 'blue', img: 'assets/regression-title.png', badge: ''
+    },
+    {
+      slug: 'who-am-i', href: './文章页.dc.html',
+      title: 'Who Am I?', desc: '\u201cA kid wanted to be a scientist, but lost precious things on the road.\u201d',
+      date: 'Apr 29, 2025', year: '2025', kind: 'essay', mins: 3,
+      tone: 'pink', img: 'assets/whoami-dusk.jpg', badge: 'PINNED'
+    }
+  ];
+
+  componentDidMount() {
+    this._onScroll = () => {
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(() => {
+        this._raf = 0;
+        const sy = window.scrollY || 0;
+        if (Math.abs(sy - (this.state.scrollY || 0)) > 1) this.setState({ scrollY: sy });
+      });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+  }
+
+  componentWillUnmount() {
+    if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+    if (this._raf) cancelAnimationFrame(this._raf);
+  }
+
+  mk(k) {
+    return {
+      enter: () => this.setState({ h: k }),
+      leave: () => this.setState(s => ({ h: s.h === k ? '' : s.h }))
+    };
+  }
+
+  renderVals() {
+    const { h, kind, scrollY } = this.state;
+    const E = 'cubic-bezier(0.2, 0, 0, 1)';
+    const showDesc = this.props.showDescriptions ?? true;
+    const showThumbs = this.props.showThumbs ?? true;
+
+    const gridShift = (-(scrollY * 0.05)).toFixed(1) + 'px';
+    const dotShiftA = (-(scrollY * 0.10)).toFixed(1) + 'px';
+    const dotShiftB = (-(scrollY * 0.06)).toFixed(1) + 'px';
+
+    // filter chips
+    const kindDefs = [
+      { id: 'all', label: 'ALL' },
+      { id: 'essay', label: 'ESSAYS' },
+      { id: 'poem', label: 'POEMS' },
+      { id: 'study', label: 'STUDIES' },
+      { id: 'note', label: 'NOTES' }
+    ];
+    const kindChips = kindDefs.map(d => {
+      const k = 'kc-' + d.id, hov = h === k, act = kind === d.id;
+      const m = this.mk(k);
+      return {
+        label: d.label,
+        onClick: () => this.setState({ kind: d.id }),
+        onEnter: m.enter, onLeave: m.leave,
+        style: {
+          padding: '3px 12px', borderRadius: '999px', cursor: 'pointer',
+          border: '1px solid ' + (act ? 'rgba(255,122,192,0.45)' : hov ? 'rgba(255,255,255,0.24)' : 'rgba(255,255,255,0.1)'),
+          background: act ? 'rgba(255,122,192,0.08)' : 'transparent',
+          color: act ? 'var(--ej-pink-2)' : hov ? '#e8e8ea' : '#9a9aa2',
+          textShadow: act ? '0 0 12px rgba(255,122,192,0.4)' : 'none',
+          fontFamily: "var(--ej-mono)", fontSize: '10.5px', fontWeight: 500, letterSpacing: '0.1em',
+          transition: 'all 130ms ' + E
+        }
+      };
+    });
+
+    // filtered rows, grouped by year
+    const filtered = this.postsData.filter(p => kind === 'all' || p.kind === kind);
+    const years = [];
+    filtered.forEach(p => { if (!years.includes(p.year)) years.push(p.year); });
+    const groups = years.map(y => {
+      const posts = filtered.filter(p => p.year === y);
+      const rows = posts.map(p => {
+        const k = 'row-' + p.slug, on = h === k;
+        const c = p.tone === 'pink' ? 'var(--ej-pink)' : 'var(--ej-blue)';
+        const cr = p.tone === 'pink' ? '255,122,192' : '76,194,255';
+        const m = this.mk(k);
+        return {
+          href: p.href, date: p.date, title: p.title, desc: p.desc,
+          meta: p.kind + ' \u00b7 ' + p.mins + ' min',
+          hasBadge: !!p.badge, badge: p.badge,
+          onEnter: m.enter, onLeave: m.leave,
+          rowStyle: {
+            position: 'relative', display: 'grid', gridTemplateColumns: '110px minmax(0,1fr) 150px',
+            gap: '20px', alignItems: 'baseline', padding: '17px 12px 17px 14px',
+            borderBottom: '1px solid rgba(255,255,255,0.055)', textDecoration: 'none',
+            background: on ? 'rgba(255,255,255,0.014)' : 'transparent',
+            transition: 'background 180ms ' + E
+          },
+          barStyle: {
+            position: 'absolute', left: 0, top: '14px', bottom: '14px', width: '2px', borderRadius: '2px',
+            background: c, boxShadow: '0 0 9px rgba(' + cr + ',0.55)',
+            opacity: on ? 1 : 0, transform: on ? 'scaleY(1)' : 'scaleY(0.55)', transformOrigin: 'center',
+            transition: 'opacity 180ms ' + E + ', transform 220ms ' + E
+          },
+          dateStyle: {
+            color: on ? '#e9e9ec' : 'var(--ej-mut-2)', fontFamily: "var(--ej-mono)", fontSize: '11.5px',
+            fontWeight: 500, fontVariantNumeric: 'tabular-nums', transition: 'color 180ms ease'
+          },
+          titleStyle: {
+            color: on ? '#ffffff' : 'var(--ej-text-2)', fontFamily: "var(--ej-serif)",
+            fontSize: '19px', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.3,
+            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0,
+            transform: on ? 'translateX(4px)' : 'translateX(0)',
+            transition: 'color 180ms ease, transform 220ms ' + E
+          },
+          descStyle: {
+            color: on ? '#9d9da5' : '#8f8f96', fontSize: '13px', lineHeight: 1.55,
+            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0,
+            transform: on ? 'translateX(4px)' : 'translateX(0)',
+            transition: 'color 180ms ease, transform 240ms ' + E
+          },
+          metaStyle: {
+            color: 'var(--ej-mut-2)', fontFamily: "var(--ej-mono)", fontSize: '11px', fontWeight: 500, textAlign: 'right',
+            opacity: on && showThumbs ? 0.12 : 1,
+            transition: 'opacity 200ms ease'
+          },
+          thumbStyle: {
+            position: 'absolute', right: '14px', top: '50%', width: '92px', height: '58px',
+            borderRadius: '7px', border: '1px solid rgba(' + cr + ',0.35)',
+            backgroundImage: 'url("' + p.img + '")', backgroundSize: 'cover', backgroundPosition: 'center',
+            boxShadow: '0 16px 34px -14px rgba(0,0,0,0.95), 0 0 0 3px rgba(10,10,12,0.65)',
+            pointerEvents: 'none', zIndex: 2,
+            display: showThumbs ? 'block' : 'none',
+            opacity: on ? 1 : 0,
+            transform: on ? 'translateY(-50%) translateX(0) scale(1)' : 'translateY(-46%) translateX(6px) scale(0.98)',
+            transition: 'opacity 200ms ' + E + ', transform 260ms ' + E,
+            transitionDelay: on ? '40ms' : '0ms'
+          }
+        };
+      });
+      return { year: y, count: posts.length + (posts.length === 1 ? ' post' : ' posts'), rows };
+    });
+
+    const countLine = filtered.length + ' of ' + this.postsData.length + ' posts';
+    const tailLine = 'the archive grows slowly, on purpose \u2014 every post is checked against its worklog trail.';
+
+    return { gridShift, dotShiftA, dotShiftB, kindChips, groups, countLine, tailLine, showDesc };
+  }
+}
+</script>
+</body>
+</html>

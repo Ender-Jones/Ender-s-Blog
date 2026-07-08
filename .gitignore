@@ -1,0 +1,15 @@
+# deps / build
+node_modules/
+dist/
+.astro/
+
+# env & secrets
+.env
+.env.*
+
+# os / editor
+.DS_Store
+.vscode/
+
+# logs
+npm-debug.log*

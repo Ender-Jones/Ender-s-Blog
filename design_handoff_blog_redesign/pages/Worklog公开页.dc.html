@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&amp;family=Geist+Mono:wght@400;500;600&amp;family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&amp;display=swap" rel="stylesheet">
+  <style>
+    @import url("./styles/tokens.css");
+    html, body { margin: 0; padding: 0; background: #030305; }
+    * { box-sizing: border-box; }
+    ::selection { background: rgba(255,122,192,0.3); color: #fff; }
+    a { color: var(--ej-text-3); }
+    a:hover { color: var(--ej-text); }
+    @keyframes ej-caret { 0%, 52% { opacity: 1; } 53%, 100% { opacity: 0; } }
+    @keyframes ej-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+    @keyframes ej-drift-a { 0% { transform: translate(0,0); } 25% { transform: translate(60px,-42px); } 50% { transform: translate(110px,24px); } 75% { transform: translate(40px,70px); } 100% { transform: translate(0,0); } }
+    @keyframes ej-drift-b { 0% { transform: translate(0,0); } 33% { transform: translate(-80px,52px); } 66% { transform: translate(-30px,-60px); } 100% { transform: translate(0,0); } }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; background:#030305; color:var(--ej-text); font-family:var(--ej-sans); -webkit-font-smoothing:antialiased;">
+
+  <!-- 底层:微网格 + 两枚漂移光点 -->
+  <div style="position:fixed; inset:0; z-index:0; pointer-events:none; background-image:linear-gradient(rgba(148,163,184,0.019) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.019) 1px, transparent 1px); background-size:56px 56px; background-position:0px {{ gridShift }};"></div>
+  <span style="position:fixed; top:22%; right:10%; z-index:0; pointer-events:none; transform:translate3d(0,{{ dotShiftA }},0);"><span style="display:block; width:4px; height:4px; border-radius:999px; background:var(--ej-pink); opacity:0.3; filter:blur(1px); box-shadow:0 0 10px rgba(255,122,192,0.55); animation:ej-drift-b 40s ease-in-out infinite;"></span></span>
+  <span style="position:fixed; bottom:18%; left:7%; z-index:0; pointer-events:none; transform:translate3d(0,{{ dotShiftB }},0);"><span style="display:block; width:3px; height:3px; border-radius:999px; background:var(--ej-blue); opacity:0.24; filter:blur(1px); box-shadow:0 0 9px rgba(76,194,255,0.5); animation:ej-drift-a 34s ease-in-out infinite;"></span></span>
+
+  <!-- Nav -->
+  <nav style="position:sticky; top:0; z-index:40; background:rgba(4,4,7,0.5); backdrop-filter:blur(9px) saturate(1.4); -webkit-backdrop-filter:blur(9px) saturate(1.4); border-bottom:1px solid rgba(255,255,255,0.07); box-shadow:inset 0 1px 0 rgba(255,255,255,0.03), 0 14px 34px -22px rgba(0,0,0,0.85);">
+    <div style="position:relative; display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto; height:46px; padding:0 40px;">
+      <span style="position:absolute; bottom:-1px; left:40px; width:210px; height:1px; background:linear-gradient(90deg, rgba(255,255,255,0.30), transparent); pointer-events:none;"></span>
+      <a href="./主页v3.dc.html" style="display:flex; align-items:baseline; gap:7px; text-decoration:none;">
+        <span style="color:var(--ej-text); font-family:var(--ej-serif); font-size:17px; font-style:italic; font-weight:500;">Ender Jones</span>
+        <span style="display:inline-block; width:9px; height:2px; border-radius:1px; background:var(--ej-pink); box-shadow:0 0 8px rgba(255,122,192,0.8); animation:ej-caret 1.3s linear infinite;"></span>
+        <span style="margin-left:7px; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11px;">research notebook</span>
+      </a>
+      <div style="display:flex; align-items:center; gap:26px;">
+        <a href="./文章列表页.dc.html" style="color:var(--ej-text-3); font-family:var(--ej-mono); font-size:12px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none; transition:color 120ms ease;" style-hover="color:var(--ej-text);">Writing</a>
+        <a href="#" style="color:var(--ej-text); font-family:var(--ej-mono); font-size:12px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none;">Worklog</a>
+        <a href="/research/" style="color:var(--ej-text-3); font-family:var(--ej-mono); font-size:12px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none; transition:color 120ms ease;" style-hover="color:var(--ej-text);">Research</a>
+        <a href="/about/" style="color:var(--ej-text-3); font-family:var(--ej-mono); font-size:12px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none; transition:color 120ms ease;" style-hover="color:var(--ej-text);">About</a>
+      </div>
+    </div>
+  </nav>
+
+  <main style="position:relative; z-index:1; max-width:980px; margin:0 auto; padding:0 40px;">
+
+    <!-- Header -->
+    <section data-screen-label="Worklog header" style="padding:clamp(48px,8vh,76px) 0 0;">
+      <p style="margin:0 0 18px; color:#82828c; font-family:var(--ej-mono); font-size:11.5px; font-weight:500; letter-spacing:0.24em;">WORKLOG — PROOF, NOT MEMORY</p>
+      <h1 style="margin:0; color:var(--ej-text); font-family:var(--ej-serif); font-size:clamp(38px,4.6vw,58px); font-weight:400; letter-spacing:-0.015em; line-height:1.05;">Still working.<span style="display:inline-block; width:0.5em; height:0.07em; margin-left:0.14em; border-radius:1px; background:var(--ej-pink); box-shadow:0 0 18px rgba(255,122,192,0.55); animation:ej-caret 1.15s linear infinite;"></span></h1>
+      <p style="margin:18px 0 0; max-width:58ch; color:var(--ej-text-3); font-size:15.5px; line-height:1.65; text-wrap:pretty;">One line at a time, pushed to git at the end of each day. Days with nothing logged are just days — they count against nothing.</p>
+
+      <!-- NOW / 公开线 -->
+      <div style="display:flex; align-items:center; gap:12px; margin-top:30px; padding:10px 13px; border:1px solid rgba(255,255,255,0.07); border-radius:9px; background:rgba(255,255,255,0.008);">
+        <span style="flex-shrink:0; padding:2px 8px; border:1px solid rgba(255,122,192,0.4); border-radius:4px; color:var(--ej-pink-2); font-family:var(--ej-mono); font-size:9.5px; font-weight:500; letter-spacing:0.16em;">NOW</span>
+        <span style="flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ej-text-2); font-family:var(--ej-mono); font-size:12px;">{{ nowLine }}</span>
+        <span style="flex-shrink:0; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:10.5px; font-weight:500;">upd {{ nowDate }}</span>
+      </div>
+
+      <!-- Save point / 存档点 -->
+      <div id="resume-here" style="display:flex; align-items:center; gap:12px; margin-top:8px; padding:10px 13px; border:1px solid rgba(245,158,11,0.22); border-radius:9px; background:linear-gradient(180deg, rgba(245,158,11,0.035), rgba(245,158,11,0.01));">
+        <span style="flex-shrink:0; white-space:nowrap; padding:2px 8px; border:1px solid rgba(245,158,11,0.45); border-radius:4px; color:var(--ej-amber-2); font-family:var(--ej-mono); font-size:9.5px; font-weight:500; letter-spacing:0.16em;">SAVE POINT</span>
+        <span style="flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:#e8e8ea; font-family:var(--ej-mono); font-size:12px;">&gt; {{ savePoint }}</span>
+        <span style="flex-shrink:0; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:10.5px; font-weight:500;">where tomorrow starts</span>
+      </div>
+    </section>
+
+    <!-- Trail -->
+    <sc-if value="{{ showTrail }}" hint-placeholder-val="{{ true }}">
+      <section data-screen-label="Log trail" style="padding:clamp(36px,6vh,52px) 0 0;">
+        <div style="padding:18px 22px 16px; border:1px solid rgba(255,255,255,0.075); border-radius:12px; background:linear-gradient(180deg, #0d0d10, #0a0a0c); box-shadow:0 1px 2px rgba(0,0,0,0.7), 0 16px 40px -20px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.055);">
+          <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; margin-bottom:14px;">
+            <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:10.5px; font-weight:500; letter-spacing:0.2em;">LOG TRAIL — 26 WEEKS</span>
+            <a href="./Worklog录入.dc.html" style="color:#9a9aa2; font-family:var(--ej-mono); font-size:11.5px; font-weight:500; text-decoration:none; transition:color 120ms ease;" style-hover="color:var(--ej-pink-2);">entry console →</a>
+          </div>
+          <div style="display:flex; align-items:center; gap:36px; flex-wrap:wrap;">
+            <div style="display:grid; grid-auto-flow:column; grid-template-rows:repeat(7, 13px); grid-auto-columns:13px; gap:3px;">
+              <sc-for list="{{ trailCells }}" as="c" hint-placeholder-count="182">
+                <span title="{{ c.title }}" style="{{ c.style }}"></span>
+              </sc-for>
+            </div>
+            <div style="flex:1; min-width:230px; display:grid; gap:12px; align-content:center;">
+              <p style="margin:0; max-width:40ch; color:#8f8f96; font-size:13px; line-height:1.65;">one cell per day. a note pushed turns it pink; gaps stay neutral — no streaks are kept, nothing resets.</p>
+              <span style="display:flex; align-items:center; gap:7px; color:#63636b; font-family:var(--ej-mono); font-size:10px;">
+                <span style="width:10px; height:10px; border-radius:3px; background:rgba(255,122,192,0.38);"></span>
+                <span>note</span>
+                <span style="width:1px; height:10px; background:rgba(255,255,255,0.12); margin:0 6px;"></span>
+                <span style="width:10px; height:10px; border-radius:3px; border:1px solid rgba(245,158,11,0.85); background:transparent;"></span>
+                <span>today</span>
+                <span style="width:1px; height:10px; background:rgba(255,255,255,0.12); margin:0 6px;"></span>
+                <span style="width:10px; height:10px; border-radius:3px; background:rgba(255,255,255,0.045);"></span>
+                <span>a day, neutrally</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </sc-if>
+
+    <!-- Weeks -->
+    <section data-screen-label="Weeks" style="padding:clamp(44px,7vh,64px) 0 0;">
+      <sc-for list="{{ weeks }}" as="w" hint-placeholder-count="2">
+        <div style="margin:0 0 52px;">
+          <div style="display:flex; align-items:baseline; gap:13px; margin:0 0 6px;">
+            <span style="color:var(--ej-text-2); font-family:var(--ej-mono); font-size:11px; font-weight:600; letter-spacing:0.18em;">{{ w.label }}</span>
+            <sc-if value="{{ w.current }}" hint-placeholder-val="{{ false }}">
+              <span style="padding:1px 7px; border:1px solid rgba(245,158,11,0.4); border-radius:4px; color:var(--ej-amber-2); font-family:var(--ej-mono); font-size:9px; font-weight:600; letter-spacing:0.14em;">OPEN</span>
+            </sc-if>
+            <span style="color:var(--ej-dim); font-family:var(--ej-mono); font-size:10.5px; font-weight:500;">{{ w.range }}</span>
+            <span style="flex:1; height:1px; background:rgba(255,255,255,0.055); transform:translateY(-3px);"></span>
+            <span style="color:var(--ej-mut); font-family:var(--ej-mono); font-size:10.5px; font-weight:500;">{{ w.digest }}</span>
+          </div>
+          <sc-for list="{{ w.days }}" as="d" hint-placeholder-count="3">
+            <div style="display:grid; grid-template-columns:118px minmax(0,1fr); gap:24px; padding:17px 6px; border-bottom:1px solid rgba(255,255,255,0.045); border-radius:6px 6px 0 0; transition:background 180ms ease;" style-hover="background:rgba(255,255,255,0.012);">
+              <div style="display:grid; gap:8px; align-content:start;">
+                <span style="color:#9a9aa2; font-family:var(--ej-mono); font-size:11px; font-weight:500; letter-spacing:0.06em;">{{ d.wd }}</span>
+                <sc-if value="{{ d.showEnergy }}" hint-placeholder-val="{{ false }}">
+                  <span title="{{ d.energyTitle }}" style="display:flex; gap:3px;">
+                    <sc-for list="{{ d.energyCells }}" as="ec" hint-placeholder-count="5">
+                      <span style="{{ ec.style }}"></span>
+                    </sc-for>
+                  </span>
+                </sc-if>
+              </div>
+              <div style="display:grid; gap:7px; align-content:start;">
+                <sc-for list="{{ d.entries }}" as="en" hint-placeholder-count="2">
+                  <span style="display:flex; align-items:baseline; gap:11px;">
+                    <span style="{{ en.glyphStyle }}">{{ en.glyph }}</span>
+                    <span style="{{ en.textStyle }}">{{ en.x }}</span>
+                  </span>
+                </sc-for>
+                <sc-if value="{{ d.hasSummary }}" hint-placeholder-val="{{ false }}">
+                  <span style="display:flex; align-items:baseline; gap:11px; margin-top:3px;">
+                    <span style="flex-shrink:0; width:14px; display:grid; justify-items:center;"><span style="width:4px; height:4px; border-radius:999px; background:var(--ej-pink); box-shadow:0 0 6px rgba(255,122,192,0.7); transform:translateY(-2px);"></span></span>
+                    <span style="color:#b9b9c2; font-family:var(--ej-serif); font-size:15px; font-style:italic; font-weight:300; line-height:1.5;">{{ d.summary }}</span>
+                  </span>
+                </sc-if>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+      <a href="/worklog/archive/" style="display:inline-block; margin:-18px 0 0; color:#9a9aa2; font-family:var(--ej-mono); font-size:11.5px; font-weight:500; text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.14); padding-bottom:2px; transition:color 120ms ease;" style-hover="color:var(--ej-text);">earlier weeks → archive</a>
+    </section>
+
+    <!-- Legend -->
+    <section data-screen-label="Symbols" style="padding:clamp(40px,6vh,56px) 0 clamp(56px,8vh,72px);">
+      <div style="display:flex; align-items:baseline; gap:18px; flex-wrap:wrap; padding:14px 0 0; border-top:1px solid rgba(255,255,255,0.06); color:var(--ej-dim); font-family:var(--ej-mono); font-size:10.5px;">
+        <span style="letter-spacing:0.18em; color:var(--ej-mut-2);">SYMBOLS</span>
+        <span><span style="color:#e8e8ea;">✓</span> done</span>
+        <span><span style="color:var(--ej-blue-2);">=</span> decision</span>
+        <span><span style="color:var(--ej-rose);">!</span> risk</span>
+        <span><span style="color:var(--ej-amber-2);">&gt;</span> next</span>
+        <span><span style="color:var(--ej-mut-2);">~</span> dropped</span>
+        <span><span style="color:var(--ej-pink);">•</span> the public line</span>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer style="position:relative; z-index:1; border-top:1px solid rgba(255,255,255,0.06);">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:20px; max-width:1200px; margin:0 auto; padding:26px 40px;">
+      <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11.5px;">© 2026 Ender Jones — still working.</span>
+      <div style="display:flex; gap:10px;">
+        <a href="https://github.com/Ender-Jones" target="_blank" style="padding:4px 12px; border-radius:6px; text-decoration:none; font-family:var(--ej-mono); font-size:11.5px; font-weight:500; color:#9a9aa2; transition:all 120ms ease;" style-hover="color:#0a0a0b; background:var(--ej-blue);">GitHub</a>
+        <a href="https://x.com/EnderJones1872" target="_blank" style="padding:4px 12px; border-radius:6px; text-decoration:none; font-family:var(--ej-mono); font-size:11.5px; font-weight:500; color:#9a9aa2; transition:all 120ms ease;" style-hover="color:var(--ej-text); background:rgba(255,255,255,0.08);">X</a>
+        <a href="mailto:enderjones1872@gmail.com" style="padding:4px 12px; border-radius:6px; text-decoration:none; font-family:var(--ej-mono); font-size:11.5px; font-weight:500; color:#9a9aa2; transition:all 120ms ease;" style-hover="color:#0a0a0b; background:var(--ej-pink);">Email</a>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showTrail&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Sections&quot;}, &quot;showEnergy&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Sections&quot;}}">
+class Component extends DCLogic {
+  state = { noteSet: {}, scrollY: 0 };
+
+  glyphMeta = {
+    done: { g: '\u2713', c: '#e8e8ea' },
+    decision: { g: '=', c: 'var(--ej-blue-2)' },
+    risk: { g: '!', c: 'var(--ej-rose)' },
+    next: { g: '>', c: 'var(--ej-amber-2)' },
+    dropped: { g: '~', c: 'var(--ej-mut-2)' }
+  };
+
+  weeksData = [
+    {
+      label: 'WEEK 28', range: 'Jul 06 \u2013 Jul 12, 2026', current: true,
+      days: [
+        {
+          date: '2026-07-07', wd: 'TUE 07\u00b707', energy: 4,
+          entries: [
+            { t: 'done', x: 'Rebuilt the worklog console: day-close ritual, drop lane, energy score' },
+            { t: 'decision', x: 'Carry-over gets a third door \u2014 drop, with a gray trace' },
+            { t: 'next', x: 'Wire energy scores into the weekly digest' }
+          ],
+          summary: 'The worklog closes its own day now.'
+        },
+        {
+          date: '2026-07-06', wd: 'MON 07\u00b706', energy: 2,
+          entries: [
+            { t: 'done', x: 'ISPACS camera-ready: figure 3 redrawn, margins fixed' },
+            { t: 'risk', x: 'J-BHI intro drifting \u2014 two framings fighting each other' }
+          ],
+          summary: 'Paper machinery, mostly.'
+        }
+      ]
+    },
+    {
+      label: 'WEEK 27', range: 'Jun 29 \u2013 Jul 05, 2026', current: false,
+      days: [
+        {
+          date: '2026-07-03', wd: 'FRI 07\u00b703', energy: 3,
+          entries: [
+            { t: 'done', x: 'Weekly digest assembles itself \u2014 review costs one glance' },
+            { t: 'done', x: 'Trail strip: gaps render neutral, nothing resets' }
+          ],
+          summary: 'The system now does the remembering.'
+        },
+        {
+          date: '2026-07-02', wd: 'THU 07\u00b702', energy: 3,
+          entries: [
+            { t: 'done', x: 'rPPG audit: motion-artifact table complete' },
+            { t: 'decision', x: 'Cut the SWT baseline from the comparison set' },
+            { t: 'dropped', x: 'Reimplement the 2019 baseline end-to-end' }
+          ],
+          summary: ''
+        },
+        {
+          date: '2026-07-01', wd: 'WED 07\u00b701', energy: 5,
+          entries: [
+            { t: 'done', x: 'Blog cutover: production domain live on Cloudflare Pages' },
+            { t: 'next', x: 'Redirect map for the old URLs' }
+          ],
+          summary: 'The site is real now.'
+        },
+        {
+          date: '2026-06-29', wd: 'MON 06\u00b729', energy: 2,
+          entries: [
+            { t: 'done', x: 'J-BHI: ablation grid queued on the lab GPU' },
+            { t: 'risk', x: 'GPU queue is three days deep' }
+          ],
+          summary: ''
+        }
+      ]
+    }
+  ];
+
+  componentDidMount() {
+    fetch('./data/worklog-days.json').then(r => r.json())
+      .then(j => {
+        const set = {};
+        (j.days || []).forEach(d => { set[d] = true; });
+        this.setState({ noteSet: set });
+      }).catch(() => {});
+    this._onScroll = () => {
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(() => {
+        this._raf = 0;
+        const sy = window.scrollY || 0;
+        if (Math.abs(sy - (this.state.scrollY || 0)) > 1) this.setState({ scrollY: sy });
+      });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+  }
+
+  componentWillUnmount() {
+    if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+    if (this._raf) cancelAnimationFrame(this._raf);
+  }
+
+  jstToday() {
+    return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Tokyo' });
+  }
+
+  renderVals() {
+    const { noteSet, scrollY } = this.state;
+    const gridShift = (-(scrollY * 0.05)).toFixed(1) + 'px';
+    const dotShiftA = (-(scrollY * 0.10)).toFixed(1) + 'px';
+    const dotShiftB = (-(scrollY * 0.06)).toFixed(1) + 'px';
+    const showEnergy = this.props.showEnergy ?? true;
+    const showTrail = this.props.showTrail ?? true;
+
+    // 语义: pink = note/公开 · amber = today/save point · gray = 中性历史
+    const localNotes = {};
+    this.weeksData.forEach(w => w.days.forEach(d => { localNotes[d.date] = true; }));
+
+    const today = this.jstToday();
+    const trailCells = [];
+    const base = new Date(today + 'T12:00:00');
+    for (let i = 181; i >= 0; i--) {
+      const dt = new Date(base.getTime() - i * 86400000);
+      const iso = dt.toISOString().slice(0, 10);
+      const isToday = i === 0;
+      const hasNote = !!noteSet[iso] || !!localNotes[iso];
+      trailCells.push({
+        title: iso + (hasNote ? ' \u00b7 note' : '') + (isToday ? ' \u00b7 today' : ''),
+        style: {
+          borderRadius: '2.5px',
+          background: hasNote ? 'rgba(255,122,192,0.38)' : 'rgba(255,255,255,0.045)',
+          border: isToday ? '1px solid rgba(245,158,11,0.85)' : '1px solid transparent',
+          boxShadow: hasNote && !isToday ? '0 0 5px rgba(255,122,192,0.10)' : 'none'
+        }
+      });
+    }
+
+    const plural = (n, s) => n + ' ' + s + (n === 1 ? '' : 's');
+    const weeks = this.weeksData.map(w => {
+      const counts = { done: 0, decision: 0, risk: 0, next: 0, dropped: 0 };
+      w.days.forEach(d => d.entries.forEach(en => { counts[en.t] += 1; }));
+      const parts = [];
+      if (counts.done) parts.push(counts.done + ' done');
+      if (counts.decision) parts.push(plural(counts.decision, 'decision'));
+      if (counts.risk) parts.push(plural(counts.risk, 'risk'));
+      if (counts.dropped) parts.push(counts.dropped + ' dropped');
+      const digest = parts.join(' \u00b7 ') + ' \u2014 ' + w.days.length + '/7 days';
+      const days = w.days.map(d => {
+        const entries = d.entries.map(en => {
+          const gm = this.glyphMeta[en.t] || this.glyphMeta.done;
+          return {
+            x: en.x, glyph: gm.g,
+            glyphStyle: {
+              flexShrink: 0, width: '14px', textAlign: 'center', color: gm.c,
+              fontFamily: "var(--ej-mono)", fontSize: '11.5px', fontWeight: 600,
+              textShadow: en.t === 'next' ? '0 0 8px rgba(245,158,11,0.35)' : 'none'
+            },
+            textStyle: {
+              color: en.t === 'dropped' ? 'var(--ej-mut-2)' : '#c2c2c9',
+              fontSize: '13.5px', lineHeight: 1.55,
+              textDecoration: en.t === 'dropped' ? 'line-through' : 'none',
+              textDecorationColor: 'rgba(255,255,255,0.3)'
+            }
+          };
+        });
+        const energyCells = [1, 2, 3, 4, 5].map(n => ({
+          style: {
+            width: '5px', height: '5px', borderRadius: '1.5px',
+            background: n <= d.energy ? 'rgba(245,158,11,0.55)' : 'rgba(255,255,255,0.06)'
+          }
+        }));
+        return {
+          wd: d.wd, entries,
+          hasSummary: !!d.summary, summary: d.summary,
+          showEnergy: showEnergy && d.energy > 0,
+          energyTitle: 'energy ' + d.energy + '/5',
+          energyCells
+        };
+      });
+      return { label: w.label, range: w.range, current: w.current, digest, days };
+    });
+
+    // NOW = 最新公开线 · SAVE POINT = 最新 > next
+    let nowLine = '', nowDate = '', savePoint = '';
+    outer: for (const w of this.weeksData) {
+      for (const d of w.days) {
+        if (d.summary) { nowLine = d.summary; nowDate = d.wd.slice(4).replace('\u00b7', '/'); break outer; }
+      }
+    }
+    for (const w of this.weeksData) {
+      for (const d of w.days) {
+        const nx = d.entries.filter(en => en.t === 'next');
+        if (nx.length && !savePoint) savePoint = nx[nx.length - 1].x;
+      }
+      if (savePoint) break;
+    }
+
+    return { showTrail, trailCells, weeks, nowLine, nowDate, savePoint, gridShift, dotShiftA, dotShiftB };
+  }
+}
+</script>
+</body>
+</html>

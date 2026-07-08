@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&display=swap" rel="stylesheet">
+  <style>
+    @import url("./styles/tokens.css");
+    html, body { margin: 0; padding: 0; background: #030305; }
+    * { box-sizing: border-box; }
+    ::selection { background: rgba(255,122,192,0.3); color: #fff; }
+    a { color: var(--ej-text-3); }
+    a:hover { color: var(--ej-text); }
+    @keyframes ej-travel { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+    @keyframes ej-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+    @keyframes ej-blink { 0%, 60% { opacity: 1; } 61%, 100% { opacity: 0.2; } }
+    @keyframes ej-caret { 0%, 52% { opacity: 1; } 53%, 100% { opacity: 0; } }
+    @keyframes ej-drift-a { 0% { transform: translate(0,0); } 25% { transform: translate(80px,-52px); } 50% { transform: translate(150px,30px); } 75% { transform: translate(50px,90px); } 100% { transform: translate(0,0); } }
+    @keyframes ej-drift-b { 0% { transform: translate(0,0); } 33% { transform: translate(-100px,64px); } 66% { transform: translate(-40px,-76px); } 100% { transform: translate(0,0); } }
+    @keyframes ej-drift-c { 0% { transform: translate(0,0); } 50% { transform: translate(110px,70px); } 100% { transform: translate(0,0); } }
+    @keyframes ej-line-in { 0% { opacity: 0; transform: translateY(16px); } 30% { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes ej-splash-out { to { opacity: 0; transform: translateY(-12px); } }
+    @keyframes ej-draw { to { stroke-dashoffset: 0; } }
+    @keyframes ej-splash-auto { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @keyframes ej-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</helmet>
+
+<div style="min-height:100vh; background:#030305; color:var(--ej-text); font-family:var(--ej-sans); -webkit-font-smoothing:antialiased;">
+
+  <!-- 暗房底层:微网格 + 三枚异速漂移光点 -->
+  <div style="position:fixed; inset:0; z-index:0; pointer-events:none; background-image:linear-gradient(rgba(148,163,184,0.019) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.019) 1px, transparent 1px); background-size:56px 56px; background-position:0px {{ gridShift }};"></div>
+  <span style="position:fixed; top:18%; left:12%; z-index:0; pointer-events:none; transform:translate3d(0,{{ dotShiftA }},0);"><span style="display:block; width:4px; height:4px; border-radius:999px; background:var(--ej-pink); opacity:0.31; filter:blur(1.5px); box-shadow:0 0 11px rgba(255,122,192,0.55); animation:ej-drift-a 34s ease-in-out infinite;"></span></span>
+  <span style="position:fixed; top:52%; right:10%; z-index:0; pointer-events:none; transform:translate3d(0,{{ dotShiftB }},0);"><span style="display:block; width:3px; height:3px; border-radius:999px; background:var(--ej-blue); opacity:0.26; filter:blur(1px); box-shadow:0 0 10px rgba(76,194,255,0.5); animation:ej-drift-b 42s ease-in-out infinite;"></span></span>
+  <span style="position:fixed; bottom:16%; left:44%; z-index:0; pointer-events:none; transform:translate3d(0,{{ dotShiftC }},0);"><span style="display:block; width:3px; height:3px; border-radius:999px; background:#e4e4e7; opacity:0.17; filter:blur(1px); animation:ej-drift-c 28s ease-in-out infinite;"></span></span>
+
+  <!-- Intro splash -->
+  <sc-if value="{{ showSplash }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ skipSplash }}" style="{{ splashStyle }}">
+      <div style="display:grid; gap:clamp(14px,2vw,26px); width:min(1200px,92vw);">
+        <p style="margin:0; color:rgba(245,245,246,0.42); font-family:var(--ej-serif); font-size:clamp(30px,3.4vw,54px); font-style:italic; font-weight:300; line-height:1; opacity:0; animation:ej-line-in 780ms cubic-bezier(0.16,0.72,0.26,1) both;">Hi, I am Ender Jones.</p>
+        <h1 style="margin:0; color:rgba(245,245,246,0.92); font-family:var(--ej-serif); font-size:clamp(50px,6.4vw,104px); font-weight:400; letter-spacing:-0.02em; line-height:1.02; opacity:0; animation:ej-line-in 780ms cubic-bezier(0.16,0.72,0.26,1) 650ms both;">{{ claimHead }}<em style="font-style:italic;">{{ claimTail }}</em><span style="display:inline-block; width:0.5em; height:0.07em; margin-left:0.14em; border-radius:1px; background:var(--ej-pink); box-shadow:0 0 20px rgba(255,122,192,0.6), 0 0 44px rgba(255,122,192,0.25); animation:ej-caret 1.15s linear infinite;"></span></h1>
+        <svg viewBox="0 0 1140 44" preserveAspectRatio="none" style="display:block; width:min(560px,60vw); height:34px; opacity:0; animation:ej-line-in 500ms ease 1250ms both;">
+          <path d="M0,30 L300,30 C312,30 320,6 333,6 C345,6 350,27 363,33 C373,38 381,22 393,22 C405,22 410,30 428,30 L1140,30" fill="none" stroke-width="2" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" stroke-linecap="round" style="stroke:var(--ej-pink); animation:ej-draw 1.25s cubic-bezier(0.4,0,0.2,1) 1350ms forwards; filter:drop-shadow(0 0 6px rgba(255,122,192,0.55));"></path>
+        </svg>
+      </div>
+      <span style="position:absolute; bottom:clamp(26px,5vw,56px); left:clamp(32px,6vw,88px); display:grid; gap:9px; opacity:0; animation:ej-line-in 780ms cubic-bezier(0.16,0.72,0.26,1) 1500ms both;">
+        <span style="width:120px; height:1px; background:rgba(255,255,255,0.14); overflow:hidden;"><span style="display:block; width:100%; height:100%; background:var(--ej-pink); box-shadow:0 0 6px rgba(255,122,192,0.6); transform-origin:left; animation:ej-splash-auto 4.4s linear forwards;"></span></span>
+        <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11px; font-weight:500; letter-spacing:0.14em;">AUTO — CLICK OR ANY KEY TO SKIP</span>
+      </span>
+    </div>
+  </sc-if>
+
+  <!-- Route hint statusbar -->
+  <div style="{{ routeBarStyle }}">{{ route }}</div>
+
+  <!-- Nav -->
+  <nav style="position:sticky; top:0; z-index:40; background:rgba(4,4,7,0.5); backdrop-filter:blur(9px) saturate(1.4); -webkit-backdrop-filter:blur(9px) saturate(1.4); border-bottom:1px solid rgba(255,255,255,0.07); box-shadow:inset 0 1px 0 rgba(255,255,255,0.03), 0 14px 34px -22px rgba(0,0,0,0.85);">
+    <div style="position:relative; display:flex; align-items:center; justify-content:space-between; max-width:1200px; margin:0 auto; height:46px; padding:0 40px;">
+      <span style="position:absolute; bottom:-1px; left:40px; width:210px; height:1px; background:linear-gradient(90deg, rgba(255,255,255,0.30), transparent); pointer-events:none;"></span>
+      <a href="/" onMouseEnter="{{ logo.enter }}" onMouseLeave="{{ logo.leave }}" style="display:flex; align-items:baseline; gap:7px; text-decoration:none;">
+        <span style="color:var(--ej-text); font-family:var(--ej-serif); font-size:18px; font-style:italic; font-weight:500; letter-spacing:0.005em;">Ender Jones</span>
+        <span style="display:inline-block; width:9px; height:2px; border-radius:1px; background:var(--ej-pink); box-shadow:0 0 8px rgba(255,122,192,0.8), 0 0 20px rgba(255,122,192,0.35); animation:ej-caret 1.3s linear infinite;"></span>
+        <span style="margin-left:7px; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11px;">research notebook</span>
+      </a>
+      <div style="display:flex; align-items:center; gap:26px;">
+        <a href="./文章列表页.dc.html" onMouseEnter="{{ nav0.enter }}" onMouseLeave="{{ nav0.leave }}" style="{{ nav0.style }}">Writing</a>
+        <a href="./Worklog公开页.dc.html" onMouseEnter="{{ nav1.enter }}" onMouseLeave="{{ nav1.leave }}" style="{{ nav1.style }}">Worklog</a>
+        <a href="/research/" onMouseEnter="{{ nav2.enter }}" onMouseLeave="{{ nav2.leave }}" style="{{ nav2.style }}">Research</a>
+        <a href="/about/" onMouseEnter="{{ nav3.enter }}" onMouseLeave="{{ nav3.leave }}" style="{{ nav3.style }}">About</a>
+        <span style="width:1px; height:15px; background:rgba(255,255,255,0.12);"></span>
+        <span style="display:inline-flex; border:1px solid rgba(255,255,255,0.12); border-radius:999px; padding:2px; font-family:var(--ej-mono); font-size:10px; background:rgba(0,0,0,0.25);">
+          <span style="padding:3px 9px; border-radius:999px; background:rgba(255,255,255,0.08); color:var(--ej-text);">EN</span>
+          <span onMouseEnter="{{ zh.enter }}" onMouseLeave="{{ zh.leave }}" style="padding:3px 9px; border-radius:999px; color:var(--ej-mut-2); cursor:pointer; transition:color 120ms ease;" style-hover="color:var(--ej-text);">中</span>
+        </span>
+      </div>
+    </div>
+  </nav>
+
+  <main style="position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:0 40px;">
+
+    <!-- §1 HERO -->
+    <section data-screen-label="Hero" style="{{ reveal0 }}">
+      <div style="display:grid; grid-template-columns:minmax(0,1.5fr) {{ heroRightCol }}; gap:clamp(36px,4.5vw,60px); align-items:center; padding:clamp(64px,10vh,110px) 0 0;">
+        <div>
+          <p style="margin:0 0 24px; color:#82828c; font-family:var(--ej-mono); font-size:12px; font-weight:500; letter-spacing:0.24em; text-transform:uppercase;">Affective Computing — Tokyo / Chiba</p>
+          <h1 style="margin:0; color:var(--ej-text); font-family:var(--ej-serif); font-size:clamp(44px,5.6vw,84px); font-weight:400; letter-spacing:-0.02em; line-height:1.03; text-wrap:balance;">{{ claimHead }}<em style="font-style:italic;">{{ claimTail }}</em><span style="display:inline-block; width:0.5em; height:0.07em; margin-left:0.14em; border-radius:1px; background:var(--ej-pink); box-shadow:0 0 20px rgba(255,122,192,0.6), 0 0 44px rgba(255,122,192,0.25); animation:ej-caret 1.15s linear infinite;"></span></h1>
+          <p style="margin:24px 0 0; max-width:52ch; color:var(--ej-text-3); font-size:16.5px; line-height:1.65; text-wrap:pretty;">Contactless stress estimation from facial video, rPPG and EDA. A research notebook, a personal archive, and proof that I am still working.</p>
+          <sc-if value="{{ noCard }}" hint-placeholder-val="{{ false }}">
+            <p style="margin:18px 0 0; color:#82828c; font-family:var(--ej-mono); font-size:12px; letter-spacing:0.02em;">PhD candidate · rPPG · EDA · landmarks · Chinese / English / Japanese</p>
+          </sc-if>
+          <div style="display:flex; align-items:center; gap:18px; margin-top:30px;">
+            <a href="/research/" onMouseEnter="{{ ctaR.enter }}" onMouseLeave="{{ ctaR.leave }}" onMouseDown="{{ ctaR.down }}" onMouseUp="{{ ctaR.up }}" style="{{ ctaR.style }}">research &amp; cv →</a>
+            <a href="mailto:enderjones1872@gmail.com" onMouseEnter="{{ ctaM.enter }}" onMouseLeave="{{ ctaM.leave }}" style="{{ ctaM.style }}">reach me →</a>
+          </div>
+        </div>
+        <sc-if value="{{ showCard }}" hint-placeholder-val="{{ true }}">
+          <aside style="position:relative; overflow:hidden; padding:20px 24px 14px; border:1px solid rgba(255,255,255,0.09); border-radius:10px; background:linear-gradient(180deg, #0d0d10, #0a0a0c); box-shadow:0 1px 2px rgba(0,0,0,0.7), 0 16px 40px -20px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.055);">
+            <!-- viewfinder 四角 -->
+            <span style="position:absolute; top:7px; left:7px; width:9px; height:9px; border-top:1px solid rgba(255,255,255,0.24); border-left:1px solid rgba(255,255,255,0.24);"></span>
+            <span style="position:absolute; top:7px; right:7px; width:9px; height:9px; border-top:1px solid rgba(255,255,255,0.24); border-right:1px solid rgba(255,255,255,0.24);"></span>
+            <span style="position:absolute; bottom:7px; left:7px; width:9px; height:9px; border-bottom:1px solid rgba(255,255,255,0.24); border-left:1px solid rgba(255,255,255,0.24);"></span>
+            <span style="position:absolute; bottom:7px; right:7px; width:9px; height:9px; border-bottom:1px solid rgba(255,255,255,0.24); border-right:1px solid rgba(255,255,255,0.24);"></span>
+
+            <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:14px; padding-bottom:12px; border-bottom:1px dashed rgba(255,255,255,0.09);">
+              <span style="color:var(--ej-mut); font-family:var(--ej-mono); font-size:10.5px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase;">Subject readout</span>
+              <span style="color:var(--ej-mut); font-family:var(--ej-mono); font-size:10.5px; font-weight:500; font-variant-numeric:tabular-nums;">{{ jstClock }} <span style="color:var(--ej-blue); animation:ej-blink 1.1s steps(1,end) infinite;">▍</span></span>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:14px; margin-bottom:13px;">
+              <span style="position:relative; flex-shrink:0; width:54px; height:54px; border-radius:9px; overflow:hidden; border:1px solid rgba(255,255,255,0.14); box-shadow:0 6px 18px -8px rgba(0,0,0,0.9);">
+                <span style="position:absolute; inset:0; background:url('assets/ang.JPG') center / cover; filter:grayscale(0.45) brightness(0.92);"></span>
+                <span style="position:absolute; left:0; right:0; top:0; height:1px; background:linear-gradient(90deg, transparent, rgba(255,122,192,0.55), transparent);"></span>
+              </span>
+              <span style="display:grid; gap:4px; min-width:0;">
+                <span style="color:var(--ej-text); font-family:var(--ej-serif); font-size:20px; font-style:italic; font-weight:500; letter-spacing:0.005em; line-height:1.1;">Ender Jones</span>
+                <span style="color:var(--ej-mut); font-family:var(--ej-mono); font-size:10.5px; font-weight:500; letter-spacing:0.06em;">PhD candidate · Affective Computing</span>
+              </span>
+            </div>
+
+            <div style="display:grid; gap:2px; border-top:1px dashed rgba(255,255,255,0.09); padding-top:7px;">
+              <sc-for list="{{ cardRows }}" as="cr" hint-placeholder-count="2">
+                <span onMouseEnter="{{ cr.onEnter }}" onMouseLeave="{{ cr.onLeave }}" style="{{ cr.rowStyle }}">
+                  <span style="{{ cr.keyStyle }}">{{ cr.k }}</span>
+                  <span style="{{ cr.leadStyle }}"></span>
+                  <span style="{{ cr.valStyle }}">{{ cr.v }}</span>
+                </span>
+              </sc-for>
+              <span onMouseEnter="{{ crS.onEnter }}" onMouseLeave="{{ crS.onLeave }}" style="{{ crS.rowStyle }}">
+                <span style="{{ crS.keyStyle }}">status</span>
+                <span style="{{ crS.leadStyle }}"></span>
+                <span style="{{ crS.valStyle }}"><span style="display:inline-block; width:6px; height:6px; border-radius:999px; background:var(--ej-pink); margin-right:8px; box-shadow:0 0 9px rgba(255,122,192,0.8), 0 0 20px rgba(255,122,192,0.3); animation:ej-pulse 3s ease-in-out infinite;"></span>writing the J-BHI draft</span>
+              </span>
+            </div>
+
+            <a href="./Worklog公开页.dc.html" onMouseEnter="{{ cardFt.enter }}" onMouseLeave="{{ cardFt.leave }}" style="display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-top:13px; padding:11px 2px 6px; border-top:1px dashed rgba(255,255,255,0.09); text-decoration:none;">
+              <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:10.5px; font-weight:500; letter-spacing:0.06em;">synced Jun 07, 2026</span>
+              <span style="{{ cardFtStyle }}">worklog →</span>
+            </a>
+          </aside>
+        </sc-if>
+      </div>
+
+      <!-- 活信号线 -->
+      <div style="position:relative; margin-top:clamp(44px,7vh,72px); border-top:1px solid rgba(255,255,255,0.055);">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:9px 2px 0;">
+          <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11px; font-weight:500; letter-spacing:0.18em;">LIVE — REMOTE PPG, RECONSTRUCTED</span>
+          <span style="color:var(--ej-mut); font-family:var(--ej-mono); font-size:11px; font-weight:500; font-variant-numeric:tabular-nums;">≈ {{ bpm }} bpm <span style="color:var(--ej-blue); animation:ej-blink 1.1s steps(1,end) infinite;">▍</span></span>
+        </div>
+        <div style="mask-image:linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); -webkit-mask-image:linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);">
+          <svg viewBox="0 0 1140 84" preserveAspectRatio="none" style="display:block; width:100%; height:70px;">
+            <line x1="0" y1="58" x2="1140" y2="58" stroke="rgba(255,255,255,0.035)" stroke-width="1" stroke-dasharray="2 6"></line>
+            <path d="M0,58 L104,58 C113,58 119,14 129,14 C138,14 142,54 152,63 C160,70 166,47 175,47 C184,47 188,58 201,58 L440,58 C449,58 455,14 465,14 C474,14 478,54 488,63 C496,70 502,47 511,47 C520,47 524,58 537,58 L776,58 C785,58 791,14 801,14 C810,14 814,54 824,63 C832,70 838,47 847,47 C856,47 860,58 873,58 L1140,58" fill="none" stroke="rgba(76,194,255,0.13)" stroke-width="1.5"></path>
+            <path d="M0,58 L104,58 C113,58 119,14 129,14 C138,14 142,54 152,63 C160,70 166,47 175,47 C184,47 188,58 201,58 L440,58 C449,58 455,14 465,14 C474,14 478,54 488,63 C496,70 502,47 511,47 C520,47 524,58 537,58 L776,58 C785,58 791,14 801,14 C810,14 814,54 824,63 C832,70 838,47 847,47 C856,47 860,58 873,58 L1140,58" fill="none" stroke="#4cc2ff" stroke-width="1.8" pathLength="1" stroke-dasharray="0.055 0.945" stroke-linecap="round" style="animation:ej-travel 6.2s linear infinite; filter:drop-shadow(0 0 6px rgba(76,194,255,0.7));"></path>
+            <circle r="2.4" fill="#9edcff" style="filter:drop-shadow(0 0 5px rgba(76,194,255,0.9));">
+              <animateMotion dur="6.2s" repeatCount="indefinite" path="M0,58 L104,58 C113,58 119,14 129,14 C138,14 142,54 152,63 C160,70 166,47 175,47 C184,47 188,58 201,58 L440,58 C449,58 455,14 465,14 C474,14 478,54 488,63 C496,70 502,47 511,47 C520,47 524,58 537,58 L776,58 C785,58 791,14 801,14 C810,14 814,54 824,63 C832,70 838,47 847,47 C856,47 860,58 873,58 L1140,58"></animateMotion>
+            </circle>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- §2 RESEARCH -->
+    <section data-screen-label="Research" style="{{ reveal1 }}">
+      <div style="padding:clamp(56px,8vh,84px) 0 0;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:20px;">
+          <h2 style="margin:0; color:var(--ej-text); font-family:var(--ej-serif); font-size:30px; font-weight:400;">Research <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11.5px; font-weight:500; margin-left:10px;">one line, three papers</span></h2>
+          <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11.5px; font-weight:500;">UBFC-PHYS · TSST-INSPIRED</span>
+        </div>
+        <div style="display:grid; grid-template-columns:minmax(0,2.1fr) minmax(250px,1fr); gap:14px; align-items:stretch;">
+          <div style="display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); border:1px solid rgba(255,255,255,0.075); border-radius:12px; overflow:hidden; background:linear-gradient(180deg, #0d0d10, #0a0a0c); box-shadow:0 1px 2px rgba(0,0,0,0.7), 0 16px 40px -20px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.055);">
+            <sc-for list="{{ papers }}" as="p" hint-placeholder-count="3">
+              <a href="{{ p.href }}" onMouseEnter="{{ p.onEnter }}" onMouseLeave="{{ p.onLeave }}" style="{{ p.panelStyle }}">
+                <span style="{{ p.topBarStyle }}"></span>
+                <span style="display:flex; align-items:center; gap:9px; margin-bottom:10px;">
+                  <span style="{{ p.dotStyle }}"></span>
+                  <span style="color:#9a9aa2; font-family:var(--ej-mono); font-size:10.5px; font-weight:500; letter-spacing:0.16em; text-transform:uppercase;">{{ p.status }}</span>
+                </span>
+                <strong style="{{ p.titleStyle }}">{{ p.title }}</strong>
+                <span style="display:block; margin-top:7px; color:#9a9aa2; font-size:13px; line-height:1.55;">{{ p.dek }}</span>
+                <span style="{{ p.venueStyle }}">{{ p.venue }}</span>
+              </a>
+            </sc-for>
+          </div>
+          <div style="display:grid; align-content:center; gap:6px; padding:20px 24px; border:1px solid rgba(255,255,255,0.09); border-radius:12px; background:linear-gradient(180deg, #0d0d10, #0a0a0c); box-shadow:0 1px 2px rgba(0,0,0,0.7), 0 16px 40px -20px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.055);">
+            <span style="display:flex; align-items:center; gap:8px; color:var(--ej-mut); font-family:var(--ej-mono); font-size:10.5px; font-weight:500; letter-spacing:0.18em; text-transform:uppercase;"><span style="width:6px; height:6px; border-radius:999px; background:var(--ej-amber); box-shadow:0 0 8px rgba(245,158,11,0.7);"></span>Headline metric</span>
+            <span style="color:var(--ej-text); font-family:var(--ej-mono); font-size:27px; font-weight:600; font-variant-numeric:tabular-nums;">0.73 → 0.83</span>
+            <span style="color:#9a9aa2; font-family:var(--ej-mono); font-size:11.5px; line-height:1.6;">macro-F1 with EDA fusion<br>subject-level 7-fold · 3 seeds</span>
+          </div>
+        </div>
+        <p style="margin:16px 0 0; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:12px;">multimodal video · cross-modal fusion · temporal modeling · <span style="color:#9a9aa2;">next: VLM / MLLM for affect</span></p>
+      </div>
+    </section>
+
+    <!-- §3 WRITING -->
+    <section data-screen-label="Writing" style="{{ reveal2 }}">
+      <div style="padding:clamp(56px,8vh,84px) 0 0;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:20px;">
+          <h2 style="margin:0; color:var(--ej-text); font-family:var(--ej-serif); font-size:30px; font-weight:400;">Writing <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11.5px; font-weight:500; margin-left:10px;">essays · poems · research notes</span></h2>
+          <a href="./文章列表页.dc.html" onMouseEnter="{{ allW.enter }}" onMouseLeave="{{ allW.leave }}" style="{{ allW.style }}">all writing →</a>
+        </div>
+
+        <a href="./文章页.dc.html" onMouseEnter="{{ wf.enter }}" onMouseLeave="{{ wf.leave }}" style="{{ wfStyle }}">
+          <span style="position:relative; display:block; min-height:0; overflow:hidden;">
+            <span style="{{ wfImgStyle }}"></span>
+            <span style="position:absolute; inset:0; background:linear-gradient(90deg, transparent 55%, rgba(10,10,12,0.62)), linear-gradient(180deg, transparent 68%, rgba(10,10,12,0.45));"></span>
+            <span style="position:absolute; top:14px; left:14px; padding:3px 10px; border-radius:6px; background:rgba(4,4,6,0.72); border:1px solid rgba(255,255,255,0.12); color:var(--ej-text-2); font-family:var(--ej-mono); font-size:10.5px; font-weight:500; letter-spacing:0.12em; text-transform:uppercase; backdrop-filter:blur(6px);">essay · pinned</span>
+          </span>
+          <span style="display:flex; flex-direction:column; padding:24px 28px 20px;">
+            <span style="display:flex; gap:14px; font-family:var(--ej-mono); font-size:11.5px; font-weight:500; color:var(--ej-mut-2);"><span>Apr 29, 2025</span><span>EN · 3 min</span></span>
+            <strong style="{{ wfTitleStyle }}">Who Am I?</strong>
+            <em style="margin-top:10px; color:var(--ej-text-3); font-family:var(--ej-serif); font-size:16px; font-style:italic; font-weight:300; line-height:1.5;">"A kid wanted to be a scientist, but lost precious things on the road."</em>
+            <span style="display:flex; align-items:center; justify-content:space-between; margin-top:auto; padding-top:14px; border-top:1px solid rgba(255,255,255,0.06);">
+              <span style="display:flex; gap:8px;">
+                <span onMouseEnter="{{ tagA.enter }}" onMouseLeave="{{ tagA.leave }}" style="{{ tagA.style }}">#blogging</span>
+                <span onMouseEnter="{{ tagB.enter }}" onMouseLeave="{{ tagB.leave }}" style="{{ tagB.style }}">#others</span>
+              </span>
+              <span style="{{ wfArrowStyle }}">read →</span>
+            </span>
+          </span>
+        </a>
+
+        <div style="margin-top:6px;">
+          <sc-for list="{{ wrRows }}" as="row" hint-placeholder-count="3">
+            <a href="{{ row.href }}" onMouseEnter="{{ row.onEnter }}" onMouseLeave="{{ row.onLeave }}" style="{{ row.rowStyle }}">
+              <span style="{{ row.barStyle }}"></span>
+              <span style="{{ row.dateStyle }}">{{ row.date }}</span>
+              <span style="min-width:0; display:flex; align-items:baseline; gap:12px;">
+                <strong style="{{ row.titleStyle }}">{{ row.title }}</strong>
+                <sc-if value="{{ row.latest }}" hint-placeholder-val="{{ false }}">
+                  <span style="flex-shrink:0; color:var(--ej-mut); font-family:var(--ej-mono); font-size:10px; font-weight:500; letter-spacing:0.14em; border:1px solid rgba(255,255,255,0.1); border-radius:4px; padding:1px 7px;">LATEST</span>
+                </sc-if>
+              </span>
+              <span style="{{ row.metaStyle }}">{{ row.meta }}</span>
+              <span style="{{ row.thumbStyle }}"></span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- §4 PROOF: 织入的证据 -->
+    <section data-screen-label="Proof" style="{{ reveal3 }}">
+      <div style="padding:clamp(56px,8vh,84px) 0 0;">
+        <div style="display:block; padding:20px 24px 20px; border:1px solid rgba(255,255,255,0.075); border-radius:12px; background:linear-gradient(180deg, #0d0d10, #0a0a0c); box-shadow:0 1px 2px rgba(0,0,0,0.7), 0 16px 40px -20px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.055);">
+          <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px;">
+            <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:10.5px; font-weight:500; letter-spacing:0.2em; text-transform:uppercase;">Proof of work — 26 weeks</span>
+            <span style="display:flex; align-items:baseline; gap:18px;">
+              <a href="./Worklog公开页.dc.html" onMouseEnter="{{ pwWl.enter }}" onMouseLeave="{{ pwWl.leave }}" style="{{ pwWl.style }}">worklog →</a>
+              <a href="https://github.com/Ender-Jones" target="_blank" onMouseEnter="{{ pwGh.enter }}" onMouseLeave="{{ pwGh.leave }}" style="{{ pwGh.style }}">github ↗</a>
+            </span>
+          </div>
+
+          <a href="./Worklog公开页.dc.html" onMouseEnter="{{ pwWall.enter }}" onMouseLeave="{{ pwWall.leave }}" style="{{ wallStyle }}">
+            <span style="display:flex; align-items:flex-start; gap:40px; flex-wrap:wrap;">
+              <span style="display:grid; gap:7px;">
+                <span style="display:grid; grid-auto-flow:column; grid-template-rows:repeat(7, 17px); grid-auto-columns:17px; gap:3.5px;">
+                  <sc-for list="{{ commitCells }}" as="c" hint-placeholder-count="182">
+                    <span title="{{ c.title }}" style="{{ c.style }}"></span>
+                  </sc-for>
+                </span>
+                <span style="display:grid; grid-auto-flow:column; grid-auto-columns:17px; gap:3.5px;">
+                  <sc-for list="{{ monthCells }}" as="m" hint-placeholder-count="26">
+                    <span style="color:#63636b; font-family:var(--ej-mono); font-size:9px; font-weight:500; letter-spacing:0.1em; white-space:nowrap; overflow:visible;">{{ m.label }}</span>
+                  </sc-for>
+                </span>
+              </span>
+              <span style="flex:1; min-width:250px; display:grid; gap:14px; align-content:center; padding-top:4px;">
+                <span style="display:block; max-width:40ch; color:#8f8f96; font-family:var(--ej-sans); font-size:13px; line-height:1.7;">any push — code, experiments, this site — turns the day pink. history needs no color, and gaps count against nothing.</span>
+                <span style="display:flex; align-items:center; gap:7px; color:#63636b; font-family:var(--ej-mono); font-size:10px;">
+                  <span style="margin-right:2px;">less</span>
+                  <span style="width:10px; height:10px; border-radius:3px; background:rgba(255,255,255,0.045);"></span>
+                  <span style="width:10px; height:10px; border-radius:3px; background:rgba(255,122,192,0.18);"></span>
+                  <span style="width:10px; height:10px; border-radius:3px; background:rgba(255,122,192,0.36);"></span>
+                  <span style="width:10px; height:10px; border-radius:3px; background:rgba(255,138,199,0.6);"></span>
+                  <span style="width:10px; height:10px; border-radius:3px; background:#ffcfe7;"></span>
+                  <span style="margin-left:2px;">more</span>
+                  <span style="width:1px; height:10px; background:rgba(255,255,255,0.12); margin:0 6px;"></span>
+                  <span style="width:10px; height:10px; border-radius:3px; border:1px solid rgba(245,158,11,0.85); box-shadow:0 0 6px rgba(245,158,11,0.35);"></span>
+                  <span>today</span>
+                </span>
+              </span>
+            </span>
+          </a>
+
+          <a href="./Worklog公开页.dc.html#resume-here" onMouseEnter="{{ thread.enter }}" onMouseLeave="{{ thread.leave }}" style="{{ threadStyle }}">
+            <span style="flex-shrink:0; padding:2px 8px; border:1px solid rgba(255,122,192,0.4); border-radius:4px; color:var(--ej-pink-2); font-family:var(--ej-mono); font-size:9.5px; font-weight:500; letter-spacing:0.16em;">NOW</span>
+            <span style="{{ threadTextStyle }}">{{ threadSummary }}</span>
+            <span style="flex-shrink:0; color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:10.5px; font-weight:500;">upd May 30</span>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- §5 CODA -->
+    <section data-screen-label="Coda" style="{{ reveal4 }}">
+      <div style="padding:clamp(72px,11vh,110px) 0 clamp(64px,9vh,90px); max-width:820px;">
+        <blockquote style="{{ quoteBlockStyle }}">{{ quoteText }}</blockquote>
+        <div style="display:flex; align-items:baseline; gap:18px; margin-top:16px;">
+          <p style="{{ quoteMetaStyle }}">— {{ quoteSource }}</p>
+          <button onClick="{{ reroll }}" onMouseEnter="{{ rrB.enter }}" onMouseLeave="{{ rrB.leave }}" style="{{ rrB.style }}">⟳ again</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer style="position:relative; z-index:1; border-top:1px solid rgba(255,255,255,0.06);">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:20px; max-width:1200px; margin:0 auto; padding:26px 40px;">
+      <span style="color:var(--ej-mut-2); font-family:var(--ej-mono); font-size:11.5px;">© 2026 Ender Jones — still working.</span>
+      <div style="display:flex; gap:10px;">
+        <a href="https://github.com/Ender-Jones" target="_blank" onMouseEnter="{{ tG.enter }}" onMouseLeave="{{ tG.leave }}" style="{{ tG.style }}">GitHub</a>
+        <a href="https://x.com/EnderJones1872" target="_blank" onMouseEnter="{{ tX.enter }}" onMouseLeave="{{ tX.leave }}" style="{{ tX.style }}">X</a>
+        <a href="mailto:enderjones1872@gmail.com" onMouseEnter="{{ tE.enter }}" onMouseLeave="{{ tE.leave }}" style="{{ tE.style }}">Email</a>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;heroClaim&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;Teaching machines how a body feels&quot;, &quot;Reading the stress a body writes&quot;, &quot;Teaching cameras to feel a pulse&quot;, &quot;How much can a camera know about a heart?&quot;], &quot;default&quot;: &quot;Teaching machines how a body feels&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Hero&quot;}, &quot;showIdentityCard&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Hero&quot;}, &quot;introSplash&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Motion&quot;}}">
+class Component extends DCLogic {
+  state = { h: '', p: '', route: '', phase: 'running', days: [], noteSet: {}, quotes: [], qi: 0, qFade: false, bpm: 62, scrollY: 0 };
+
+  wrData = [
+    { date: 'May 07, 2026', title: 'What Distance Taught Us', meta: 'poem \u00b7 1 min', tone: 'pink', img: 'assets/cherry-blossom-wide.jpg', latest: true, href: '/posts/what-distance-taught-us/' },
+    { date: 'Sep 01, 2025', title: 'My Take on Prompt Engineering and Major AI Models', meta: 'study \u00b7 6 min', tone: 'blue', img: 'assets/chatgpt-plus.jpg', latest: false, href: '/posts/prompt-engineering-and-major-model-takes/' },
+    { date: 'May 08, 2025', title: 'Regression Model Evaluation Metrics, Explained', meta: 'note \u00b7 7 min', tone: 'blue', img: 'assets/regression-title.png', latest: false, href: '/posts/regression-model-evaluation-metrics/' }
+  ];
+
+  paperData = [
+    { status: 'Published', title: 'EDA-augmented CCT-LSTM for stress-task classification', dek: 'First result: adding EDA lifts macro-F1 under a strict subject-level protocol.', venue: 'KICS \u00b7 short paper', dot: 'white', href: '/research/#kics-2025', route: '\u2192 /research/#kics-2025' },
+    { status: 'Under review', title: 'A reliability audit of remote-PPG under social stress', dek: 'Why EDA is necessary: rPPG degrades exactly when stress happens.', venue: 'ISPACS 2026 \u00b7 submitted', dot: 'blue', href: '/research/#ispacs-2026', route: '\u2192 /research/#ispacs-2026' },
+    { status: 'In writing', title: 'The journal version \u2014 reproducible, fully open', dek: 'Strict protocol, full ablations, honest negative results.', venue: 'IEEE J-BHI \u00b7 target', dot: 'amber', href: '/research/#ieee-j-bhi', route: '\u2192 /research/#ieee-j-bhi' }
+  ];
+
+  cardData = [
+    { k: 'measures', v: 'rPPG \u00b7 EDA \u00b7 landmarks' },
+    { k: 'langs', v: 'Chinese \u00b7 English \u00b7 Japanese' }
+  ];
+
+  threadData = {
+    summary: 'New blog release gate and Cloudflare Pages staging passed final checks; production domain cutover is next.'
+  };
+
+  componentDidMount() {
+    const splashOn = (this.props.introSplash ?? true) && !sessionStorage.getItem('ej-splash-seen');
+    if (!splashOn) {
+      this.setState({ phase: 'done' });
+    } else {
+      this._t1 = setTimeout(() => this.finishSplash(false), 4400);
+      this._onKey = (e) => {
+        if (this.state.phase === 'running' && (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ')) this.finishSplash(true);
+      };
+      document.addEventListener('keydown', this._onKey);
+    }
+    fetch('./data/github-activity.json').then(r => r.json())
+      .then(j => this.setState({ days: j.days || [] })).catch(() => {});
+    fetch('./data/worklog-days.json').then(r => r.json())
+      .then(j => {
+        const set = {};
+        (j.days || []).forEach(d => { set[d] = true; });
+        this.setState({ noteSet: set });
+      }).catch(() => {});
+    fetch('./data/quotes.json').then(r => r.json())
+      .then(j => {
+        const qs = j.quotes || [];
+        this.setState({ quotes: qs, qi: qs.length ? Math.floor(Math.random() * qs.length) : 0 });
+      }).catch(() => {});
+    this._bpmT = setInterval(() => {
+      this.setState({ bpm: 60 + Math.floor(Math.random() * 5) });
+    }, 2600);
+    this._onScroll = () => {
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(() => {
+        this._raf = 0;
+        const sy = window.scrollY || 0;
+        if (Math.abs(sy - (this.state.scrollY || 0)) > 1) this.setState({ scrollY: sy });
+      });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this._t1); clearTimeout(this._t2); clearInterval(this._bpmT);
+    if (this._onKey) document.removeEventListener('keydown', this._onKey);
+    if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+    if (this._raf) cancelAnimationFrame(this._raf);
+  }
+
+  finishSplash(fast) {
+    if (this.state.phase !== 'running') return;
+    try { sessionStorage.setItem('ej-splash-seen', '1'); } catch (e) {}
+    this.setState({ phase: 'exiting' });
+    this._t2 = setTimeout(() => this.setState({ phase: 'done' }), fast ? 120 : 380);
+  }
+
+  mk(k, route) {
+    const r = route || '';
+    return {
+      enter: () => this.setState({ h: k, route: r }),
+      leave: () => this.setState(s => ({ h: s.h === k ? '' : s.h, p: s.p === k ? '' : s.p, route: s.route === r ? '' : s.route })),
+      down: () => this.setState({ p: k }),
+      up: () => this.setState({ p: '' })
+    };
+  }
+
+  renderVals() {
+    const { h, p, phase, days, noteSet, quotes, qi, qFade, route, bpm, scrollY } = this.state;
+    const E = 'cubic-bezier(0.2, 0, 0, 1)';
+    // ambient parallax — background loops much slower than content
+    const gridShift = (-(scrollY * 0.05)).toFixed(1) + 'px';
+    const dotShiftA = (-(scrollY * 0.10)).toFixed(1) + 'px';
+    const dotShiftB = (-(scrollY * 0.06)).toFixed(1) + 'px';
+    const dotShiftC = (-(scrollY * 0.14)).toFixed(1) + 'px';
+    const jstClock = new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo', hour12: false }).slice(0, 5) + ' JST';
+    const claim = this.props.heroClaim ?? 'Teaching machines how a body feels';
+    const words = claim.split(' ');
+    const claimTail = words[words.length - 1];
+    const claimHead = words.length > 1 ? words.slice(0, -1).join(' ') + ' ' : '';
+    const showCard = this.props.showIdentityCard ?? true;
+
+    // splash
+    const showSplash = phase !== 'done';
+    const splashStyle = {
+      position: 'fixed', zIndex: 999, inset: 0, display: 'grid', alignItems: 'center',
+      padding: 'clamp(32px,6vw,88px)', cursor: 'pointer', background: '#030305',
+      animation: phase === 'exiting' ? 'ej-splash-out 380ms ease both' : 'none'
+    };
+    const hidden = { opacity: 0 };
+    const reveal = (i) => phase === 'done'
+      ? { animation: 'ej-rise 560ms ' + E + ' both', animationDelay: (i * 70) + 'ms' }
+      : hidden;
+
+    // route hint statusbar
+    const routeBarStyle = {
+      position: 'fixed', left: '18px', bottom: '16px', zIndex: 60, pointerEvents: 'none',
+      padding: '5px 12px', borderRadius: '7px',
+      background: 'rgba(6,6,8,0.85)', border: '1px solid rgba(255,255,255,0.09)',
+      backdropFilter: 'blur(10px)', boxShadow: '0 8px 24px -8px rgba(0,0,0,0.8)',
+      fontFamily: "var(--ej-mono)", fontSize: '10.5px', fontWeight: 500,
+      letterSpacing: '0.04em', color: 'var(--ej-text-3)', whiteSpace: 'nowrap',
+      opacity: route ? 1 : 0, transform: route ? 'translateY(0)' : 'translateY(4px)',
+      transition: 'opacity 140ms ' + E + ', transform 140ms ' + E
+    };
+
+    // nav links
+    const navLink = (k) => {
+      const on = h === k;
+      return {
+        color: on ? 'var(--ej-text)' : 'var(--ej-text-3)', fontFamily: "var(--ej-mono)", fontSize: '12px',
+        fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', textDecoration: 'none',
+        transition: 'color 120ms ' + E
+      };
+    };
+    const navRoutes = ['\u2192 /posts/', '\u2192 /worklog/', '\u2192 /research/', '\u2192 /about/'];
+    const navs = {};
+    ['nav0', 'nav1', 'nav2', 'nav3'].forEach((k, i) => {
+      const m = this.mk(k, navRoutes[i]);
+      navs[k] = { enter: m.enter, leave: m.leave, style: navLink(k) };
+    });
+    const logoM = this.mk('logo', '\u2192 / \u2014 home');
+    const zhM = this.mk('zh', '\u4e2d\u6587\u7248 \u2014 planned');
+
+    // hero CTAs
+    const rOn = h === 'ctaR', rPress = p === 'ctaR';
+    const ctaRm = this.mk('ctaR', '\u2192 /research/ \u2014 publications & cv');
+    const ctaR = {
+      enter: ctaRm.enter, leave: ctaRm.leave, down: ctaRm.down, up: ctaRm.up,
+      style: {
+        display: 'inline-flex', alignItems: 'center', whiteSpace: 'nowrap', padding: '10px 22px', borderRadius: '8px',
+        fontFamily: "var(--ej-mono)", fontSize: '12.5px', fontWeight: 600, letterSpacing: '0.05em',
+        textDecoration: 'none', cursor: 'pointer',
+        background: rOn ? 'var(--ej-amber)' : '#17171a',
+        border: '1px solid ' + (rOn ? 'var(--ej-amber)' : 'rgba(255,255,255,0.1)'),
+        color: rOn ? '#0a0a0b' : 'var(--ej-text)',
+        transform: rPress ? 'translateY(0) scale(0.985)' : rOn ? 'translateY(-1px)' : 'none',
+        boxShadow: rPress
+          ? '0 1px 2px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.2)'
+          : rOn
+            ? '0 2px 4px rgba(0,0,0,0.6), 0 10px 28px -8px rgba(245,158,11,0.45), inset 0 1px 0 rgba(255,255,255,0.3)'
+            : '0 1px 2px rgba(0,0,0,0.7), 0 6px 16px -6px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.08)',
+        transition: 'all 120ms ' + E
+      }
+    };
+    const mOn = h === 'ctaM';
+    const ctaMm = this.mk('ctaM', '\u2709 enderjones1872@gmail.com');
+    const ctaM = {
+      enter: ctaMm.enter, leave: ctaMm.leave,
+      style: {
+        color: mOn ? 'var(--ej-pink-2)' : '#9a9aa2', fontFamily: "var(--ej-mono)", fontSize: '12.5px',
+        textDecoration: 'none', paddingBottom: '2px',
+        borderBottom: '1px solid ' + (mOn ? 'rgba(255,122,192,0.55)' : 'rgba(255,255,255,0.16)'),
+        textShadow: mOn ? '0 0 14px rgba(255,122,192,0.45)' : 'none',
+        transition: 'all 120ms ' + E
+      }
+    };
+
+    // identity card rows
+    const cardRows = this.cardData.map((d, i) => {
+      const k = 'cr' + i, on = h === k;
+      const m = this.mk(k);
+      return {
+        k: d.k, v: d.v, onEnter: m.enter, onLeave: m.leave,
+        rowStyle: { display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 2px', cursor: 'default' },
+        keyStyle: {
+          flexShrink: 0, color: on ? 'var(--ej-text-2)' : 'var(--ej-mut-2)', fontFamily: "var(--ej-mono)",
+          fontSize: '10.5px', fontWeight: 500, letterSpacing: '0.14em', textTransform: 'uppercase',
+          transition: 'color 120ms ease'
+        },
+        leadStyle: {
+          flex: 1, minWidth: '14px', borderBottom: '1px dotted rgba(255,255,255,' + (on ? '0.22' : '0.11') + ')',
+          transform: 'translateY(-3px)', transition: 'border-color 120ms ease'
+        },
+        valStyle: {
+          flexShrink: 0, color: on ? '#ffffff' : '#e8e8ea', fontFamily: "var(--ej-mono)",
+          fontSize: '12.5px', fontVariantNumeric: 'tabular-nums', textAlign: 'right',
+          transition: 'color 120ms ease'
+        }
+      };
+    });
+    const sOn = h === 'crS';
+    const sM = this.mk('crS');
+    const crS = {
+      onEnter: sM.enter, onLeave: sM.leave,
+      rowStyle: { display: 'flex', alignItems: 'baseline', gap: '10px', padding: '6px 2px', cursor: 'default' },
+      keyStyle: {
+        flexShrink: 0, color: sOn ? 'var(--ej-text-2)' : 'var(--ej-mut-2)', fontFamily: "var(--ej-mono)",
+        fontSize: '10.5px', fontWeight: 500, letterSpacing: '0.14em', textTransform: 'uppercase',
+        transition: 'color 120ms ease'
+      },
+      leadStyle: {
+        flex: 1, minWidth: '14px', borderBottom: '1px dotted rgba(255,255,255,' + (sOn ? '0.22' : '0.11') + ')',
+        transform: 'translateY(-3px)', transition: 'border-color 120ms ease'
+      },
+      valStyle: {
+        flexShrink: 0, color: sOn ? '#ffffff' : '#e8e8ea', fontFamily: "var(--ej-mono)",
+        fontSize: '12.5px', transition: 'color 120ms ease'
+      }
+    };
+    const ftOn = h === 'cardFt';
+    const cardFtM = this.mk('cardFt', '\u2192 /worklog/ \u2014 the full log');
+    const cardFtStyle = {
+      color: ftOn ? 'var(--ej-pink-2)' : '#9a9aa2', fontFamily: "var(--ej-mono)", fontSize: '11px',
+      fontWeight: 500, textShadow: ftOn ? '0 0 12px rgba(255,122,192,0.5)' : 'none',
+      transform: ftOn ? 'translateX(2px)' : 'none', transition: 'all 120ms ' + E
+    };
+
+    // research panels
+    const dotFor = (t) => t === 'white'
+      ? { width: '7px', height: '7px', borderRadius: '999px', background: 'var(--ej-pink)', boxShadow: '0 0 8px rgba(255,122,192,0.7)' }
+      : t === 'blue'
+        ? { width: '7px', height: '7px', borderRadius: '999px', background: 'var(--ej-blue)', boxShadow: '0 0 8px rgba(76,194,255,0.7)', animation: 'ej-pulse 2.8s ease-in-out infinite' }
+        : { width: '7px', height: '7px', borderRadius: '999px', background: 'var(--ej-amber)', boxShadow: '0 0 8px rgba(245,158,11,0.7)' };
+    const papers = this.paperData.map((d, i) => {
+      const k = 'pp' + i, on = h === k;
+      const m = this.mk(k, d.route);
+      return {
+        onEnter: m.enter, onLeave: m.leave, href: d.href,
+        status: d.status, title: d.title, dek: d.dek, venue: d.venue,
+        dotStyle: dotFor(d.dot),
+        panelStyle: {
+          position: 'relative', overflow: 'hidden', display: 'block', padding: '18px 20px',
+          borderRight: i < 2 ? '1px solid rgba(255,255,255,0.055)' : 'none',
+          textDecoration: 'none',
+          background: on ? 'rgba(255,255,255,0.02)' : 'transparent',
+          transition: 'background 180ms ' + E
+        },
+        topBarStyle: {
+          position: 'absolute', top: 0, left: '20px', right: '20px', height: '2px', borderRadius: '2px',
+          background: d.dot === 'blue' ? 'var(--ej-blue)' : d.dot === 'amber' ? 'var(--ej-amber)' : 'var(--ej-pink)',
+          boxShadow: '0 0 9px ' + (d.dot === 'blue' ? 'rgba(76,194,255,0.5)' : d.dot === 'amber' ? 'rgba(245,158,11,0.5)' : 'rgba(255,122,192,0.5)'),
+          opacity: on ? 1 : 0, transform: on ? 'scaleX(1)' : 'scaleX(0.4)', transformOrigin: 'left',
+          transition: 'opacity 180ms ' + E + ', transform 240ms ' + E
+        },
+        titleStyle: {
+          display: 'block', color: on ? '#fff' : '#e8e8ea', fontSize: '14.5px', fontWeight: 600,
+          lineHeight: 1.4, letterSpacing: '-0.005em', transition: 'color 120ms ease'
+        },
+        venueStyle: {
+          display: 'block', marginTop: '10px', color: on ? 'var(--ej-text-3)' : 'var(--ej-mut)',
+          fontFamily: "var(--ej-mono)", fontSize: '11.5px', fontWeight: 500,
+          transition: 'color 120ms ease'
+        }
+      };
+    });
+
+    // writing featured
+    const wfOn = h === 'wf';
+    const wfM = this.mk('wf', '\u2192 /posts/who-am-i/');
+    const wfStyle = {
+      display: 'grid', gridTemplateColumns: '340px minmax(0,1fr)', minHeight: '212px',
+      border: '1px solid ' + (wfOn ? 'rgba(255,122,192,0.32)' : 'rgba(255,255,255,0.075)'),
+      borderRadius: '12px', overflow: 'hidden', textDecoration: 'none',
+      background: 'linear-gradient(180deg, #0d0d10, #0a0a0c)',
+      boxShadow: wfOn
+        ? '0 2px 4px rgba(0,0,0,0.6), 0 24px 56px -24px rgba(0,0,0,1), 0 0 34px -6px rgba(255,122,192,0.16), inset 0 1px 0 rgba(255,255,255,0.07)'
+        : '0 1px 2px rgba(0,0,0,0.7), 0 16px 40px -20px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.055)',
+      transform: wfOn ? 'translateY(-2px)' : 'none',
+      transition: 'all 130ms ' + E
+    };
+    const wfImgStyle = {
+      position: 'absolute', inset: 0, display: 'block',
+      backgroundImage: 'url("assets/whoami-dusk.jpg")', backgroundSize: 'cover', backgroundPosition: '50% 42%',
+      filter: wfOn ? 'brightness(0.95)' : 'brightness(0.82) saturate(0.9)',
+      transform: wfOn ? 'scale(1.025)' : 'none',
+      transition: 'filter 200ms ' + E + ', transform 260ms ' + E
+    };
+    const wfTitleStyle = {
+      marginTop: '12px', color: wfOn ? '#fff' : 'var(--ej-text)',
+      fontFamily: "var(--ej-serif)", fontSize: '27px', fontWeight: 500,
+      letterSpacing: '-0.01em', lineHeight: 1.15, transition: 'color 120ms ease'
+    };
+    const wfArrowStyle = {
+      color: wfOn ? 'var(--ej-pink-2)' : '#9a9aa2', fontFamily: "var(--ej-mono)", fontSize: '12px',
+      fontWeight: 500, textShadow: wfOn ? '0 0 14px rgba(255,122,192,0.5)' : 'none',
+      transform: wfOn ? 'translateX(3px)' : 'none',
+      transition: 'all 120ms ' + E
+    };
+    const tagStyle = (k) => {
+      const on = h === k;
+      return {
+        padding: '2px 10px', border: '1px solid rgba(255,255,255,' + (on ? '0.24' : '0.1') + ')',
+        borderRadius: '999px', color: on ? '#e8e8ea' : '#9a9aa2',
+        fontFamily: "var(--ej-mono)", fontSize: '10.5px', fontWeight: 500,
+        transition: 'all 120ms ' + E
+      };
+    };
+    const tagAM = this.mk('tagA', '\u2192 /tags/blogging/');
+    const tagBM = this.mk('tagB', '\u2192 /tags/others/');
+
+    // writing rows
+    const wrRows = this.wrData.map((d, i) => {
+      const k = 'wr' + i, on = h === k;
+      const c = d.tone === 'pink' ? 'var(--ej-pink)' : 'var(--ej-blue)';
+      const cr = d.tone === 'pink' ? '255,122,192' : '76,194,255';
+      const m = this.mk(k, '\u2192 ' + d.href);
+      return {
+        onEnter: m.enter, onLeave: m.leave, href: d.href,
+        date: d.date, title: d.title, meta: d.meta, latest: d.latest,
+        rowStyle: {
+          position: 'relative', display: 'grid', gridTemplateColumns: '110px minmax(0,1fr) 130px',
+          gap: '20px', alignItems: 'baseline', padding: '16px 12px 16px 14px',
+          borderBottom: '1px solid rgba(255,255,255,0.055)', textDecoration: 'none',
+          background: on ? 'rgba(255,255,255,0.014)' : 'transparent',
+          transition: 'background 180ms ' + E
+        },
+        barStyle: {
+          position: 'absolute', left: 0, top: '13px', bottom: '13px', width: '2px', borderRadius: '2px',
+          background: c, boxShadow: '0 0 9px rgba(' + cr + ',0.55)',
+          opacity: on ? 1 : 0, transform: on ? 'scaleY(1)' : 'scaleY(0.55)', transformOrigin: 'center',
+          transition: 'opacity 180ms ' + E + ', transform 220ms ' + E
+        },
+        dateStyle: {
+          color: on ? '#e9e9ec' : 'var(--ej-mut-2)', fontFamily: "var(--ej-mono)", fontSize: '11.5px',
+          fontWeight: 500, fontVariantNumeric: 'tabular-nums', transition: 'color 180ms ease'
+        },
+        titleStyle: {
+          color: on ? '#ffffff' : 'var(--ej-text-2)', fontFamily: "var(--ej-serif)",
+          fontSize: '19px', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.3,
+          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0,
+          transform: on ? 'translateX(4px)' : 'translateX(0)',
+          transition: 'color 180ms ease, transform 220ms ' + E
+        },
+        metaStyle: {
+          color: 'var(--ej-mut-2)', fontFamily: "var(--ej-mono)", fontSize: '11px', fontWeight: 500, textAlign: 'right',
+          opacity: on ? 0.12 : 1,
+          transition: 'opacity 200ms ease'
+        },
+        thumbStyle: {
+          position: 'absolute', right: '14px', top: '50%', width: '92px', height: '58px',
+          borderRadius: '7px', border: '1px solid rgba(' + cr + ',0.35)',
+          backgroundImage: 'url("' + d.img + '")', backgroundSize: 'cover', backgroundPosition: 'center',
+          boxShadow: '0 16px 34px -14px rgba(0,0,0,0.95), 0 0 0 3px rgba(10,10,12,0.65)',
+          pointerEvents: 'none', zIndex: 2,
+          opacity: on ? 1 : 0,
+          transform: on ? 'translateY(-50%) translateX(0) scale(1)' : 'translateY(-46%) translateX(6px) scale(0.98)',
+          transition: 'opacity 200ms ' + E + ', transform 260ms ' + E,
+          transitionDelay: on ? '40ms' : '0ms'
+        }
+      };
+    });
+
+    // all writing link
+    const awOn = h === 'allW';
+    const awM = this.mk('allW', '\u2192 /posts/ \u2014 the archive');
+    const allW = {
+      enter: awM.enter, leave: awM.leave,
+      style: {
+        color: awOn ? 'var(--ej-text)' : '#9a9aa2', fontFamily: "var(--ej-mono)", fontSize: '12px',
+        fontWeight: 500, textDecoration: 'none', paddingBottom: '2px',
+        borderBottom: '1px solid rgba(255,255,255,' + (awOn ? '0.35' : '0.14') + ')',
+        transition: 'all 120ms ' + E
+      }
+    };
+
+    // proof — header links
+    const proofLink = (k, pink) => {
+      const on = h === k;
+      const glow = pink ? '255,122,192' : '76,194,255';
+      const hi = pink ? 'var(--ej-pink-2)' : 'var(--ej-blue-2)';
+      return {
+        color: on ? hi : '#9a9aa2', fontFamily: "var(--ej-mono)", fontSize: '11.5px',
+        fontWeight: 500, textDecoration: 'none',
+        textShadow: on ? '0 0 12px rgba(' + glow + ',0.5)' : 'none',
+        transition: 'all 120ms ' + E
+      };
+    };
+    const pwWlM = this.mk('pwWl', '\u2192 /worklog/ \u2014 the full log');
+    const pwGhM = this.mk('pwGh', '\u2197 github.com/Ender-Jones');
+
+    // proof — wall
+    const wallOn = h === 'pwWall';
+    const pwWallM = this.mk('pwWall', '\u2192 /worklog/ \u2014 the full log');
+    const wallStyle = {
+      display: 'block', margin: '16px 0 0', textDecoration: 'none',
+      opacity: wallOn ? 1 : 0.94, transition: 'opacity 120ms ' + E
+    };
+    // 26-week wall — pink = any push that day, amber frame = today, gray = nothing
+    const raw = (days.length ? days.slice() : Array.from({ length: 84 }, () => ({ date: '', count: 0 })));
+    const pad = 182 - raw.length;
+    if (pad > 0) {
+      const first = raw[0] && raw[0].date ? new Date(raw[0].date + 'T12:00:00') : null;
+      const pre = Array.from({ length: pad }, (_, i) => {
+        if (!first) return { date: '', count: 0 };
+        const dt = new Date(first.getTime() - (pad - i) * 86400000);
+        return { date: dt.toISOString().slice(0, 10), count: 0 };
+      });
+      raw.unshift.apply(raw, pre);
+    }
+    const pinks = ['rgba(255,255,255,0.045)', 'rgba(255,122,192,0.18)', 'rgba(255,122,192,0.36)', 'rgba(255,138,199,0.6)', '#ffcfe7'];
+    const commitCells = raw.map((d, i) => {
+      const c = d.count || 0;
+      const level = c === 0 ? 0 : c <= 2 ? 1 : c <= 5 ? 2 : c <= 10 ? 3 : 4;
+      const isToday = i === raw.length - 1;
+      return {
+        title: d.date ? (d.date + ': ' + c + ' commit' + (c === 1 ? '' : 's') + (isToday ? ' \u00b7 today' : '')) : '',
+        style: {
+          borderRadius: '3.5px',
+          background: pinks[level],
+          border: isToday ? '1px solid rgba(245,158,11,0.85)' : '1px solid transparent',
+          boxShadow: isToday ? '0 0 9px rgba(245,158,11,0.45)' : level === 4 ? '0 0 7px rgba(255,122,192,0.28)' : 'none'
+        }
+      };
+    });
+    const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    const monthLabels = Array.from({ length: 26 }, () => '');
+    raw.forEach((d, i) => {
+      if (d.date && d.date.slice(8, 10) === '01') {
+        const col = Math.floor(i / 7);
+        if (col < 26) monthLabels[col] = monthNames[parseInt(d.date.slice(5, 7), 10) - 1] || '';
+      }
+    });
+    const monthCells = monthLabels.map(l => ({ label: l }));
+
+    // proof — current thread (public_thread parse)
+    const thOn = h === 'thread';
+    const threadM = this.mk('thread', '\u2192 /worklog/#resume-here');
+    const threadStyle = {
+      display: 'flex', alignItems: 'center', gap: '12px', margin: '14px 0 0',
+      padding: '9px 12px', borderRadius: '8px', textDecoration: 'none',
+      border: '1px solid rgba(255,255,255,' + (thOn ? '0.12' : '0.06') + ')',
+      background: thOn ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.008)',
+      transition: 'all 120ms ' + E
+    };
+    const threadTextStyle = {
+      flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+      color: thOn ? '#e8e8ea' : 'var(--ej-text-3)', fontFamily: "var(--ej-mono)", fontSize: '12px',
+      transition: 'color 120ms ease'
+    };
+
+    // coda
+    const q = quotes[qi] || { text: '', source: '' };
+    const rrOn = h === 'rrB';
+    const rrM = this.mk('rrB', '\u27f3 another quote');
+    const rrB = {
+      enter: rrM.enter, leave: rrM.leave,
+      style: {
+        padding: '3px 12px', borderRadius: '999px', cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
+        border: '1px solid ' + (rrOn ? 'rgba(255,122,192,0.45)' : 'rgba(255,255,255,0.1)'),
+        background: rrOn ? 'rgba(255,122,192,0.07)' : 'transparent',
+        color: rrOn ? 'var(--ej-pink-2)' : 'var(--ej-mut-2)',
+        textShadow: rrOn ? '0 0 12px rgba(255,122,192,0.4)' : 'none',
+        fontFamily: "var(--ej-mono)", fontSize: '10.5px', fontWeight: 500, letterSpacing: '0.06em',
+        transition: 'all 120ms ' + E
+      }
+    };
+    const quoteBlockStyle = {
+      margin: 0, color: 'var(--ej-text-2)', fontFamily: 'var(--ej-serif)',
+      fontSize: 'clamp(22px,2.4vw,28px)', fontStyle: 'italic', fontWeight: 300,
+      lineHeight: 1.42, textWrap: 'pretty', minHeight: '2.8em',
+      opacity: qFade ? 0 : 1, transform: qFade ? 'translateY(8px)' : 'translateY(0)',
+      transition: 'opacity 220ms ease, transform 260ms ' + E
+    };
+    const quoteMetaStyle = {
+      margin: 0, color: 'var(--ej-mut)', fontFamily: 'var(--ej-mono)',
+      fontSize: '11.5px', fontWeight: 500,
+      opacity: qFade ? 0 : 1, transition: 'opacity 200ms ease'
+    };
+    const reroll = () => {
+      if (quotes.length < 2 || this.state.qFade) return;
+      let n = Math.floor(Math.random() * (quotes.length - 1));
+      if (n >= qi) n += 1;
+      this.setState({ qFade: true });
+      this._qT = setTimeout(() => this.setState({ qi: n, qFade: false }), 230);
+    };
+
+    // footer transmit
+    const tLink = (k, fill, dark) => {
+      const on = h === k;
+      return {
+        padding: '4px 12px', borderRadius: '6px', textDecoration: 'none',
+        fontFamily: "var(--ej-mono)", fontSize: '11.5px', fontWeight: 500,
+        color: on ? (dark ? '#0a0a0b' : 'var(--ej-text)') : '#9a9aa2',
+        background: on ? fill : 'transparent',
+        boxShadow: on && dark ? '0 6px 18px -6px ' + fill : 'none',
+        transition: 'all 120ms ' + E
+      };
+    };
+    const tGm = this.mk('tG', '\u2197 github.com/Ender-Jones');
+    const tXm = this.mk('tX', '\u2197 x.com/EnderJones1872');
+    const tEm = this.mk('tE', '\u2709 enderjones1872@gmail.com');
+
+    return {
+      claimHead, claimTail,
+      showSplash, splashStyle, skipSplash: () => this.finishSplash(true),
+      route, routeBarStyle,
+      reveal0: reveal(0), reveal1: reveal(1), reveal2: reveal(2), reveal3: reveal(3), reveal4: reveal(4),
+      logo: { enter: logoM.enter, leave: logoM.leave },
+      zh: { enter: zhM.enter, leave: zhM.leave },
+      nav0: navs.nav0, nav1: navs.nav1, nav2: navs.nav2, nav3: navs.nav3,
+      showCard, noCard: !showCard,
+      heroRightCol: showCard ? '360px' : '0px',
+      ctaR, ctaM,
+      cardRows, crS,
+      cardFt: { enter: cardFtM.enter, leave: cardFtM.leave }, cardFtStyle,
+      bpm,
+      papers,
+      wf: { enter: wfM.enter, leave: wfM.leave },
+      wfStyle, wfImgStyle, wfTitleStyle, wfArrowStyle,
+      tagA: { enter: tagAM.enter, leave: tagAM.leave, style: tagStyle('tagA') },
+      tagB: { enter: tagBM.enter, leave: tagBM.leave, style: tagStyle('tagB') },
+      wrRows, allW,
+      pwWl: { enter: pwWlM.enter, leave: pwWlM.leave, style: proofLink('pwWl', true) },
+      pwGh: { enter: pwGhM.enter, leave: pwGhM.leave, style: proofLink('pwGh', false) },
+      pwWall: { enter: pwWallM.enter, leave: pwWallM.leave },
+      wallStyle, commitCells, monthCells,
+      gridShift, dotShiftA, dotShiftB, dotShiftC, jstClock,
+      thread: { enter: threadM.enter, leave: threadM.leave },
+      threadStyle, threadTextStyle, threadSummary: this.threadData.summary,
+      quoteText: q.lang === 'fr' ? q.text : '\u201c' + q.text + '\u201d',
+      quoteSource: q.source,
+      reroll, rrB, quoteBlockStyle, quoteMetaStyle,
+      tG: { enter: tGm.enter, leave: tGm.leave, style: tLink('tG', 'var(--ej-blue)', true) },
+      tX: { enter: tXm.enter, leave: tXm.leave, style: tLink('tX', 'rgba(255,255,255,0.08)', false) },
+      tE: { enter: tEm.enter, leave: tEm.leave, style: tLink('tE', 'var(--ej-pink)', true) }
+    };
+  }
+}
+</script>
+</body>
+</html>
