@@ -1,4 +1,5 @@
 ---
+// 诗: 居中衬线斜体, 行距宽, 结语引号收束.
 type Props = {
   title: string;
   lines: string[];
@@ -8,57 +9,54 @@ type Props = {
 const { title, lines, closing } = Astro.props;
 ---
 
-<div class="content-poem">
+<div class="poem">
   <h2>{title}</h2>
-  <p>
-    {lines.map((line) => <><span>{line}</span></>)}
+  <p class="verse">
+    {lines.map((line) => <span>{line}</span>)}
   </p>
-  {closing && <p class="content-poem__closing">“{closing}”</p>}
+  {closing && <p class="closing">“{closing}”</p>}
 </div>
 
 <style>
-  .content-poem {
+  .poem {
     width: max-content;
     max-width: 100%;
-    margin: 1.8rem auto 2.2rem;
-    font-family: var(--font-serif);
-    font-size: 1.18rem;
+    margin: 34px auto 42px;
+    color: var(--ej-text-2);
+    font-family: var(--ej-serif);
+    font-size: 18px;
     font-style: italic;
+    font-weight: 300;
     line-height: 1.9;
     text-align: center;
   }
-
-  .content-poem h2 {
-    margin-bottom: 3rem;
-    font-family: var(--font-serif);
-    font-size: 1.35rem;
+  h2 {
+    margin: 0 0 44px;
+    color: var(--ej-text);
+    font-family: var(--ej-serif);
+    font-size: 22px;
     font-style: normal;
-    font-weight: var(--fw-regular);
+    font-weight: 400;
     line-height: 1.4;
     text-align: center;
   }
-
-  .content-poem p {
-    margin-bottom: 0;
+  .verse {
+    margin: 0;
     white-space: nowrap;
   }
-
-  .content-poem span {
+  .verse span {
     display: block;
   }
-
-  .content-poem__closing {
-    margin-top: 1.2rem;
-    color: var(--text);
+  .closing {
+    margin: 20px 0 0;
+    color: var(--ej-text-3);
   }
-
   @media (max-width: 720px) {
-    .content-poem {
+    .poem {
       width: auto;
-      font-size: 1.08rem;
+      font-size: 16px;
     }
-
-    .content-poem p {
+    .verse {
       white-space: normal;
     }
   }

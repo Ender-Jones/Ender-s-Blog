@@ -101,18 +101,21 @@
 </style>
 
 <script>
+  // 通用视差: 任何带 data-parallax 的元素都会被驱动(页面自己的氛围元素也能搭车).
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!reduced) {
-    const grid = document.querySelector<HTMLElement>('.grid[data-parallax]');
-    const dots = [...document.querySelectorAll<HTMLElement>('.dot[data-parallax]')];
+    const els = [...document.querySelectorAll<HTMLElement>('[data-parallax]')];
     let raf = 0;
     const apply = () => {
       raf = 0;
       const sy = window.scrollY || 0;
-      if (grid) grid.style.backgroundPosition = `0px ${-(sy * 0.05).toFixed(1)}px`;
-      for (const dot of dots) {
-        const k = Number(dot.dataset.parallax || 0);
-        dot.style.transform = `translate3d(0, ${-(sy * k).toFixed(1)}px, 0)`;
+      for (const el of els) {
+        const k = Number(el.dataset.parallax || 0);
+        if (el.classList.contains('grid')) {
+          el.style.backgroundPosition = `0px ${-(sy * k).toFixed(1)}px`;
+        } else {
+          el.style.transform = `translate3d(0, ${-(sy * k).toFixed(1)}px, 0)`;
+        }
       }
     };
     window.addEventListener(

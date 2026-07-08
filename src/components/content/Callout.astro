@@ -1,4 +1,6 @@
 ---
+// 文中提示块: 安静面板 + 彩点 + mono 标签 + 渐隐发丝线.
+// 语义色: info/note=蓝(信号) · tip/warning=琥珀(行动) · danger=玫瑰(风险).
 type Props = {
   type?: 'info' | 'tip' | 'note' | 'warning' | 'danger';
   title?: string;
@@ -13,86 +15,77 @@ const labels = {
 };
 
 const { type = 'info', title = labels[type] } = Astro.props;
+const tone = type === 'tip' || type === 'warning' ? 'amber' : type === 'danger' ? 'rose' : 'blue';
 ---
 
-<aside class:list={['content-callout', `content-callout--${type}`]}>
-  <p class="content-callout__title">{title}</p>
-  <div class="content-callout__body">
+<aside class:list={['callout', `tone-${tone}`]}>
+  <span class="head">
+    <span class="dot" aria-hidden="true"></span>
+    <span class="label">{title}</span>
+    <span class="hairline" aria-hidden="true"></span>
+  </span>
+  <div class="body">
     <slot />
   </div>
 </aside>
 
 <style>
-  .content-callout {
-    position: relative;
-    display: grid;
-    gap: var(--s-3);
-    margin: var(--s-8) 0;
-    padding: var(--s-5) var(--s-6);
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    border-left: 4px solid var(--accent-blue);
-    border-radius: var(--r-md);
-    background:
-      linear-gradient(90deg, rgba(56, 189, 248, 0.08), transparent 38%),
-      rgba(14, 16, 20, 0.58);
+  .callout {
+    --tone: var(--ej-blue);
+    --tone-2: var(--ej-blue-2);
+    --tone-rgb: 76, 194, 255;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 24px 0;
+    padding: 13px 17px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 9px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.018), rgba(255, 255, 255, 0.005));
   }
-
-  .content-callout__title {
-    margin: 0;
-    color: var(--accent-blue);
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: var(--fw-semibold);
-    letter-spacing: 0.08em;
-    line-height: 1.2;
+  .callout.tone-amber {
+    --tone: var(--ej-amber);
+    --tone-2: var(--ej-amber-2);
+    --tone-rgb: 245, 158, 11;
+  }
+  .callout.tone-rose {
+    --tone: var(--ej-rose);
+    --tone-2: var(--ej-rose);
+    --tone-rgb: 255, 157, 157;
+  }
+  .head {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--tone);
+    box-shadow: 0 0 7px rgba(var(--tone-rgb), 0.85);
+  }
+  .label {
+    color: var(--tone-2);
+    font-family: var(--ej-mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
   }
-
-  .content-callout__body {
+  .hairline {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(var(--tone-rgb), 0.16), transparent);
+  }
+  .body {
     display: grid;
-    gap: var(--s-3);
+    gap: 8px;
+    color: #b4b4bc;
+    font-size: 14.5px;
+    line-height: 1.65;
   }
-
-  .content-callout__body :global(> *) {
+  .body :global(> *) {
     margin: 0;
-  }
-
-  .content-callout--tip {
-    border-left-color: var(--accent-teal);
-    background:
-      linear-gradient(90deg, rgba(93, 202, 165, 0.09), transparent 38%),
-      rgba(14, 16, 20, 0.58);
-  }
-
-  .content-callout--tip .content-callout__title {
-    color: var(--accent-teal);
-  }
-
-  .content-callout--warning {
-    border-left-color: #fbbf24;
-    background:
-      linear-gradient(90deg, rgba(251, 191, 36, 0.09), transparent 38%),
-      rgba(14, 16, 20, 0.58);
-  }
-
-  .content-callout--warning .content-callout__title {
-    color: #fbbf24;
-  }
-
-  .content-callout--danger {
-    border-left-color: var(--accent-pink);
-    background:
-      linear-gradient(90deg, rgba(244, 114, 182, 0.1), transparent 38%),
-      rgba(14, 16, 20, 0.58);
-  }
-
-  .content-callout--danger .content-callout__title {
-    color: var(--accent-pink);
-  }
-
-  @media (max-width: 720px) {
-    .content-callout {
-      padding: var(--s-4);
-    }
   }
 </style>

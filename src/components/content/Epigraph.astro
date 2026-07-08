@@ -1,97 +1,107 @@
 ---
+// 文章开篇引文: 原文(衬线斜体) → 译文(无衬线, 直接可见) → 出典行(短横线 + mono + 语言 chip).
 type Props = {
   lines: string[];
   source?: string;
   translationLines?: string[];
-  translationLabel?: string;
+  translationLabel?: string; // 兼容旧用法, 不再渲染(译文常显)
+  lang?: string;
 };
 
-const {
-  lines,
-  source,
-  translationLines = [],
-  translationLabel = 'Show English Translation',
-} = Astro.props;
-const hasTranslation = translationLines.length > 0;
+const { lines, source, translationLines = [], lang } = Astro.props;
 ---
 
-<blockquote class="content-epigraph">
-  <div class="content-epigraph__text">
+<blockquote class="epigraph">
+  <span class="bar" aria-hidden="true"></span>
+  <div class="original">
     {lines.map((line) => <span>{line}</span>)}
   </div>
-  {source && <footer>{source}</footer>}
-  {
-    hasTranslation && (
-      <details class="content-epigraph__translation">
-        <summary>
-          <span aria-hidden="true">▶</span>
-          <em>{translationLabel}</em>
-        </summary>
-        <div>
-          {translationLines.map((line) => <span>{line}</span>)}
-        </div>
-      </details>
-    )
-  }
+  {translationLines.length > 0 && (
+    <div class="translation">
+      {translationLines.map((line) => <span>{line}</span>)}
+    </div>
+  )}
+  {source && (
+    <footer>
+      <span class="rule" aria-hidden="true"></span>
+      <span class="source">{source}</span>
+      {lang && <span class="lang">{lang.toUpperCase()}</span>}
+    </footer>
+  )}
 </blockquote>
 
 <style>
-  .content-epigraph {
-    padding-left: var(--s-5);
-    color: #d4d8de;
-    font-family: var(--font-serif);
-    font-style: italic;
-    border-left: 3px solid var(--accent-pink);
+  .epigraph {
+    position: relative;
+    margin: 6px 0 46px;
+    padding: 2px 0 2px 26px;
   }
-
-  .content-epigraph__text,
-  .content-epigraph__translation div {
+  .bar {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    bottom: 2px;
+    width: 2px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, rgba(255, 122, 192, 0.55), rgba(255, 122, 192, 0.06));
+  }
+  .original {
     display: grid;
-    gap: 0;
+    color: #d6d6db;
+    font-family: var(--ej-serif);
+    font-size: 17.5px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.7;
+    text-wrap: pretty;
   }
-
-  .content-epigraph__text span,
-  .content-epigraph__translation span {
+  .original span {
     display: block;
   }
-
-  .content-epigraph footer {
-    margin-top: var(--s-4);
-    color: var(--text-muted);
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-style: normal;
+  .translation {
+    display: grid;
+    margin-top: 9px;
+    max-width: 58ch;
+    color: var(--ej-mut);
+    font-family: var(--ej-sans);
+    font-size: 13.5px;
+    font-weight: 400;
+    line-height: 1.65;
   }
-
-  .content-epigraph__translation {
-    margin-top: var(--s-5);
+  .translation span {
+    display: block;
   }
-
-  .content-epigraph__translation summary {
-    cursor: pointer;
+  footer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
   }
-
-  .content-epigraph__translation summary span {
-    display: inline-block;
-    margin-right: 0.5em;
-    transition: transform 0.2s ease-in-out;
+  .rule {
+    width: 18px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.22);
   }
-
-  .content-epigraph__translation[open] summary span {
-    transform: rotate(90deg);
+  .source {
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
   }
-
-  .content-epigraph__translation div {
-    margin-top: var(--s-4);
-    padding-left: var(--s-4);
-    border-left: 2px solid rgba(148, 163, 184, 0.22);
-    color: #8b95a1;
-    font-size: 0.86em;
+  .lang {
+    padding: 1px 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: var(--ej-dim);
+    font-family: var(--ej-mono);
+    font-size: 8.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
   }
-
   @media (max-width: 720px) {
-    .content-epigraph {
-      padding-left: var(--s-4);
+    .epigraph {
+      padding-left: 18px;
     }
   }
 </style>

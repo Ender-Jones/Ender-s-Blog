@@ -1,0 +1,240 @@
+/* 文章正文排版 — Markdown/MDX 渲染出的裸元素在 .prose 容器内统一着装.
+   § 编号由 CSS counter 自动打在每个 H2 上, 和交接稿的手写编号同貌. */
+
+.prose {
+  counter-reset: ej-section;
+  color: #b8b8c0;
+  font-family: var(--ej-sans);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.prose > * {
+  margin: 0 0 16px;
+}
+
+.prose p {
+  text-wrap: pretty;
+}
+
+.prose h2 {
+  counter-increment: ej-section;
+  margin: 52px 0 16px;
+  scroll-margin-top: 84px;
+  color: var(--ej-text);
+  font-family: var(--ej-serif);
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.prose h2::before {
+  content: '§' counter(ej-section, decimal-leading-zero);
+  display: block;
+  margin-bottom: 8px;
+  color: var(--ej-mut-2);
+  font-family: var(--ej-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+}
+
+.prose h3 {
+  margin: 26px 0 12px;
+  scroll-margin-top: 84px;
+  color: #f0f0f2;
+  font-family: var(--ej-serif);
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.prose strong {
+  color: #f0f0f2;
+  font-weight: 600;
+}
+
+.prose em {
+  font-family: var(--ej-serif);
+}
+
+.prose a {
+  color: #b4b4bc;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-underline-offset: 3px;
+  transition: all 120ms var(--ej-ease);
+}
+
+.prose a:hover {
+  color: var(--ej-pink-2);
+  text-decoration-color: rgba(255, 122, 192, 0.55);
+  text-shadow: 0 0 12px rgba(255, 122, 192, 0.45);
+}
+
+.prose ul,
+.prose ol {
+  display: grid;
+  gap: 8px;
+  padding-left: 4px;
+}
+
+.prose ul {
+  list-style: none;
+}
+
+.prose ul > li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 15.5px;
+  line-height: 1.7;
+}
+
+.prose ul > li::before {
+  content: '–';
+  position: absolute;
+  left: 0;
+  color: var(--ej-mut-2);
+}
+
+.prose ol {
+  padding-left: 26px;
+}
+
+.prose ol > li {
+  font-size: 15.5px;
+  line-height: 1.7;
+}
+
+.prose ol > li::marker {
+  color: var(--ej-mut-2);
+  font-family: var(--ej-mono);
+  font-size: 12px;
+}
+
+.prose li ul,
+.prose li ol {
+  margin-top: 8px;
+}
+
+.prose blockquote {
+  position: relative;
+  margin: 24px 0;
+  padding: 2px 0 2px 22px;
+  color: #c8c8cd;
+  font-family: var(--ej-serif);
+  font-size: 16.5px;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+.prose blockquote::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(255, 122, 192, 0.45), rgba(255, 122, 192, 0.05));
+}
+
+.prose blockquote p {
+  margin: 0;
+}
+
+.prose code {
+  font-family: var(--ej-mono);
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+.prose pre {
+  margin: 24px 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: linear-gradient(180deg, #0d0d10, #0a0a0c) !important;
+  overflow-x: auto;
+}
+
+.prose pre code {
+  background: transparent;
+  padding: 0;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #0d0d10, #0a0a0c);
+}
+
+.prose th {
+  padding: 10px 14px;
+  text-align: left;
+  color: var(--ej-mut);
+  font-family: var(--ej-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.prose td {
+  padding: 10px 14px;
+  color: #b4b4bc;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.prose tr:last-child td {
+  border-bottom: none;
+}
+
+.prose td:first-child {
+  color: #f0f0f2;
+  font-family: var(--ej-mono);
+  font-weight: 600;
+}
+
+.prose hr {
+  margin: 40px 0;
+  border: none;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.prose .katex-display {
+  margin: 24px 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 0;
+}
+
+.prose .katex {
+  font-size: 1.06em;
+  color: #e8e8ea;
+}
+
+@media (max-width: 720px) {
+  .prose table {
+    display: block;
+    overflow-x: auto;
+  }
+}
