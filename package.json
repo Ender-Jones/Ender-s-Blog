@@ -8,7 +8,8 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build",
+    "check:content": "node scripts/validate-content.mjs",
+    "build": "node scripts/validate-content.mjs && astro check && astro build",
     "preview": "astro preview",
     "activity:cache": "node scripts/update-github-activity.mjs"
   },

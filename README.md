@@ -18,13 +18,17 @@
 | 组件 | `src/components/` — `content/` 是文章内用的四件套 (Epigraph/Figure/Callout/Poem) |
 | worklog 解析 | `src/lib/parseWorklog.ts` |
 | 刷新 commit 墙数据 | `npm run activity:cache`(需要 `GITHUB_TOKEN` 或已登录的 `gh`) |
+| 手动跑内容检查 | `npm run check:content`(commit 时也会自动跑, 见下) |
+
+约定: 所有需要你手动维护的"主页级数据"(研究面板的论文列表、readout 卡的状态行、hero 文案等)一律放 `src/data/*.yml`, 文件内带注释, 并在此表登记入口——不许藏进组件代码里.
 
 ## 本地跑
 
 ```bash
 npm install
+git config core.hooksPath hooks   # 一次性: 让 commit 前自动跑内容检查
 npm run dev        # localhost:4321
-npm run build      # astro check + 构建, 上线前必须全绿
+npm run build      # 内容检查 + astro check + 构建, 上线前必须全绿
 ```
 
 ## 部署(上线时)

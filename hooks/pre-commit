@@ -1,0 +1,3 @@
+#!/bin/sh
+# commit 前跑内容门禁; 激活方式(clone 后一次): git config core.hooksPath hooks
+npm run -s check:content

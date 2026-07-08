@@ -21,7 +21,7 @@ PAT(Personal Access Token)= 一把代替你 GitHub 密码的钥匙, 但被削成
 Cloudflare → Zero Trust → Access → 撤销那台设备的会话(session). 名单里只有你自己, 别人本来也进不来.
 
 **每日自动重建没跑.**
-仓库 `.github/workflows/` 里有个定时任务, 每天 00:05 JST 戳一次 Cloudflare 重建(让 commit 墙对齐"今天"). GitHub Actions 页面能看到它跑没跑; 挂了也不致命, 你任何一次 push 都会顺带重建.
+仓库 `.github/workflows/` 里有个定时任务, 每天 04:00 JST 戳一次 Cloudflare 重建(让 commit 墙对齐"今天"; 定在 4 点是因为你常干活到凌晨). GitHub Actions 页面能看到它跑没跑; 挂了也不致命, 你任何一次 push 都会顺带重建.
 
 ## 一年一遇
 
