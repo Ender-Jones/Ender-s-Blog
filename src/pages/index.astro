@@ -1,45 +1,30 @@
 ---
-import '../styles/tokens.css';
-import '@fontsource/newsreader/400-italic.css';
-import '@fontsource/geist-mono/500.css';
+import BaseLayout from '../components/layout/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('posts');
 const worklogs = await getCollection('worklogs');
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex" />
-    <title>Ender Jones — rebuilding</title>
-  </head>
-  <body>
-    <main>
+<BaseLayout title="Ender Jones — research notebook" noindex>
+  <main>
+    <section class="construction">
       <p class="line">
-        Ender Jones<span class="caret"></span>
+        Ender Jones<span class="caret" aria-hidden="true"></span>
       </p>
       <p class="meta">
         V3 under construction — {posts.length} posts · {worklogs.length} worklogs migrated
       </p>
-    </main>
-  </body>
-</html>
+    </section>
+  </main>
+</BaseLayout>
 
 <style>
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    background: #030305;
-  }
-  main {
+  .construction {
     display: grid;
     place-content: center;
     gap: 14px;
-    min-height: 100vh;
+    min-height: calc(100vh - 46px - 120px);
     text-align: center;
   }
   .line {

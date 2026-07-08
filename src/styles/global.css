@@ -1,0 +1,46 @@
+@import './tokens.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #030305;
+}
+
+body {
+  color: var(--ej-text);
+  font-family: var(--ej-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(255, 122, 192, 0.3);
+  color: #fff;
+}
+
+a {
+  color: var(--ej-text-3);
+}
+
+a:hover {
+  color: var(--ej-text);
+}
+
+/* 每页的内容层: 压在背景层之上; 页面可用 --ej-page-w 改宽度(如 worklog 页 980px) */
+main {
+  position: relative;
+  z-index: 1;
+  max-width: var(--ej-page-w, 1200px);
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+@media (max-width: 720px) {
+  main {
+    padding: 0 20px;
+  }
+}

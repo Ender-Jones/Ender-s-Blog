@@ -1,0 +1,69 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <div class="inner">
+    <span class="line">© {year} Ender Jones — still working.</span>
+    <div class="pills">
+      <a class="pill pill-github" href="https://github.com/Ender-Jones" target="_blank" rel="noopener">GitHub</a>
+      <a class="pill pill-x" href="https://x.com/EnderJones1872" target="_blank" rel="noopener">X</a>
+      <a class="pill pill-email" href="mailto:enderjones1872@gmail.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 26px 40px;
+  }
+  .line {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+  }
+  .pills {
+    display: flex;
+    gap: 10px;
+  }
+  .pill {
+    padding: 4px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    color: #9a9aa2;
+    transition: all 120ms var(--ej-ease);
+  }
+  .pill-github:hover {
+    color: #0a0a0b;
+    background: var(--ej-blue);
+    box-shadow: 0 6px 18px -6px var(--ej-blue);
+  }
+  .pill-x:hover {
+    color: var(--ej-text);
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .pill-email:hover {
+    color: #0a0a0b;
+    background: var(--ej-pink);
+    box-shadow: 0 6px 18px -6px var(--ej-pink);
+  }
+  @media (max-width: 720px) {
+    .inner {
+      padding: 26px 20px;
+    }
+  }
+</style>

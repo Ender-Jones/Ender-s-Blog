@@ -1,0 +1,98 @@
+---
+// 暗房底层: 56px 微网格 + 三枚异速漂移光点, 均以慢于内容的速度视差.
+---
+
+<div class="grid" data-parallax="0.05" aria-hidden="true"></div>
+<span class="dot dot-a" data-parallax="0.10" aria-hidden="true"><span></span></span>
+<span class="dot dot-b" data-parallax="0.06" aria-hidden="true"><span></span></span>
+<span class="dot dot-c" data-parallax="0.14" aria-hidden="true"><span></span></span>
+
+<style>
+  .grid {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.019) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.019) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  .dot {
+    position: fixed;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .dot > span {
+    display: block;
+    border-radius: 999px;
+  }
+  .dot-a {
+    top: 18%;
+    left: 12%;
+  }
+  .dot-a > span {
+    width: 4px;
+    height: 4px;
+    background: var(--ej-pink);
+    opacity: 0.31;
+    filter: blur(1.5px);
+    box-shadow: 0 0 11px rgba(255, 122, 192, 0.55);
+    animation: ej-drift-a 34s ease-in-out infinite;
+  }
+  .dot-b {
+    top: 52%;
+    right: 10%;
+  }
+  .dot-b > span {
+    width: 3px;
+    height: 3px;
+    background: var(--ej-blue);
+    opacity: 0.26;
+    filter: blur(1px);
+    box-shadow: 0 0 10px rgba(76, 194, 255, 0.5);
+    animation: ej-drift-b 42s ease-in-out infinite;
+  }
+  .dot-c {
+    bottom: 16%;
+    left: 44%;
+  }
+  .dot-c > span {
+    width: 3px;
+    height: 3px;
+    background: #e4e4e7;
+    opacity: 0.17;
+    filter: blur(1px);
+    animation: ej-drift-c 28s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dot > span {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduced) {
+    const grid = document.querySelector<HTMLElement>('.grid[data-parallax]');
+    const dots = [...document.querySelectorAll<HTMLElement>('.dot[data-parallax]')];
+    let raf = 0;
+    const apply = () => {
+      raf = 0;
+      const sy = window.scrollY || 0;
+      if (grid) grid.style.backgroundPosition = `0px ${-(sy * 0.05).toFixed(1)}px`;
+      for (const dot of dots) {
+        const k = Number(dot.dataset.parallax || 0);
+        dot.style.transform = `translate3d(0, ${-(sy * k).toFixed(1)}px, 0)`;
+      }
+    };
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!raf) raf = requestAnimationFrame(apply);
+      },
+      { passive: true },
+    );
+  }
+</script>

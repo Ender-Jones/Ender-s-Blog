@@ -4,10 +4,10 @@
    Edit a value here and all pages follow.
    ============================================================ */
 :root {
-  /* type */
-  --ej-serif: 'Newsreader', Georgia, serif;
-  --ej-mono: 'Geist Mono', monospace;
-  --ej-sans: 'Geist', system-ui, sans-serif;
+  /* type — self-hosted via @fontsource-variable (China-friendly), hence the "Variable" names */
+  --ej-serif: 'Newsreader Variable', 'Newsreader', Georgia, serif;
+  --ej-mono: 'Geist Mono Variable', 'Geist Mono', monospace;
+  --ej-sans: 'Geist Variable', 'Geist', system-ui, sans-serif;
 
   /* ink — grays, brightest to dimmest */
   --ej-text: #f5f5f6;
