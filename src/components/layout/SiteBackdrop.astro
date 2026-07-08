@@ -6,6 +6,8 @@
 <span class="dot dot-a" data-parallax="0.10" aria-hidden="true"><span></span></span>
 <span class="dot dot-b" data-parallax="0.06" aria-hidden="true"><span></span></span>
 <span class="dot dot-c" data-parallax="0.14" aria-hidden="true"><span></span></span>
+<span class="dot dot-d" data-parallax="0.08" aria-hidden="true"><span></span></span>
+<span class="dot dot-e" data-parallax="0.12" aria-hidden="true"><span></span></span>
 
 <style>
   .grid {
@@ -64,6 +66,32 @@
     opacity: 0.17;
     filter: blur(1px);
     animation: ej-drift-c 28s ease-in-out infinite;
+  }
+  .dot-d {
+    top: 72%;
+    left: 18%;
+  }
+  .dot-d > span {
+    width: 3px;
+    height: 3px;
+    background: var(--ej-pink);
+    opacity: 0.2;
+    filter: blur(1px);
+    box-shadow: 0 0 9px rgba(255, 122, 192, 0.4);
+    animation: ej-drift-b 48s ease-in-out infinite;
+  }
+  .dot-e {
+    top: 10%;
+    right: 28%;
+  }
+  .dot-e > span {
+    width: 3px;
+    height: 3px;
+    background: var(--ej-blue);
+    opacity: 0.18;
+    filter: blur(1px);
+    box-shadow: 0 0 8px rgba(76, 194, 255, 0.35);
+    animation: ej-drift-c 40s ease-in-out infinite;
   }
   @media (prefers-reduced-motion: reduce) {
     .dot > span {

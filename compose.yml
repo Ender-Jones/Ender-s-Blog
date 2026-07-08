@@ -1,8 +1,12 @@
+# 项目名固定(= 长期环境的名字): volume 叫 enders-blog_node_modules, 改文件夹名也不丢.
+name: enders-blog
+
 services:
   site:
     image: node:22-bookworm-slim
     working_dir: /app
-    command: sh -c "[ -x node_modules/.bin/astro ] || npm install; exec npm run dev -- --host 0.0.0.0"
+    # 容器被杀不会清 astro 的 dev 锁(.astro/dev.json), 启动前先删, 否则新容器会被旧锁挡住
+    command: sh -c "rm -f .astro/dev.json; [ -x node_modules/.bin/astro ] || npm install; exec npm run dev -- --host 0.0.0.0"
     ports:
       - "4321:4321"
     environment:

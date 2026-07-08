@@ -62,3 +62,21 @@ html.ej-splash-active .reveal {
     opacity: 1;
   }
 }
+
+/* 跨页过渡: 原生 cross-document View Transitions — 支持的浏览器 200ms 交叉淡入,
+   其余(如 Firefox)静默降级为普通跳转. nav 有自己的 transition name, 换页时稳住不动. */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 200ms;
+  animation-timing-function: var(--ej-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+}
