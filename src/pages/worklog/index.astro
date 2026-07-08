@@ -1,0 +1,381 @@
+---
+// Worklog 公开页: NOW / SAVE POINT 双条 + 26 周 log trail + 最近周分组 + 符号图例.
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import RouteHint from '../../components/home/RouteHint.astro';
+import WorklogWeeks from '../../components/worklog/WorklogWeeks.astro';
+import { getCurrentThread } from '../../lib/parseWorklog';
+import { getWorklogDays, groupByWeek } from '../../lib/worklogDays';
+
+const worklogs = await getCollection('worklogs');
+const days = getWorklogDays(worklogs);
+const todayIso = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Tokyo' });
+
+const fmtShort = (iso: string) =>
+  new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-US', {
+    month: 'short',
+    day: '2-digit',
+    timeZone: 'UTC',
+  });
+
+// NOW: 最新的逐日公开句; 没有则回退到 frontmatter public_thread.
+const latestPublic = days.find((d) => d.publicLine);
+const thread = getCurrentThread(worklogs);
+const now = latestPublic
+  ? { text: latestPublic.publicLine!, upd: fmtShort(latestPublic.date) }
+  : thread.state === 'normal' || thread.state === 'stale'
+    ? {
+        text: thread.summary,
+        upd: thread.updatedAt.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }),
+      }
+    : undefined;
+
+// SAVE POINT: 最新一条 next.
+const savePoint = (() => {
+  for (const d of days) {
+    const nexts = d.items.filter((i) => i.type === 'next');
+    if (nexts.length) return nexts[nexts.length - 1].text;
+  }
+  return undefined;
+})();
+
+// Trail: 26 周, 有记录的日子 = 粉, 今天 = 琥珀框.
+const noteSet = new Set(days.map((d) => d.date));
+const DAYS = 182;
+const base = new Date(`${todayIso}T12:00:00Z`);
+const trail = Array.from({ length: DAYS }, (_, i) => {
+  const dt = new Date(base.getTime() - (DAYS - 1 - i) * 86400000);
+  const iso = dt.toISOString().slice(0, 10);
+  return { iso, note: noteSet.has(iso), isToday: i === DAYS - 1 };
+});
+
+const weeks = groupByWeek(days, todayIso);
+const RECENT = 4;
+const recentWeeks = weeks.slice(0, RECENT);
+const hasArchive = weeks.length > RECENT;
+---
+
+<BaseLayout title="Worklog — Ender Jones" description="One line at a time, pushed to git at the end of each day." noindex>
+  <RouteHint />
+  <main style="--ej-page-w: 980px;">
+    <section class="reveal" style="--reveal-i: 0;">
+      <p class="kicker">WORKLOG — PROOF, NOT MEMORY</p>
+      <h1>Still working.<span class="caret" aria-hidden="true"></span></h1>
+      <p class="sub">One line at a time, pushed to git at the end of each day. Days with nothing logged are just days — they count against nothing.</p>
+
+      {now && (
+        <div class="bar-now">
+          <span class="chip chip-pink">NOW</span>
+          <span class="bar-text">{now.text}</span>
+          <span class="bar-upd">upd {now.upd}</span>
+        </div>
+      )}
+      {savePoint && (
+        <div class="bar-save" id="resume-here">
+          <span class="chip chip-amber">SAVE POINT</span>
+          <span class="bar-text save-text">&gt; {savePoint}</span>
+          <span class="bar-upd">where tomorrow starts</span>
+        </div>
+      )}
+    </section>
+
+    <section class="trail-sec reveal" style="--reveal-i: 1;">
+      <div class="trail-card">
+        <div class="trail-head">
+          <span class="trail-label">LOG TRAIL — 26 WEEKS</span>
+          <a class="console-link" href="/console/" data-route="→ /console/ — write access only">entry console →</a>
+        </div>
+        <div class="trail-flex">
+          <div class="trail-grid" role="img" aria-label="26-week log trail">
+            {trail.map((c) => (
+              <span
+                class:list={['t-cell', { note: c.note, today: c.isToday }]}
+                title={`${c.iso}${c.note ? ' · note' : ''}${c.isToday ? ' · today' : ''}`}></span>
+            ))}
+          </div>
+          <div class="trail-side">
+            <p class="trail-note">one cell per day. a note pushed turns it pink; gaps stay neutral — no streaks are kept, nothing resets.</p>
+            <span class="legend">
+              <span class="sw sw-note"></span><span>note</span>
+              <span class="lg-div"></span>
+              <span class="sw sw-today"></span><span>today</span>
+              <span class="lg-div"></span>
+              <span class="sw sw-empty"></span><span>a day, neutrally</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="weeks-sec reveal" style="--reveal-i: 2;">
+      <WorklogWeeks weeks={recentWeeks} />
+      {hasArchive && (
+        <a class="archive-link" href="/worklog/archive/" data-route="→ /worklog/archive/">earlier weeks → archive</a>
+      )}
+    </section>
+
+    <section class="legend-sec reveal" style="--reveal-i: 3;">
+      <div class="symbols">
+        <span class="sym-label">SYMBOLS</span>
+        <span><span class="s s-done">✓</span> done</span>
+        <span><span class="s s-decision">=</span> decision</span>
+        <span><span class="s s-risk">!</span> risk</span>
+        <span><span class="s s-next">&gt;</span> next</span>
+        <span><span class="s s-dropped">~</span> dropped</span>
+        <span><span class="s s-public">•</span> the public line</span>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .kicker {
+    margin: 0 0 18px;
+    padding-top: clamp(48px, 8vh, 76px);
+    color: #82828c;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+  }
+  h1 {
+    margin: 0;
+    color: var(--ej-text);
+    font-family: var(--ej-serif);
+    font-size: clamp(38px, 4.6vw, 58px);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1.05;
+  }
+  .caret {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.07em;
+    margin-left: 0.14em;
+    border-radius: 1px;
+    background: var(--ej-pink);
+    box-shadow: 0 0 18px rgba(255, 122, 192, 0.55);
+    animation: ej-caret 1.15s linear infinite;
+  }
+  .sub {
+    margin: 18px 0 0;
+    max-width: 58ch;
+    color: var(--ej-text-3);
+    font-size: 15.5px;
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+
+  .bar-now,
+  .bar-save {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 13px;
+    border-radius: 9px;
+  }
+  .bar-now {
+    margin-top: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    background: rgba(255, 255, 255, 0.008);
+  }
+  .bar-save {
+    margin-top: 8px;
+    border: 1px solid rgba(245, 158, 11, 0.22);
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.035), rgba(245, 158, 11, 0.01));
+  }
+  .chip {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: var(--ej-mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+  }
+  .chip-pink {
+    border: 1px solid rgba(255, 122, 192, 0.4);
+    color: var(--ej-pink-2);
+  }
+  .chip-amber {
+    border: 1px solid rgba(245, 158, 11, 0.45);
+    color: var(--ej-amber-2);
+  }
+  .bar-text {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--ej-text-2);
+    font-family: var(--ej-mono);
+    font-size: 12px;
+  }
+  .save-text {
+    color: #e8e8ea;
+  }
+  .bar-upd {
+    flex-shrink: 0;
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+  }
+
+  .trail-sec {
+    padding: clamp(36px, 6vh, 52px) 0 0;
+  }
+  .trail-card {
+    padding: 18px 22px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.075);
+    border-radius: 12px;
+    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.7),
+      0 16px 40px -20px rgba(0, 0, 0, 0.9),
+      inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  }
+  .trail-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+  .trail-label {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+  }
+  .console-link {
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 120ms ease;
+  }
+  .console-link:hover {
+    color: var(--ej-pink-2);
+  }
+  .trail-flex {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    flex-wrap: wrap;
+  }
+  .trail-grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(7, 13px);
+    grid-auto-columns: 13px;
+    gap: 3px;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .t-cell {
+    border-radius: 2.5px;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid transparent;
+  }
+  .t-cell.note {
+    background: rgba(255, 122, 192, 0.38);
+    box-shadow: 0 0 5px rgba(255, 122, 192, 0.1);
+  }
+  .t-cell.today {
+    border-color: rgba(245, 158, 11, 0.85);
+  }
+  .trail-side {
+    flex: 1;
+    min-width: 230px;
+    display: grid;
+    gap: 12px;
+    align-content: center;
+  }
+  .trail-note {
+    margin: 0;
+    max-width: 40ch;
+    color: #8f8f96;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #63636b;
+    font-family: var(--ej-mono);
+    font-size: 10px;
+  }
+  .sw {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+  .sw-note {
+    background: rgba(255, 122, 192, 0.38);
+  }
+  .sw-today {
+    border: 1px solid rgba(245, 158, 11, 0.85);
+    background: transparent;
+  }
+  .sw-empty {
+    background: rgba(255, 255, 255, 0.045);
+  }
+  .lg-div {
+    width: 1px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 0 6px;
+  }
+
+  .weeks-sec {
+    padding: clamp(44px, 7vh, 64px) 0 0;
+  }
+  .archive-link {
+    display: inline-block;
+    margin: -18px 0 0;
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    padding-bottom: 2px;
+    transition: color 120ms ease;
+  }
+  .archive-link:hover {
+    color: var(--ej-text);
+  }
+
+  .legend-sec {
+    padding: clamp(40px, 6vh, 56px) 0 clamp(56px, 8vh, 72px);
+  }
+  .symbols {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    flex-wrap: wrap;
+    padding: 14px 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--ej-dim);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+  }
+  .sym-label {
+    letter-spacing: 0.18em;
+    color: var(--ej-mut-2);
+  }
+  .s {
+    font-weight: 600;
+  }
+  .s-done { color: #e8e8ea; }
+  .s-decision { color: var(--ej-blue-2); }
+  .s-risk { color: var(--ej-rose); }
+  .s-next { color: var(--ej-amber-2); }
+  .s-dropped { color: var(--ej-mut-2); }
+  .s-public { color: var(--ej-pink); }
+</style>
