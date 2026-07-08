@@ -1,0 +1,101 @@
+---
+// 活信号线: 暗蓝全程 rPPG 波形 + 亮段巡游 + 发光点, bpm 每 2.6s 在 60–64 间浮动.
+const ecg =
+  'M0,58 L104,58 C113,58 119,14 129,14 C138,14 142,54 152,63 C160,70 166,47 175,47 C184,47 188,58 201,58 L440,58 C449,58 455,14 465,14 C474,14 478,54 488,63 C496,70 502,47 511,47 C520,47 524,58 537,58 L776,58 C785,58 791,14 801,14 C810,14 814,54 824,63 C832,70 838,47 847,47 C856,47 860,58 873,58 L1140,58';
+---
+
+<div class="live">
+  <div class="live-head">
+    <span class="live-label">LIVE — REMOTE PPG, RECONSTRUCTED</span>
+    <span class="live-bpm">≈ <span id="ej-bpm">62</span> bpm <span class="blink" aria-hidden="true">▍</span></span>
+  </div>
+  <div class="scope">
+    <svg viewBox="0 0 1140 84" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="0" y1="58" x2="1140" y2="58" stroke="rgba(255,255,255,0.035)" stroke-width="1" stroke-dasharray="2 6"></line>
+      <path d={ecg} fill="none" stroke="rgba(76,194,255,0.13)" stroke-width="1.5"></path>
+      <path
+        d={ecg}
+        fill="none"
+        stroke="#4cc2ff"
+        stroke-width="1.8"
+        pathLength="1"
+        stroke-dasharray="0.055 0.945"
+        stroke-linecap="round"
+        class="travel"></path>
+      <circle r="2.4" fill="#9edcff" class="spark">
+        <animateMotion dur="6.2s" repeatCount="indefinite" path={ecg}></animateMotion>
+      </circle>
+    </svg>
+  </div>
+</div>
+
+<script>
+  const bpm = document.getElementById('ej-bpm');
+  if (bpm) {
+    setInterval(() => {
+      bpm.textContent = String(60 + Math.floor(Math.random() * 5));
+    }, 2600);
+  }
+</script>
+
+<style>
+  .live {
+    position: relative;
+    margin-top: clamp(44px, 7vh, 72px);
+    border-top: 1px solid rgba(255, 255, 255, 0.055);
+  }
+  .live-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 2px 0;
+  }
+  .live-label {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+  }
+  .live-bpm {
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: 11px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .blink {
+    color: var(--ej-blue);
+    animation: ej-blink 1.1s steps(1, end) infinite;
+  }
+  .scope {
+    mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  }
+  svg {
+    display: block;
+    width: 100%;
+    height: 70px;
+  }
+  .travel {
+    animation: ej-travel 6.2s linear infinite;
+    filter: drop-shadow(0 0 6px rgba(76, 194, 255, 0.7));
+  }
+  .spark {
+    filter: drop-shadow(0 0 5px rgba(76, 194, 255, 0.9));
+  }
+  @keyframes ej-travel {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .travel,
+    .spark {
+      display: none;
+    }
+  }
+</style>

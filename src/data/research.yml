@@ -1,3 +1,40 @@
+# Research 数据入口(主页面板用; 将来 /research/ 页也从这里读).
+# tone 决定状态点/悬停条的颜色: pink=published · blue=under review(点会呼吸) · amber=in writing.
+
+subtitle: one line, three papers
+protocol: UBFC-PHYS · TSST-INSPIRED
+
+papers:
+  - status: Published
+    tone: pink
+    title: EDA-augmented CCT-LSTM for stress-task classification
+    dek: "First result: adding EDA lifts macro-F1 under a strict subject-level protocol."
+    venue: KICS · short paper
+    anchor: kics-2025
+  - status: Under review
+    tone: blue
+    title: A reliability audit of remote-PPG under social stress
+    dek: "Why EDA is necessary: rPPG degrades exactly when stress happens."
+    venue: ISPACS 2026 · submitted
+    anchor: ispacs-2026
+  - status: In writing
+    tone: amber
+    title: The journal version — reproducible, fully open
+    dek: Strict protocol, full ablations, honest negative results.
+    venue: IEEE J-BHI · target
+    anchor: ieee-j-bhi
+
+metric:
+  label: Headline metric
+  value: 0.73 → 0.83
+  notes:
+    - macro-F1 with EDA fusion
+    - subject-level 7-fold · 3 seeds
+
+keywords: multimodal video · cross-modal fusion · temporal modeling
+keywords_next: "next: VLM / MLLM for affect"
+
+# ↓ 研究现状(将来 About / Research 页使用)
 focus: Stress detection from multi-modal physiological signals.
 abstract: |
   Reproducing CCT-LSTM on BP4D++ with EDA augmentation; exploring 3-class
@@ -10,4 +47,3 @@ tags:
   - stress detection
   - VLM/LLM
 updated: 2026-05-01
-stale_after_days: 180

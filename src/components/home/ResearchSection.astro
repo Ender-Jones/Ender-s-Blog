@@ -1,0 +1,253 @@
+---
+// §2 Research: 三篇论文面板(状态色: pink=published / blue=review / amber=writing) + 指标卡.
+import { research } from '../../lib/data';
+
+const papers = research.papers;
+---
+
+<section class="reveal" style="--reveal-i: 1;" data-screen="research">
+  <div class="wrap">
+    <div class="head">
+      <h2>Research <span class="sub">{research.subtitle}</span></h2>
+      <span class="protocol">{research.protocol}</span>
+    </div>
+    <div class="grid">
+      <div class="panels">
+        {papers.map((p) => (
+          <a class:list={['panel', `tone-${p.tone}`]} href={`/research/#${p.anchor}`} data-route={`→ /research/#${p.anchor}`}>
+            <span class="topbar" aria-hidden="true"></span>
+            <span class="status-row">
+              <span class="dot" aria-hidden="true"></span>
+              <span class="status">{p.status}</span>
+            </span>
+            <strong class="title">{p.title}</strong>
+            <span class="dek">{p.dek}</span>
+            <span class="venue">{p.venue}</span>
+          </a>
+        ))}
+      </div>
+      <div class="metric">
+        <span class="metric-label"><span class="metric-dot" aria-hidden="true"></span>{research.metric.label}</span>
+        <span class="metric-value">{research.metric.value}</span>
+        <span class="metric-note">{research.metric.notes.map((n, i) => (<>{i > 0 && <br />}{n}</>))}</span>
+      </div>
+    </div>
+    <p class="keywords">{research.keywords} · <span class="kw-next">{research.keywords_next}</span></p>
+  </div>
+</section>
+
+<style>
+  .wrap {
+    padding: clamp(56px, 8vh, 84px) 0 0;
+  }
+  .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  h2 {
+    margin: 0;
+    color: var(--ej-text);
+    font-family: var(--ej-serif);
+    font-size: 30px;
+    font-weight: 400;
+  }
+  .sub {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    margin-left: 10px;
+  }
+  .protocol {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2.1fr) minmax(250px, 1fr);
+    gap: 14px;
+    align-items: stretch;
+  }
+  .panels {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border: 1px solid rgba(255, 255, 255, 0.075);
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.7),
+      0 16px 40px -20px rgba(0, 0, 0, 0.9),
+      inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  }
+  .panel {
+    --tone: var(--ej-pink);
+    --tone-rgb: 255, 122, 192;
+    position: relative;
+    overflow: hidden;
+    display: block;
+    padding: 18px 20px;
+    text-decoration: none;
+    transition: background 180ms var(--ej-ease);
+  }
+  .panel.tone-blue {
+    --tone: var(--ej-blue);
+    --tone-rgb: 76, 194, 255;
+  }
+  .panel.tone-amber {
+    --tone: var(--ej-amber);
+    --tone-rgb: 245, 158, 11;
+  }
+  .panel:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 0.055);
+  }
+  .panel:hover {
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .topbar {
+    position: absolute;
+    top: 0;
+    left: 20px;
+    right: 20px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--tone);
+    box-shadow: 0 0 9px rgba(var(--tone-rgb), 0.5);
+    opacity: 0;
+    transform: scaleX(0.4);
+    transform-origin: left;
+    transition:
+      opacity 180ms var(--ej-ease),
+      transform 240ms var(--ej-ease);
+  }
+  .panel:hover .topbar {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  .status-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 10px;
+  }
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--tone);
+    box-shadow: 0 0 8px rgba(var(--tone-rgb), 0.7);
+  }
+  .panel.tone-blue .dot {
+    animation: ej-pulse 2.8s ease-in-out infinite;
+  }
+  .status {
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .title {
+    display: block;
+    color: #e8e8ea;
+    font-size: 14.5px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+    transition: color 120ms ease;
+  }
+  .panel:hover .title {
+    color: #fff;
+  }
+  .dek {
+    display: block;
+    margin-top: 7px;
+    color: #9a9aa2;
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .venue {
+    display: block;
+    margin-top: 10px;
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    transition: color 120ms ease;
+  }
+  .panel:hover .venue {
+    color: var(--ej-text-3);
+  }
+
+  .metric {
+    display: grid;
+    align-content: center;
+    gap: 6px;
+    padding: 20px 24px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 12px;
+    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.7),
+      0 16px 40px -20px rgba(0, 0, 0, 0.9),
+      inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  }
+  .metric-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .metric-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--ej-amber);
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.7);
+  }
+  .metric-value {
+    color: var(--ej-text);
+    font-family: var(--ej-mono);
+    font-size: 27px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .metric-note {
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    line-height: 1.6;
+  }
+  .keywords {
+    margin: 16px 0 0;
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 12px;
+  }
+  .kw-next {
+    color: #9a9aa2;
+  }
+
+  @media (max-width: 980px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .panels {
+      grid-template-columns: 1fr;
+    }
+    .panel:not(:last-child) {
+      border-right: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+    }
+  }
+</style>

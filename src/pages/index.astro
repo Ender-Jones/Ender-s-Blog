@@ -1,53 +1,27 @@
 ---
 import BaseLayout from '../components/layout/BaseLayout.astro';
-import { getCollection } from 'astro:content';
-
-const posts = await getCollection('posts');
-const worklogs = await getCollection('worklogs');
+import Splash from '../components/home/Splash.astro';
+import RouteHint from '../components/home/RouteHint.astro';
+import Hero from '../components/home/Hero.astro';
+import LiveStrip from '../components/home/LiveStrip.astro';
+import ResearchSection from '../components/home/ResearchSection.astro';
+import WritingSection from '../components/home/WritingSection.astro';
+import ProofWall from '../components/home/ProofWall.astro';
+import Coda from '../components/home/Coda.astro';
+import { home } from '../lib/data';
 ---
 
-<BaseLayout title="Ender Jones — research notebook" noindex>
+<BaseLayout title="Ender Jones — research notebook" description={home.hero.body} noindex>
+  <Splash />
+  <RouteHint />
   <main>
-    <section class="construction">
-      <p class="line">
-        Ender Jones<span class="caret" aria-hidden="true"></span>
-      </p>
-      <p class="meta">
-        V3 under construction — {posts.length} posts · {worklogs.length} worklogs migrated
-      </p>
-    </section>
+    <Hero />
+    <div class="reveal" style="--reveal-i: 0;">
+      <LiveStrip />
+    </div>
+    <ResearchSection />
+    <WritingSection />
+    <ProofWall />
+    <Coda />
   </main>
 </BaseLayout>
-
-<style>
-  .construction {
-    display: grid;
-    place-content: center;
-    gap: 14px;
-    min-height: calc(100vh - 46px - 120px);
-    text-align: center;
-  }
-  .line {
-    margin: 0;
-    color: var(--ej-text);
-    font-family: var(--ej-serif);
-    font-size: 34px;
-    font-style: italic;
-  }
-  .caret {
-    display: inline-block;
-    width: 0.5em;
-    height: 0.07em;
-    margin-left: 0.14em;
-    border-radius: 1px;
-    background: var(--ej-pink);
-    box-shadow: 0 0 16px rgba(255, 122, 192, 0.6);
-    animation: ej-caret 1.15s linear infinite;
-  }
-  .meta {
-    margin: 0;
-    color: var(--ej-mut);
-    font-family: var(--ej-mono);
-    font-size: 12px;
-  }
-</style>

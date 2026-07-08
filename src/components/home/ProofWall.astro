@@ -1,0 +1,308 @@
+---
+// §4 Proof of work: 26 周墙(任何 push = 粉色梯度, 今天 = 琥珀框, 空白中性) + NOW 线.
+// 数据: src/data/github-activity.json(构建期快照; 刷新 → npm run activity:cache).
+import { getCollection } from 'astro:content';
+import activity from '../../data/github-activity.json';
+import { getCurrentThread } from '../../lib/parseWorklog';
+
+const DAYS = 182;
+const counts = new Map<string, number>(
+  (activity.days ?? []).map((d: { date: string; count: number }) => [d.date, d.count]),
+);
+
+const todayIso = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Tokyo' });
+const base = new Date(`${todayIso}T12:00:00Z`);
+const level = (c: number) => (c === 0 ? 0 : c <= 2 ? 1 : c <= 5 ? 2 : c <= 10 ? 3 : 4);
+
+const cells = Array.from({ length: DAYS }, (_, i) => {
+  const dt = new Date(base.getTime() - (DAYS - 1 - i) * 86400000);
+  const iso = dt.toISOString().slice(0, 10);
+  const count = counts.get(iso) ?? 0;
+  return {
+    iso,
+    count,
+    level: level(count),
+    isToday: i === DAYS - 1,
+    firstOfMonth: iso.slice(8, 10) === '01',
+    month: dt.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase(),
+  };
+});
+
+const monthLabels = Array.from({ length: Math.ceil(DAYS / 7) }, (_, col) => {
+  const week = cells.slice(col * 7, col * 7 + 7);
+  return week.find((c) => c.firstOfMonth)?.month ?? '';
+});
+
+const worklogs = await getCollection('worklogs');
+const thread = getCurrentThread(worklogs);
+const now =
+  thread.state === 'normal' || thread.state === 'stale'
+    ? {
+        summary: thread.summary,
+        upd: thread.updatedAt.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }),
+      }
+    : undefined;
+---
+
+<section class="reveal" style="--reveal-i: 3;" data-screen="proof">
+  <div class="wrap">
+    <div class="card">
+      <div class="head">
+        <span class="label">Proof of work — 26 weeks</span>
+        <span class="links">
+          <a class="lk lk-pink" href="/worklog/" data-route="→ /worklog/ — the full log">worklog →</a>
+          <a class="lk lk-blue" href="https://github.com/Ender-Jones" target="_blank" rel="noopener" data-route="↗ github.com/Ender-Jones">github ↗</a>
+        </span>
+      </div>
+
+      <a class="wall" href="/worklog/" data-route="→ /worklog/ — the full log">
+        <span class="wall-flex">
+          <span class="grid-wrap">
+            <span class="grid">
+              {cells.map((c) => (
+                <span
+                  class:list={['cell', `l${c.level}`, { today: c.isToday }]}
+                  title={`${c.iso}: ${c.count} commit${c.count === 1 ? '' : 's'}${c.isToday ? ' · today' : ''}`}></span>
+              ))}
+            </span>
+            <span class="months">
+              {monthLabels.map((m) => (
+                <span class="month">{m}</span>
+              ))}
+            </span>
+          </span>
+          <span class="side">
+            <span class="caption">any push — code, experiments, this site — turns the day pink. history needs no color, and gaps count against nothing.</span>
+            <span class="legend">
+              <span class="lg-txt">less</span>
+              <span class="sw l0"></span>
+              <span class="sw l1"></span>
+              <span class="sw l2"></span>
+              <span class="sw l3"></span>
+              <span class="sw l4"></span>
+              <span class="lg-txt">more</span>
+              <span class="lg-div"></span>
+              <span class="sw sw-today"></span>
+              <span class="lg-txt">today</span>
+            </span>
+          </span>
+        </span>
+      </a>
+
+      {now && (
+        <a class="now" href="/worklog/#resume-here" data-route="→ /worklog/#resume-here">
+          <span class="now-chip">NOW</span>
+          <span class="now-text">{now.summary}</span>
+          <span class="now-upd">upd {now.upd}</span>
+        </a>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .wrap {
+    padding: clamp(56px, 8vh, 84px) 0 0;
+  }
+  .card {
+    display: block;
+    padding: 20px 24px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.075);
+    border-radius: 12px;
+    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.7),
+      0 16px 40px -20px rgba(0, 0, 0, 0.9),
+      inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  }
+  .head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .label {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .links {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+  }
+  .lk {
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 120ms var(--ej-ease);
+  }
+  .lk-pink:hover {
+    color: var(--ej-pink-2);
+    text-shadow: 0 0 12px rgba(255, 122, 192, 0.5);
+  }
+  .lk-blue:hover {
+    color: var(--ej-blue-2);
+    text-shadow: 0 0 12px rgba(76, 194, 255, 0.5);
+  }
+
+  .wall {
+    display: block;
+    margin: 16px 0 0;
+    text-decoration: none;
+    opacity: 0.94;
+    transition: opacity 120ms var(--ej-ease);
+  }
+  .wall:hover {
+    opacity: 1;
+  }
+  .wall-flex {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .grid-wrap {
+    display: grid;
+    gap: 7px;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(7, 17px);
+    grid-auto-columns: 17px;
+    gap: 3.5px;
+  }
+  .cell {
+    border-radius: 3.5px;
+    border: 1px solid transparent;
+  }
+  .cell.l0 { background: rgba(255, 255, 255, 0.045); }
+  .cell.l1 { background: rgba(255, 122, 192, 0.18); }
+  .cell.l2 { background: rgba(255, 122, 192, 0.36); }
+  .cell.l3 { background: rgba(255, 138, 199, 0.6); }
+  .cell.l4 {
+    background: #ffcfe7;
+    box-shadow: 0 0 7px rgba(255, 122, 192, 0.28);
+  }
+  .cell.today {
+    border-color: rgba(245, 158, 11, 0.85);
+    box-shadow: 0 0 9px rgba(245, 158, 11, 0.45);
+  }
+  .months {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 17px;
+    gap: 3.5px;
+  }
+  .month {
+    color: #63636b;
+    font-family: var(--ej-mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    overflow: visible;
+  }
+  .side {
+    flex: 1;
+    min-width: 250px;
+    display: grid;
+    gap: 14px;
+    align-content: center;
+    padding-top: 4px;
+  }
+  .caption {
+    display: block;
+    max-width: 40ch;
+    color: #8f8f96;
+    font-family: var(--ej-sans);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #63636b;
+    font-family: var(--ej-mono);
+    font-size: 10px;
+  }
+  .sw {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+  .sw.l0 { background: rgba(255, 255, 255, 0.045); }
+  .sw.l1 { background: rgba(255, 122, 192, 0.18); }
+  .sw.l2 { background: rgba(255, 122, 192, 0.36); }
+  .sw.l3 { background: rgba(255, 138, 199, 0.6); }
+  .sw.l4 { background: #ffcfe7; }
+  .lg-div {
+    width: 1px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 0 6px;
+  }
+  .sw-today {
+    border: 1px solid rgba(245, 158, 11, 0.85);
+    box-shadow: 0 0 6px rgba(245, 158, 11, 0.35);
+    background: transparent;
+  }
+
+  .now {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 14px 0 0;
+    padding: 9px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.008);
+    transition: all 120ms var(--ej-ease);
+  }
+  .now:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .now-chip {
+    flex-shrink: 0;
+    padding: 2px 8px;
+    border: 1px solid rgba(255, 122, 192, 0.4);
+    border-radius: 4px;
+    color: var(--ej-pink-2);
+    font-family: var(--ej-mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+  }
+  .now-text {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--ej-text-3);
+    font-family: var(--ej-mono);
+    font-size: 12px;
+    transition: color 120ms ease;
+  }
+  .now:hover .now-text {
+    color: #e8e8ea;
+  }
+  .now-upd {
+    flex-shrink: 0;
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+  }
+</style>

@@ -1,3 +1,5 @@
+import homeYaml from '../data/home.yml';
+import quotesYaml from '../data/quotes.yml';
 import researchYaml from '../data/research.yml';
 import siteYaml from '../data/site.yml';
 import tagsYaml from '../data/tags.yml';
@@ -52,12 +54,49 @@ export type SiteData = {
   };
 };
 
+export type PaperTone = 'pink' | 'blue' | 'amber';
+
+export type Paper = {
+  status: string;
+  tone: PaperTone;
+  title: string;
+  dek: string;
+  venue: string;
+  anchor: string;
+};
+
 export type ResearchData = {
+  subtitle: string;
+  protocol: string;
+  papers: Paper[];
+  metric: {
+    label: string;
+    value: string;
+    notes: string[];
+  };
+  keywords: string;
+  keywords_next: string;
   focus: string;
   abstract: string;
   tags: string[];
   updated: string;
-  stale_after_days: number;
+};
+
+export type HomeData = {
+  splash: { greeting: string };
+  hero: { kicker: string; claim: string; body: string };
+  readout: {
+    rows: { key: string; value: string }[];
+    status: string;
+  };
+};
+
+export type Quote = {
+  text: string;
+  trans?: string;
+  source: string;
+  link_label?: string;
+  lang?: string;
 };
 
 export type TagTone = 'research' | 'personal' | 'neutral';
@@ -76,6 +115,8 @@ export type SocialDisplayLink = {
 export const site = siteYaml as SiteData;
 export const research = researchYaml as ResearchData;
 export const tagMeta = tagsYaml as Record<string, TagMeta>;
+export const home = homeYaml as HomeData;
+export const quotes = (quotesYaml as { quotes: Quote[] }).quotes;
 
 export function getSocialLinks(siteData = site): SocialDisplayLink[] {
   const links: SocialDisplayLink[] = [];

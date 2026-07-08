@@ -1,0 +1,208 @@
+---
+// 开场 splash: 每会话一次(sessionStorage), 4.4s 自动进入, 点击/按键跳过.
+import { home } from '../../lib/data';
+
+const claim = home.hero.claim;
+const words = claim.split(' ');
+const claimTail = words[words.length - 1];
+const claimHead = words.length > 1 ? words.slice(0, -1).join(' ') + ' ' : '';
+---
+
+<div class="splash" id="ej-splash">
+  <div class="stack">
+    <p class="greeting">{home.splash.greeting}</p>
+    <h1 class="claim">
+      {claimHead}<em>{claimTail}</em><span class="caret" aria-hidden="true"></span>
+    </h1>
+    <svg viewBox="0 0 1140 44" preserveAspectRatio="none" class="pulse" aria-hidden="true">
+      <path
+        d="M0,30 L300,30 C312,30 320,6 333,6 C345,6 350,27 363,33 C373,38 381,22 393,22 C405,22 410,30 428,30 L1140,30"
+        fill="none"
+        stroke-width="2"
+        pathLength="1"
+        stroke-dasharray="1"
+        stroke-dashoffset="1"
+        stroke-linecap="round"
+        style="stroke: var(--ej-pink); filter: drop-shadow(0 0 6px rgba(255,122,192,0.55));"></path>
+    </svg>
+  </div>
+  <span class="auto">
+    <span class="bar"><span class="fill"></span></span>
+    <span class="label">AUTO — CLICK OR ANY KEY TO SKIP</span>
+  </span>
+</div>
+
+<script is:inline>
+  (function () {
+    var el = document.getElementById('ej-splash');
+    if (!el) return;
+    var seen = false;
+    try {
+      seen = !!sessionStorage.getItem('ej-splash-seen');
+    } catch (e) {}
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (seen || reduced) {
+      el.remove();
+      return;
+    }
+    // 挡住正文的入场动画, splash 结束时放行(见 global.css 的 .reveal)
+    document.documentElement.classList.add('ej-splash-active');
+    var finished = false;
+    var finish = function (fast) {
+      if (finished) return;
+      finished = true;
+      try {
+        sessionStorage.setItem('ej-splash-seen', '1');
+      } catch (e) {}
+      el.classList.add('exiting');
+      window.removeEventListener('keydown', onKey);
+      setTimeout(function () {
+        el.remove();
+        document.documentElement.classList.remove('ej-splash-active');
+      }, fast ? 120 : 380);
+    };
+    var onKey = function (e) {
+      if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') finish(true);
+    };
+    el.addEventListener('click', function () {
+      finish(true);
+    });
+    window.addEventListener('keydown', onKey);
+    setTimeout(function () {
+      finish(false);
+    }, 4400);
+  })();
+</script>
+
+<style>
+  .splash {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    display: grid;
+    align-items: center;
+    padding: clamp(32px, 6vw, 88px);
+    cursor: pointer;
+    background: #030305;
+  }
+  .splash.exiting {
+    animation: ej-splash-out 380ms ease both;
+  }
+  .stack {
+    display: grid;
+    gap: clamp(14px, 2vw, 26px);
+    width: min(1200px, 92vw);
+  }
+  .greeting {
+    margin: 0;
+    color: rgba(245, 245, 246, 0.42);
+    font-family: var(--ej-serif);
+    font-size: clamp(30px, 3.4vw, 54px);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1;
+    opacity: 0;
+    animation: ej-line-in 780ms cubic-bezier(0.16, 0.72, 0.26, 1) both;
+  }
+  .claim {
+    margin: 0;
+    color: rgba(245, 245, 246, 0.92);
+    font-family: var(--ej-serif);
+    font-size: clamp(50px, 6.4vw, 104px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+    opacity: 0;
+    animation: ej-line-in 780ms cubic-bezier(0.16, 0.72, 0.26, 1) 650ms both;
+  }
+  .claim em {
+    font-style: italic;
+  }
+  .caret {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.07em;
+    margin-left: 0.14em;
+    border-radius: 1px;
+    background: var(--ej-pink);
+    box-shadow:
+      0 0 20px rgba(255, 122, 192, 0.6),
+      0 0 44px rgba(255, 122, 192, 0.25);
+    animation: ej-caret 1.15s linear infinite;
+  }
+  .pulse {
+    display: block;
+    width: min(560px, 60vw);
+    height: 34px;
+    opacity: 0;
+    animation: ej-line-in 500ms ease 1250ms both;
+  }
+  .pulse path {
+    animation: ej-draw 1.25s cubic-bezier(0.4, 0, 0.2, 1) 1350ms forwards;
+  }
+  .auto {
+    position: absolute;
+    bottom: clamp(26px, 5vw, 56px);
+    left: clamp(32px, 6vw, 88px);
+    display: grid;
+    gap: 9px;
+    opacity: 0;
+    animation: ej-line-in 780ms cubic-bezier(0.16, 0.72, 0.26, 1) 1500ms both;
+  }
+  .bar {
+    display: block;
+    width: 120px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.14);
+    overflow: hidden;
+  }
+  .fill {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--ej-pink);
+    box-shadow: 0 0 6px rgba(255, 122, 192, 0.6);
+    transform-origin: left;
+    animation: ej-splash-auto 4.4s linear forwards;
+  }
+  .label {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+  }
+  @keyframes ej-line-in {
+    0% {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    30% {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes ej-splash-out {
+    to {
+      opacity: 0;
+      transform: translateY(-12px);
+    }
+  }
+  @keyframes ej-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes ej-splash-auto {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+</style>

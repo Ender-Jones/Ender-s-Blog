@@ -1,0 +1,21 @@
+# 主页手动维护的文案/数据入口. 改这里即可, 不用碰组件代码.
+# claim 的最后一个词会自动变斜体; splash 和 hero 共用同一句 claim.
+
+splash:
+  greeting: Hi, I am Ender Jones.
+
+hero:
+  kicker: Affective Computing — Tokyo / Chiba
+  claim: Teaching machines how a body feels
+  body: >-
+    Contactless stress estimation from facial video, rPPG and EDA.
+    A research notebook, a personal archive, and proof that I am still working.
+
+# Subject readout 卡(主页右上): 点点引导行 + 带脉冲点的 status 行.
+readout:
+  rows:
+    - key: measures
+      value: rPPG · EDA · landmarks
+    - key: langs
+      value: Chinese · English · Japanese
+  status: writing the J-BHI draft

@@ -1,0 +1,51 @@
+---
+// 路由提示条: 悬停任何带 data-route 的链接时, 左下角显示目的地.
+---
+
+<div class="route-hint" id="route-hint" aria-hidden="true"></div>
+
+<script>
+  const bar = document.getElementById('route-hint');
+  if (bar) {
+    for (const el of document.querySelectorAll<HTMLElement>('[data-route]')) {
+      el.addEventListener('mouseenter', () => {
+        bar.textContent = el.dataset.route ?? '';
+        bar.classList.add('on');
+      });
+      el.addEventListener('mouseleave', () => {
+        bar.classList.remove('on');
+      });
+    }
+  }
+</script>
+
+<style>
+  .route-hint {
+    position: fixed;
+    left: 18px;
+    bottom: 16px;
+    z-index: 60;
+    pointer-events: none;
+    padding: 5px 12px;
+    border-radius: 7px;
+    background: rgba(6, 6, 8, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.8);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--ej-text-3);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(4px);
+    transition:
+      opacity 140ms var(--ej-ease),
+      transform 140ms var(--ej-ease);
+  }
+  .route-hint.on {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>

@@ -44,3 +44,21 @@ main {
     padding: 0 20px;
   }
 }
+
+/* 入场动画: 区块加 class="reveal" + style="--reveal-i: n"; splash 展示期间暂缓 */
+.reveal {
+  animation: ej-rise 560ms var(--ej-ease) both;
+  animation-delay: calc(var(--reveal-i, 0) * 70ms);
+}
+
+html.ej-splash-active .reveal {
+  animation: none;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+    opacity: 1;
+  }
+}
