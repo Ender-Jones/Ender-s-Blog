@@ -22,13 +22,14 @@
 
 约定: 所有需要你手动维护的"主页级数据"(研究面板的论文列表、readout 卡的状态行、hero 文案等)一律放 `src/data/*.yml`, 文件内带注释, 并在此表登记入口——不许藏进组件代码里.
 
-## 本地跑
+## 本地跑(Docker-first — 依赖住在容器的 named volume 里, 不落在 Mac 上)
 
 ```bash
-npm install
-git config core.hooksPath hooks   # 一次性: 让 commit 前自动跑内容检查
-npm run dev        # localhost:4321
-npm run build      # 内容检查 + astro check + 构建, 上线前必须全绿
+docker compose up site                        # 第一次自动装依赖; localhost:4321
+docker compose run --rm site npm run build    # 完整门禁: 内容检查 + astro check + 构建
+docker compose down                           # 停 (down -v 连依赖 volume 一起清掉重来)
+
+git config core.hooksPath hooks   # 一次性: commit 前自动跑内容检查(用 Mac 自带 node, 不需要 node_modules)
 ```
 
 ## 部署(上线时)

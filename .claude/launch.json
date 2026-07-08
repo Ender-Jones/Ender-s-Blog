@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "blog",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeExecutable": "docker",
+      "runtimeArgs": ["compose", "up", "site"],
       "port": 4321
     }
   ]
