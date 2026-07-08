@@ -1,0 +1,790 @@
+---
+// 文章页: 面包屑 + 阅读进度线 + 正文(prose) + §编号 ToC 轨道 + filed under + 前后篇 + 评论占位 + coda.
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import RouteHint from '../../components/home/RouteHint.astro';
+import { quotes } from '../../lib/data';
+import 'katex/dist/katex.min.css';
+import '../../styles/prose.css';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { id: post.id.replace(/\.(md|mdx)$/, '') },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+const idx = posts.findIndex((p) => p.id === post.id);
+const newer = idx > 0 ? posts[idx - 1] : undefined;
+const older = idx < posts.length - 1 ? posts[idx + 1] : undefined;
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+const minutes = Math.max(1, Math.ceil((post.body ?? '').split(/\s+/).filter(Boolean).length / 200));
+const toneOf = (kind: string) => (kind === 'poem' || kind === 'essay' ? 'pink' : 'blue');
+const tone = toneOf(post.data.kind);
+const kindChip = post.data.kind.replace(/-/g, ' ');
+const kindShort = (kind: string) =>
+  kind === 'research-note' ? 'note' : kind === 'field-report' ? 'field' : kind;
+const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
+const tagSlug = (tag: string) =>
+  tag.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+let n = 0;
+const tocItems = toc.map((h) => {
+  if (h.depth === 2) n += 1;
+  return { ...h, num: h.depth === 2 ? String(n).padStart(2, '0') : '' };
+});
+const showToc = tocItems.length >= 3;
+---
+
+<BaseLayout title={`${post.data.title} — Ender Jones`} description={post.data.description} noindex>
+  <RouteHint />
+  <div class="read-progress" id="read-progress" aria-hidden="true"></div>
+  <div class="orb orb-a" data-parallax="0.05" aria-hidden="true"></div>
+  <div class="orb orb-b" data-parallax="0.03" aria-hidden="true"></div>
+
+  <main>
+    <header id="post-top" class="post-head reveal" style="--reveal-i: 0;">
+      <div class="crumbs">
+        <a class="back" href="/posts/" data-route="→ /posts/ — the archive">← writing</a>
+        <span class="div" aria-hidden="true"></span>
+        <span class:list={['kind-chip', `tone-${tone}`]}><span class="kind-dot" aria-hidden="true"></span>{kindChip}</span>
+        <span class="meta">{fmtDate(post.data.date)} · {post.data.language.toUpperCase()} · {minutes} min read</span>
+      </div>
+      <h1>{post.data.title}</h1>
+      {post.data.description && <p class="dek">{post.data.description}</p>}
+    </header>
+
+    {post.data.image && (
+      <figure class="hero reveal" style="--reveal-i: 1;">
+        <div class="hero-img" style={`background-image: url('${post.data.image}'); background-position: ${post.data.image_focus};`}></div>
+        <figcaption>
+          <span>{post.data.image_alt}</span>
+          <span>image · {post.data.image_role}</span>
+        </figcaption>
+      </figure>
+    )}
+
+    <section class:list={['body-grid', 'reveal', { 'no-toc': !showToc }]} style="--reveal-i: 2;">
+      <article class="prose">
+        <Content />
+
+        <div class="filed">
+          <span class="filed-label">FILED UNDER</span>
+          <div class="filed-tags">
+            {post.data.tags.map((tag: string) => (
+              <a class="tag" href={`/tags/${tagSlug(tag)}/`} data-route={`→ /tags/${tagSlug(tag)}/`}>#{tag}</a>
+            ))}
+          </div>
+        </div>
+
+        <nav class="prevnext">
+          {older ? (
+            <a class="pv" href={href(older.id)} data-route={`→ ${href(older.id)}`}>
+              <span class="pv-arrow">← PREVIOUS</span>
+              <strong>{older.data.title}</strong>
+              <span class="pv-meta">{fmtDate(older.data.date)} · {kindShort(older.data.kind)}</span>
+            </a>
+          ) : (
+            <span class="pv pv-empty"></span>
+          )}
+          {newer ? (
+            <a class="pv pv-next" href={href(newer.id)} data-route={`→ ${href(newer.id)}`}>
+              <span class="pv-arrow">NEXT →</span>
+              <strong>{newer.data.title}</strong>
+              <span class="pv-meta">{fmtDate(newer.data.date)} · {kindShort(newer.data.kind)}</span>
+            </a>
+          ) : (
+            <span class="pv pv-empty"></span>
+          )}
+        </nav>
+
+        {post.data.comments && (
+          <section class="comments">
+            <div class="cm-head">
+              <span class="cm-label">COMMENTS</span>
+              <span class="cm-note">giscus · wired at go-live</span>
+            </div>
+            <div class="cm-panel">
+              <p>Comments live in GitHub Discussions via giscus.<br />Reactions and replies land in the repo — nothing else is stored.</p>
+              <span class="cm-btn">Sign in with GitHub</span>
+            </div>
+          </section>
+        )}
+
+        <section class="coda">
+          <span class="coda-bar" aria-hidden="true"></span>
+          <blockquote id="coda-quote"></blockquote>
+          <p class="coda-trans" id="coda-trans"></p>
+          <div class="coda-meta">
+            <span class="rule" aria-hidden="true"></span>
+            <span class="coda-source" id="coda-source"></span>
+            <span class="coda-lang" id="coda-lang"></span>
+            <button id="coda-reroll" type="button" data-route="⟳ another quote">⟳ another</button>
+          </div>
+        </section>
+      </article>
+
+      {showToc && (
+        <aside class="toc-rail">
+          <div class="toc-sticky">
+            <div class="toc-head">
+              <span>ON THIS PAGE</span>
+              <span>READ <span id="read-pct">0</span>%</span>
+            </div>
+            <div class="toc-list" id="toc-rail">
+              <span class="toc-fill" id="toc-fill" aria-hidden="true"></span>
+              {tocItems.map((t) => (
+                <a class:list={['toc-link', { sub: t.depth === 3 }]} href={`#${t.slug}`} data-route={`§ #${t.slug}`}>
+                  <span class="toc-mark" aria-hidden="true"></span>
+                  {t.num && <span class="toc-num">{t.num}</span>}
+                  {t.text}
+                </a>
+              ))}
+            </div>
+            <a class="toc-top" href="#post-top" data-route="↑ #post-top">↑ back to top</a>
+          </div>
+        </aside>
+      )}
+    </section>
+  </main>
+</BaseLayout>
+
+<script is:inline type="application/json" id="coda-data" set:html={JSON.stringify(quotes)} />
+
+<script is:inline>
+  (function () {
+    var data = document.getElementById('coda-data');
+    var quote = document.getElementById('coda-quote');
+    var trans = document.getElementById('coda-trans');
+    var source = document.getElementById('coda-source');
+    var lang = document.getElementById('coda-lang');
+    var btn = document.getElementById('coda-reroll');
+    if (!data || !quote || !source || !btn) return;
+    var quotes = JSON.parse(data.textContent || '[]');
+    if (!quotes.length) return;
+    var qi = Math.floor(Math.random() * quotes.length);
+    var fading = false;
+    var show = function () {
+      var q = quotes[qi];
+      quote.textContent = q.lang === 'fr' ? q.text : '“' + q.text + '”';
+      trans.textContent = q.trans || '';
+      trans.style.display = q.trans ? '' : 'none';
+      source.textContent = q.source;
+      lang.textContent = (q.lang || 'en').toUpperCase();
+    };
+    show();
+    btn.addEventListener('click', function () {
+      if (quotes.length < 2 || fading) return;
+      var m = Math.floor(Math.random() * (quotes.length - 1));
+      if (m >= qi) m += 1;
+      fading = true;
+      quote.classList.add('fade');
+      trans.classList.add('fade');
+      setTimeout(function () {
+        qi = m;
+        show();
+        quote.classList.remove('fade');
+        trans.classList.remove('fade');
+        fading = false;
+      }, 230);
+    });
+  })();
+</script>
+
+<script>
+  const bar = document.getElementById('read-progress');
+  const pct = document.getElementById('read-pct');
+  const rail = document.getElementById('toc-rail');
+  const fill = document.getElementById('toc-fill');
+  const links = rail ? [...rail.querySelectorAll<HTMLAnchorElement>('.toc-link')] : [];
+  const targets = links
+    .map((l) => document.getElementById(decodeURIComponent(l.hash.slice(1))))
+    .filter((el): el is HTMLElement => !!el);
+
+  let raf = 0;
+  const apply = () => {
+    raf = 0;
+    const doc = document.documentElement;
+    const max = doc.scrollHeight - window.innerHeight;
+    const p = max > 0 ? Math.max(0, Math.min(1, window.scrollY / max)) : 0;
+    if (bar) {
+      bar.style.width = `${(p * 100).toFixed(1)}%`;
+      bar.style.opacity = p > 0.004 ? '1' : '0';
+    }
+    if (pct) pct.textContent = String(Math.round(p * 100));
+    if (targets.length && rail && fill) {
+      let active = targets[0];
+      for (const el of targets) {
+        if (el.getBoundingClientRect().top < 130) active = el;
+      }
+      let fillH = 0;
+      for (const link of links) {
+        const on = decodeURIComponent(link.hash.slice(1)) === active.id;
+        link.classList.toggle('active', on);
+        if (on) fillH = link.offsetTop + link.offsetHeight - 5;
+      }
+      fill.style.height = `${fillH}px`;
+    }
+  };
+  apply();
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!raf) raf = requestAnimationFrame(apply);
+    },
+    { passive: true },
+  );
+</script>
+
+<style>
+  .read-progress {
+    position: fixed;
+    top: 45px;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    z-index: 41;
+    background: linear-gradient(90deg, rgba(255, 122, 192, 0.85), rgba(76, 194, 255, 0.85));
+    box-shadow: 0 0 8px rgba(76, 194, 255, 0.3);
+    opacity: 0;
+    transition: opacity 200ms ease;
+    pointer-events: none;
+  }
+  .orb {
+    position: fixed;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: 999px;
+  }
+  .orb-a {
+    top: 6%;
+    right: -180px;
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, rgba(255, 122, 192, 0.05), transparent 65%);
+  }
+  .orb-b {
+    top: 58%;
+    left: -220px;
+    width: 560px;
+    height: 560px;
+    background: radial-gradient(circle, rgba(76, 194, 255, 0.042), transparent 65%);
+  }
+
+  .post-head {
+    max-width: 880px;
+    padding: clamp(44px, 7vh, 72px) 0 0;
+  }
+  .crumbs {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .back {
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 120ms var(--ej-ease);
+  }
+  .back:hover {
+    color: var(--ej-text);
+  }
+  .div {
+    width: 1px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .kind-chip {
+    --tone: var(--ej-pink);
+    --tone-2: var(--ej-pink-2);
+    --tone-rgb: 255, 122, 192;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 3px 10px;
+    border: 1px solid rgba(var(--tone-rgb), 0.3);
+    border-radius: 999px;
+    color: var(--tone-2);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .kind-chip.tone-blue {
+    --tone: var(--ej-blue);
+    --tone-2: var(--ej-blue-2);
+    --tone-rgb: 76, 194, 255;
+  }
+  .kind-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--tone);
+    box-shadow: 0 0 7px rgba(var(--tone-rgb), 0.8);
+  }
+  .meta {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+  }
+  h1 {
+    margin: 22px 0 0;
+    color: var(--ej-text);
+    font-family: var(--ej-serif);
+    font-size: clamp(32px, 3.6vw, 44px);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1.14;
+    text-wrap: balance;
+  }
+  .dek {
+    margin: 16px 0 0;
+    max-width: 64ch;
+    color: var(--ej-text-3);
+    font-family: var(--ej-serif);
+    font-size: 17.5px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  .hero {
+    margin: 34px 0 0;
+  }
+  .hero-img {
+    height: clamp(220px, 32vh, 340px);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 12px;
+    background-size: cover;
+    filter: brightness(0.88);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.7),
+      0 24px 60px -28px rgba(0, 0, 0, 1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+  .hero figcaption {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 9px;
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+  }
+
+  .body-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 230px;
+    gap: 64px;
+    padding: clamp(40px, 6vh, 60px) 0 0;
+  }
+  .body-grid.no-toc {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  article {
+    max-width: 720px;
+    min-width: 0;
+  }
+
+  .filed {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin: 44px 0 0;
+    padding: 18px 0 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .filed-label {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+  }
+  .filed-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    padding: 2px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
+    color: #9a9aa2;
+    text-decoration: none;
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: all 120ms var(--ej-ease);
+  }
+  .tag:hover {
+    border-color: rgba(255, 255, 255, 0.24);
+    color: #e8e8ea;
+  }
+
+  .prevnext {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 34px 0 0;
+  }
+  .pv {
+    display: block;
+    padding: 16px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.075);
+    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.7),
+      0 14px 34px -20px rgba(0, 0, 0, 0.9),
+      inset 0 1px 0 rgba(255, 255, 255, 0.055);
+    transition: all 130ms var(--ej-ease);
+  }
+  .pv:hover {
+    border-color: rgba(255, 255, 255, 0.14);
+    transform: translateY(-2px);
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.6),
+      0 20px 44px -22px rgba(0, 0, 0, 1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  }
+  .pv-empty {
+    border: none;
+    background: none;
+    box-shadow: none;
+    pointer-events: none;
+  }
+  .pv-next {
+    text-align: right;
+  }
+  .pv-arrow {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    transition: all 120ms var(--ej-ease);
+  }
+  .pv:hover .pv-arrow {
+    color: var(--ej-pink-2);
+    text-shadow: 0 0 12px rgba(255, 122, 192, 0.5);
+  }
+  .pv strong {
+    display: block;
+    margin-top: 9px;
+    color: #e8e8ea;
+    font-family: var(--ej-serif);
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 1.25;
+  }
+  .pv-meta {
+    display: block;
+    margin-top: 7px;
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+  }
+
+  .comments {
+    margin: 34px 0 0;
+  }
+  .cm-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .cm-label,
+  .cm-note {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+  }
+  .cm-note {
+    letter-spacing: 0.02em;
+  }
+  .cm-panel {
+    display: grid;
+    place-items: center;
+    gap: 12px;
+    padding: 34px 24px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.008);
+  }
+  .cm-panel p {
+    margin: 0;
+    color: var(--ej-mut);
+    font-size: 13.5px;
+    text-align: center;
+    line-height: 1.6;
+  }
+  .cm-btn {
+    padding: 8px 20px;
+    border-radius: 8px;
+    background: #17171a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e8e8ea;
+    font-family: var(--ej-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    opacity: 0.7;
+  }
+
+  .coda {
+    position: relative;
+    margin: 64px 0 0;
+    padding: 26px 0 8px 26px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .coda-bar {
+    position: absolute;
+    left: 0;
+    top: 34px;
+    bottom: 14px;
+    width: 2px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, rgba(255, 122, 192, 0.5), rgba(76, 194, 255, 0.1));
+  }
+  .coda blockquote {
+    margin: 0;
+    color: #d0d0d6;
+    font-family: var(--ej-serif);
+    font-size: 20px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.55;
+    text-wrap: pretty;
+    min-height: 2.9em;
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 220ms ease,
+      transform 260ms var(--ej-ease);
+  }
+  .coda blockquote.fade,
+  .coda-trans.fade {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .coda-trans {
+    margin: 10px 0 0;
+    max-width: 58ch;
+    color: var(--ej-mut);
+    font-family: var(--ej-sans);
+    font-size: 13.5px;
+    font-weight: 400;
+    line-height: 1.65;
+    opacity: 1;
+    transition:
+      opacity 200ms ease,
+      transform 260ms var(--ej-ease);
+  }
+  .coda-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .coda .rule {
+    width: 18px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.22);
+  }
+  .coda-source {
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+  .coda-lang {
+    padding: 1px 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: var(--ej-dim);
+    font-family: var(--ej-mono);
+    font-size: 8.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+  }
+  #coda-reroll {
+    margin-left: auto;
+    padding: 3px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    transition: all 120ms var(--ej-ease);
+  }
+  #coda-reroll:hover {
+    border-color: rgba(255, 122, 192, 0.45);
+    background: rgba(255, 122, 192, 0.07);
+    color: var(--ej-pink-2);
+    text-shadow: 0 0 12px rgba(255, 122, 192, 0.4);
+  }
+
+  .toc-rail {
+    min-width: 0;
+  }
+  .toc-sticky {
+    position: sticky;
+    top: 74px;
+  }
+  .toc-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+  }
+  .toc-head span:last-child {
+    color: var(--ej-mut);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+  }
+  .toc-list {
+    position: relative;
+    border-left: 1px solid rgba(255, 255, 255, 0.07);
+  }
+  .toc-fill {
+    position: absolute;
+    left: -1px;
+    top: 0;
+    width: 2px;
+    height: 0;
+    border-radius: 2px;
+    background: linear-gradient(180deg, rgba(255, 122, 192, 0.7), rgba(76, 194, 255, 0.5));
+    box-shadow: 0 0 7px rgba(255, 122, 192, 0.25);
+    transition: height 160ms ease;
+    pointer-events: none;
+  }
+  .toc-link {
+    position: relative;
+    display: block;
+    padding: 5px 0 5px 14px;
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    line-height: 1.45;
+    transition:
+      color 120ms var(--ej-ease),
+      transform 140ms var(--ej-ease);
+  }
+  .toc-link.sub {
+    padding: 4px 0 4px 40px;
+    color: var(--ej-mut-2);
+    font-size: 10.5px;
+  }
+  .toc-link:hover {
+    color: #e8e8ea;
+    transform: translateX(2px);
+  }
+  .toc-link.active {
+    color: var(--ej-pink-2);
+    text-shadow: 0 0 12px rgba(255, 122, 192, 0.45);
+    transform: translateX(0);
+  }
+  .toc-num {
+    display: inline-block;
+    width: 26px;
+    color: #5f5f66;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    transition: color 120ms ease;
+  }
+  .toc-link.active .toc-num {
+    color: rgba(255, 179, 217, 0.75);
+  }
+  .toc-mark {
+    position: absolute;
+    left: -1.5px;
+    top: 5px;
+    bottom: 5px;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--ej-pink);
+    box-shadow: 0 0 9px rgba(255, 122, 192, 0.8);
+    opacity: 0;
+    transition: opacity 140ms ease;
+  }
+  .toc-link.active .toc-mark {
+    opacity: 1;
+  }
+  .toc-top {
+    display: inline-block;
+    margin-top: 14px;
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 120ms var(--ej-ease);
+  }
+  .toc-top:hover {
+    color: var(--ej-text);
+  }
+
+  @media (max-width: 1120px) {
+    .body-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .toc-rail {
+      display: none;
+    }
+    article {
+      max-width: none;
+    }
+  }
+  @media (max-width: 720px) {
+    .prevnext {
+      grid-template-columns: 1fr;
+    }
+    .pv-next {
+      text-align: left;
+    }
+  }
+</style>
