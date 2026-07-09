@@ -1,3 +1,4 @@
+import aboutYaml from '../data/about.yml';
 import homeYaml from '../data/home.yml';
 import quotesYaml from '../data/quotes.yml';
 import researchYaml from '../data/research.yml';
@@ -63,6 +64,15 @@ export type Paper = {
   dek: string;
   venue: string;
   anchor: string;
+  abstract: string;
+  contribution: string;
+  links: { paper?: string; code?: string };
+};
+
+export type TimelineEntry = {
+  when: string;
+  label: string;
+  tone: PaperTone | 'gray';
 };
 
 export type ResearchData = {
@@ -73,13 +83,25 @@ export type ResearchData = {
     label: string;
     value: string;
     notes: string[];
+    honesty: string;
   };
   keywords: string;
   keywords_next: string;
+  whats_next: string;
+  timeline: TimelineEntry[];
   focus: string;
   abstract: string;
   tags: string[];
   updated: string;
+};
+
+export type AboutData = {
+  lead: string;
+  paras: string[];
+  essay_link: { label: string; href: string };
+  notebook: { key: string; value: string }[];
+  system: { title: string; body: string; link_label: string; link: string };
+  colophon: string[];
 };
 
 export type HomeData = {
@@ -117,6 +139,7 @@ export const site = siteYaml as SiteData;
 export const research = researchYaml as ResearchData;
 export const tagMeta = tagsYaml as Record<string, TagMeta>;
 export const home = homeYaml as HomeData;
+export const about = aboutYaml as AboutData;
 export const quotes = (quotesYaml as { quotes: Quote[] }).quotes;
 
 export function getSocialLinks(siteData = site): SocialDisplayLink[] {

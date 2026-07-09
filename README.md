@@ -12,6 +12,9 @@
 | 加/改 coda 引文 | `src/data/quotes.yml` — 文章想固定某条: frontmatter 写 `coda: <id>`, 不写则随机 |
 | 新 tag 注册 | `src/data/tags.yml` — 文章用了没注册的 tag 构建会报错, 这是故意的 |
 | 改身份/联系方式 | `src/data/site.yml` |
+| 改 About 页文案 | `src/data/about.yml` — 自述/三重身份/ADHD 短节/colophon 全在这 |
+| 改 Research 页内容 | `src/data/research.yml` — 论文详情/时间线(学历年份待你填)/what's next |
+| 放 CV | `public/cv.pdf` — 文件一放, Research 页的下载按钮自动出现 |
 | 改颜色/字体/动效 | `src/styles/tokens.css` — 全站唯一的设计令牌来源 |
 | 未完成的草稿 | `drafts/` — 永远不进 `src/content`, 不用 `draft: true` |
 | 页面 | `src/pages/` — 路由即文件 |

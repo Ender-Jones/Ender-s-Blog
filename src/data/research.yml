@@ -1,5 +1,6 @@
-# Research 数据入口(主页面板用; 将来 /research/ 页也从这里读).
+# Research 数据入口 — 主页面板和 /research/ 页都从这里读.
 # tone 决定状态点/悬停条的颜色: pink=published · blue=under review(点会呼吸) · amber=in writing.
+# links 里没有的键就不渲染(paper/code 都可留空); timeline 想加学历节点照模板取消注释即可.
 
 subtitle: one line, three papers
 protocol: UBFC-PHYS · TSST-INSPIRED
@@ -11,18 +12,36 @@ papers:
     dek: "First result: adding EDA lifts macro-F1 under a strict subject-level protocol."
     venue: KICS · short paper
     anchor: kics-2025
+    abstract: >-
+      Reproduces CCT-LSTM for stress-task classification on UBFC-PHYS and augments it
+      with electrodermal activity. Under a strict subject-level split, EDA fusion lifts
+      macro-F1 from 0.73 to 0.83 — the first result on this line.
+    contribution: Designed the fusion setup and the subject-level evaluation protocol; ran all experiments.
+    links: {}
   - status: Under review
     tone: blue
     title: A reliability audit of remote-PPG under social stress
     dek: "Why EDA is necessary: rPPG degrades exactly when stress happens."
     venue: ISPACS 2026 · submitted
     anchor: ispacs-2026
+    abstract: >-
+      Audits how remote photoplethysmography behaves when the subject is actually
+      stressed — motion, expression, and autonomic load degrade the signal precisely
+      in the moments that matter. The audit motivates contact-signal augmentation.
+    contribution: Built the audit pipeline and the motion-artifact analysis; first author.
+    links: {}
   - status: In writing
     tone: amber
     title: The journal version — reproducible, fully open
     dek: Strict protocol, full ablations, honest negative results.
     venue: IEEE J-BHI · target
     anchor: ieee-j-bhi
+    abstract: >-
+      The consolidated journal account: strict subject-level protocol, full ablation
+      grid, paired statistics, and the negative results kept in — written to be
+      reproduced, not just cited.
+    contribution: In writing now — the day-by-day trail is on the worklog.
+    links: {}
 
 metric:
   label: Headline metric
@@ -30,11 +49,35 @@ metric:
   notes:
     - macro-F1 with EDA fusion
     - subject-level 7-fold · 3 seeds
+  honesty: >-
+    Numbers under a strict protocol: subject-level splits, multiple seeds, paired
+    statistics — smaller headline, but it holds.
 
 keywords: multimodal video · cross-modal fusion · temporal modeling
 keywords_next: "next: VLM / MLLM for affect"
+whats_next: >-
+  Vision-language directions for emotion recognition — probing whether VLM/MLLM
+  representations can read affect the way contact signals do.
 
-# ↓ 研究现状(将来 About / Research 页使用)
+timeline:
+  - when: "2026"
+    label: IEEE J-BHI journal version — in writing
+    tone: amber
+  - when: "2026"
+    label: ISPACS 2026 — reliability audit submitted
+    tone: blue
+  - when: "2025"
+    label: KICS short paper — EDA-augmented CCT-LSTM published
+    tone: pink
+  # ↓ 学历/身份节点: 把年份补上后取消注释(tone: gray = 中性节点)
+  # - when: "20XX"
+  #   label: PhD, Affective Computing — Tokyo/Chiba
+  #   tone: gray
+  # - when: "20XX"
+  #   label: M.Eng — TUIS
+  #   tone: gray
+
+# ↓ 研究现状(About 页使用)
 focus: Stress detection from multi-modal physiological signals.
 abstract: |
   Reproducing CCT-LSTM on BP4D++ with EDA augmentation; exploring 3-class

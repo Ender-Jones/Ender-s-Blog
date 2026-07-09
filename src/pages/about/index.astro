@@ -1,14 +1,445 @@
 ---
+// About: 自述开场 → 笔记本的三重身份 → ADHD 系统短节 → Now → Colophon → 联系.
+// 全部文案来自 src/data/about.yml(他的声音, 他可整段重写); Now 行复用 home.yml/worklog 数据.
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import RouteHint from '../../components/home/RouteHint.astro';
-import PagePlaceholder from '../../components/layout/PagePlaceholder.astro';
+import { about, home, site, getSocialLinks } from '../../lib/data';
+import { getNowLine, getWorklogDays } from '../../lib/worklogDays';
+
+const socials = getSocialLinks();
+const worklogs = await getCollection('worklogs');
+const nowLine = getNowLine(worklogs, getWorklogDays(worklogs))?.text;
+
+const nowRows = [
+  { key: 'base', value: site.location },
+  { key: 'role', value: site.identity.role_detail },
+  { key: 'langs', value: site.identity.languages.join(' · ') },
+  { key: 'status', value: home.readout.status },
+];
 ---
 
-<BaseLayout title="About — Ender Jones" description="Who keeps this notebook." noindex>
+<BaseLayout title="About — Ender Jones" description={about.lead} noindex>
   <RouteHint />
-  <PagePlaceholder
-    kicker="ABOUT — UNDER CONSTRUCTION"
-    title="Not written yet."
-    note="Who keeps this notebook, and why. Until this page is designed, the homepage readout card is the honest summary."
-  />
+  <main style="--ej-page-w: 980px;">
+    <section class="reveal" style="--reveal-i: 0;">
+      <p class="kicker">ABOUT — WHO KEEPS THIS NOTEBOOK</p>
+      <h1>About.<span class="caret" aria-hidden="true"></span></h1>
+      <p class="lead">{about.lead}</p>
+      <div class="intro">
+        <span class="portrait" aria-hidden="true"></span>
+        <div class="paras">
+          {about.paras.map((p) => (
+            <p>{p}</p>
+          ))}
+          <a class="essay" href={about.essay_link.href} data-route={`→ ${about.essay_link.href}`}>{about.essay_link.label}</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="notebook reveal" style="--reveal-i: 1;">
+      <div class="nb-card">
+        <span class="nb-label">THIS NOTEBOOK, THREE WAYS</span>
+        <div class="nb-rows">
+          {about.notebook.map((row) => (
+            <span class="nb-row">
+              <span class="nb-key">{row.key}</span>
+              <span class="nb-lead" aria-hidden="true"></span>
+              <span class="nb-val">{row.value}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="system reveal" style="--reveal-i: 2;">
+      <h2>{about.system.title}</h2>
+      <p class="sys-body">{about.system.body}</p>
+      <a class="sys-link" href={about.system.link} data-route={`→ ${about.system.link}`}>{about.system.link_label}</a>
+    </section>
+
+    <section class="now reveal" style="--reveal-i: 3;">
+      <div class="now-card">
+        <div class="now-head">
+          <span class="nb-label">NOW</span>
+          <span class="now-clock"><span id="about-clock">--:--</span> JST</span>
+        </div>
+        <div class="nb-rows">
+          {nowRows.map((row) => (
+            <span class="nb-row">
+              <span class="nb-key">{row.key}</span>
+              <span class="nb-lead" aria-hidden="true"></span>
+              <span class="nb-val">{row.key === 'status' && <span class="pulse" aria-hidden="true"></span>}{row.value}</span>
+            </span>
+          ))}
+        </div>
+        {nowLine && (
+          <a class="now-line" href="/worklog/" data-route="→ /worklog/">
+            <span class="now-chip">NOW</span>
+            <span class="now-text">{nowLine}</span>
+          </a>
+        )}
+      </div>
+    </section>
+
+    <section class="contact reveal" style="--reveal-i: 4;">
+      <h2>Reach me</h2>
+      <div class="c-rows">
+        {socials.map((s) => (
+          <a class:list={['c-row', `c-${s.key}`]} href={s.href} target={s.key === 'email' ? undefined : '_blank'} rel="noopener" data-route={s.key === 'email' ? `✉ ${s.value}` : `↗ ${s.value}`}>
+            <span class="c-label">{s.label}</span>
+            <span class="c-lead" aria-hidden="true"></span>
+            <span class="c-val">{s.value}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="colophon reveal" style="--reveal-i: 5;">
+      <span class="col-label">COLOPHON</span>
+      {about.colophon.map((line) => (
+        <p class="col-line">{line}</p>
+      ))}
+    </section>
+  </main>
 </BaseLayout>
+
+<script>
+  const el = document.getElementById('about-clock');
+  if (el) {
+    const tick = () => {
+      el.textContent = new Date()
+        .toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo', hour12: false })
+        .slice(0, 5);
+    };
+    tick();
+    setInterval(tick, 1000);
+  }
+</script>
+
+<style>
+  .kicker {
+    margin: 0 0 18px;
+    padding-top: clamp(48px, 8vh, 76px);
+    color: #82828c;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+  }
+  h1 {
+    margin: 0;
+    color: var(--ej-text);
+    font-family: var(--ej-serif);
+    font-size: clamp(38px, 4.6vw, 58px);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1.05;
+  }
+  .caret {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.07em;
+    margin-left: 0.14em;
+    border-radius: 1px;
+    background: var(--ej-pink);
+    box-shadow: 0 0 18px rgba(255, 122, 192, 0.55);
+    animation: ej-caret 1.15s linear infinite;
+  }
+  .lead {
+    margin: 22px 0 0;
+    max-width: 34ch;
+    color: var(--ej-text-2);
+    font-family: var(--ej-serif);
+    font-size: clamp(21px, 2.4vw, 28px);
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.45;
+    text-wrap: balance;
+  }
+  .intro {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    margin-top: 26px;
+  }
+  .portrait {
+    flex-shrink: 0;
+    width: 84px;
+    height: 84px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: url('/img/author/ang.JPG') center / cover;
+    filter: grayscale(0.45) brightness(0.92);
+    box-shadow: 0 10px 26px -12px rgba(0, 0, 0, 0.9);
+  }
+  .paras {
+    display: grid;
+    gap: 12px;
+    max-width: 60ch;
+  }
+  .paras p {
+    margin: 0;
+    color: var(--ej-text-3);
+    font-size: 15px;
+    line-height: 1.7;
+    text-wrap: pretty;
+  }
+  .essay {
+    justify-self: start;
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    text-decoration: none;
+    padding-bottom: 2px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+    transition: all 120ms var(--ej-ease);
+  }
+  .essay:hover {
+    color: var(--ej-pink-2);
+    border-bottom-color: rgba(255, 122, 192, 0.5);
+    text-shadow: 0 0 12px rgba(255, 122, 192, 0.4);
+  }
+
+  .notebook,
+  .now {
+    padding: clamp(40px, 6vh, 56px) 0 0;
+  }
+  .nb-card,
+  .now-card {
+    padding: 18px 24px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.075);
+    border-radius: 12px;
+    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.7),
+      0 16px 40px -20px rgba(0, 0, 0, 0.9),
+      inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  }
+  .nb-label {
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .nb-rows {
+    display: grid;
+    gap: 2px;
+    margin-top: 10px;
+  }
+  .nb-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 7px 2px;
+  }
+  .nb-key {
+    flex-shrink: 0;
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transition: color 120ms ease;
+  }
+  .nb-lead {
+    flex: 1;
+    min-width: 14px;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.11);
+    transform: translateY(-3px);
+    transition: border-color 120ms ease;
+  }
+  .nb-val {
+    flex-shrink: 0;
+    max-width: 62%;
+    text-align: right;
+    color: #e8e8ea;
+    font-family: var(--ej-mono);
+    font-size: 12px;
+    line-height: 1.6;
+    transition: color 120ms ease;
+  }
+  .nb-row:hover .nb-key { color: var(--ej-text-2); }
+  .nb-row:hover .nb-lead { border-bottom-color: rgba(255, 255, 255, 0.22); }
+  .nb-row:hover .nb-val { color: #fff; }
+
+  .system {
+    padding: clamp(44px, 6vh, 60px) 0 0;
+    max-width: 640px;
+  }
+  h2 {
+    margin: 0;
+    color: var(--ej-text);
+    font-family: var(--ej-serif);
+    font-size: 26px;
+    font-weight: 400;
+  }
+  .sys-body {
+    margin: 14px 0 0;
+    color: var(--ej-text-3);
+    font-size: 15px;
+    line-height: 1.75;
+    text-wrap: pretty;
+  }
+  .sys-link {
+    display: inline-block;
+    margin-top: 14px;
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 120ms var(--ej-ease);
+  }
+  .sys-link:hover {
+    color: var(--ej-pink-2);
+    text-shadow: 0 0 12px rgba(255, 122, 192, 0.5);
+  }
+
+  .now-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .now-clock {
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .pulse {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--ej-pink);
+    margin-right: 8px;
+    box-shadow:
+      0 0 9px rgba(255, 122, 192, 0.8),
+      0 0 20px rgba(255, 122, 192, 0.3);
+    animation: ej-pulse 3s ease-in-out infinite;
+  }
+  .now-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.008);
+    transition: all 120ms var(--ej-ease);
+  }
+  .now-line:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .now-chip {
+    flex-shrink: 0;
+    padding: 2px 8px;
+    border: 1px solid rgba(255, 122, 192, 0.4);
+    border-radius: 4px;
+    color: var(--ej-pink-2);
+    font-family: var(--ej-mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+  }
+  .now-text {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--ej-text-3);
+    font-family: var(--ej-mono);
+    font-size: 12px;
+  }
+
+  .contact {
+    padding: clamp(44px, 6vh, 60px) 0 0;
+    max-width: 640px;
+  }
+  .c-rows {
+    display: grid;
+    gap: 2px;
+    margin-top: 14px;
+  }
+  .c-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 9px 2px;
+    text-decoration: none;
+  }
+  .c-label {
+    flex-shrink: 0;
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    transition: color 120ms ease;
+  }
+  .c-lead {
+    flex: 1;
+    min-width: 14px;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.11);
+    transform: translateY(-3px);
+    transition: border-color 120ms ease;
+  }
+  .c-val {
+    flex-shrink: 0;
+    color: #e8e8ea;
+    font-family: var(--ej-mono);
+    font-size: 12.5px;
+    transition: all 120ms var(--ej-ease);
+  }
+  .c-row:hover .c-label { color: var(--ej-text-2); }
+  .c-row:hover .c-lead { border-bottom-color: rgba(255, 255, 255, 0.22); }
+  .c-github:hover .c-val {
+    color: var(--ej-blue-2);
+    text-shadow: 0 0 12px rgba(76, 194, 255, 0.5);
+  }
+  .c-twitter:hover .c-val {
+    color: #ffffff;
+  }
+  .c-email:hover .c-val {
+    color: var(--ej-pink-2);
+    text-shadow: 0 0 12px rgba(255, 122, 192, 0.5);
+  }
+
+  .colophon {
+    padding: clamp(48px, 7vh, 64px) 0 clamp(56px, 8vh, 72px);
+  }
+  .col-label {
+    display: block;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+  }
+  .col-line {
+    margin: 8px 0 0;
+    color: var(--ej-dim);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 720px) {
+    .intro {
+      flex-direction: column;
+    }
+  }
+</style>

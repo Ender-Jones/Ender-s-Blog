@@ -3,7 +3,7 @@
 // 数据: src/data/github-activity.json(构建期快照; 刷新 → npm run activity:cache).
 import { getCollection } from 'astro:content';
 import activity from '../../data/github-activity.json';
-import { getCurrentThread } from '../../lib/parseWorklog';
+import { getNowLine, getWorklogDays } from '../../lib/worklogDays';
 
 const DAYS = 182;
 const counts = new Map<string, number>(
@@ -34,14 +34,13 @@ const monthLabels = Array.from({ length: Math.ceil(DAYS / 7) }, (_, col) => {
 });
 
 const worklogs = await getCollection('worklogs');
-const thread = getCurrentThread(worklogs);
-const now =
-  thread.state === 'normal' || thread.state === 'stale'
-    ? {
-        summary: thread.summary,
-        upd: thread.updatedAt.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }),
-      }
-    : undefined;
+const nowLine = getNowLine(worklogs, getWorklogDays(worklogs));
+const now = nowLine
+  ? {
+      summary: nowLine.text,
+      upd: nowLine.date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', timeZone: 'UTC' }),
+    }
+  : undefined;
 ---
 
 <section class="reveal" style="--reveal-i: 3;" data-screen="proof">

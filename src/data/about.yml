@@ -1,0 +1,45 @@
+# About 页的全部文案入口 — 改这里即可, 每段都是你的声音, 随意重写.
+
+lead: >-
+  A kid who wanted to be a scientist — still on the road, now teaching
+  machines how a body feels.
+
+paras:
+  - >-
+    I am a PhD candidate in affective computing in Tokyo/Chiba, working on
+    contactless stress estimation from facial video, rPPG and EDA. Before the
+    research there was writing, and before the writing there was a long detour —
+    the essay below tells that part better than a bio can.
+  - >-
+    I write in three languages, think mostly in two, and keep the important
+    things in one place: this notebook.
+
+essay_link:
+  label: read “Who Am I?” — the longer answer
+  href: /posts/who-am-i/
+
+# 站点的三重身份(dotted rows)
+notebook:
+  - key: research notebook
+    value: methods, metrics, honest negative results
+  - key: personal archive
+    value: essays and poems, kept against forgetting
+  - key: proof
+    value: one line a day says the work continued
+
+# ADHD 方法论短节(将来独立成文, 这里只带过)
+system:
+  title: One line against forgetting
+  body: >-
+    The worklog exists because my working memory can't be trusted with a whole
+    day. One line at capture, a small ritual at close, git as the spine: done
+    beats todo, dropping a task is a decision rather than a failure, and blank
+    days count against nothing. A longer essay on this system is coming; until
+    then, the worklog itself is the demonstration.
+  link_label: watch it run →
+  link: /worklog/
+
+colophon:
+  - "Astro · Cloudflare Pages · type set in Newsreader, Geist & Geist Mono"
+  - "theme: vital signs in a darkroom — chrome stays gray, only living signals glow"
+  - "built in the open; the build gates its own content"

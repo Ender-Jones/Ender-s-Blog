@@ -4,31 +4,20 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import RouteHint from '../../components/home/RouteHint.astro';
 import WorklogWeeks from '../../components/worklog/WorklogWeeks.astro';
-import { getCurrentThread } from '../../lib/parseWorklog';
-import { getWorklogDays, groupByWeek } from '../../lib/worklogDays';
+import { getNowLine, getWorklogDays, groupByWeek } from '../../lib/worklogDays';
 
 const worklogs = await getCollection('worklogs');
 const days = getWorklogDays(worklogs);
 const todayIso = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Tokyo' });
 
-const fmtShort = (iso: string) =>
-  new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-US', {
-    month: 'short',
-    day: '2-digit',
-    timeZone: 'UTC',
-  });
-
-// NOW: 最新的逐日公开句; 没有则回退到 frontmatter public_thread.
-const latestPublic = days.find((d) => d.publicLine);
-const thread = getCurrentThread(worklogs);
-const now = latestPublic
-  ? { text: latestPublic.publicLine!, upd: fmtShort(latestPublic.date) }
-  : thread.state === 'normal' || thread.state === 'stale'
-    ? {
-        text: thread.summary,
-        upd: thread.updatedAt.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }),
-      }
-    : undefined;
+// NOW: 最新的逐日公开句; 没有则回退到任意月份 frontmatter 的 public_thread.
+const nowLine = getNowLine(worklogs, days);
+const now = nowLine
+  ? {
+      text: nowLine.text,
+      upd: nowLine.date.toLocaleDateString('en-US', { month: 'short', day: '2-digit', timeZone: 'UTC' }),
+    }
+  : undefined;
 
 // SAVE POINT: 最新一条 next.
 const savePoint = (() => {

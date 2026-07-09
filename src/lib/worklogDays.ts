@@ -1,7 +1,8 @@
 // V3 worklog 日条目解析器 — 从月度 markdown 里抽出逐日条目流.
 // 宽容两代格式: legacy(2026-04/05, 无 Public/energy, 夹杂非日期 H2 块)与新格式
 // (## YYYY-MM-DD + <!-- energy: N --> + ### Done/Decision/Risk/Next/Dropped/Public).
-import type { WorklogEntry } from './content';
+import { byDateDesc, type WorklogEntry } from './content';
+import { getPublicThread } from './parseWorklog';
 
 export type WorklogItemType =
   | 'done'
@@ -127,6 +128,20 @@ export function getWorklogDays(worklogs: WorklogEntry[]): WorklogDay[] {
   }
 
   return [...days.values()].sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+/** 站点 NOW 线: 最新的逐日 ### Public, 否则回退到任意月份 frontmatter 的 public_thread. */
+export function getNowLine(
+  worklogs: WorklogEntry[],
+  days: WorklogDay[],
+): { text: string; date: Date } | undefined {
+  const day = days.find((d) => d.publicLine);
+  if (day) return { text: day.publicLine!, date: new Date(`${day.date}T12:00:00Z`) };
+  for (const worklog of byDateDesc(worklogs)) {
+    const thread = getPublicThread(worklog);
+    if (thread) return { text: thread.summary, date: worklog.data.updated ?? worklog.data.date };
+  }
+  return undefined;
 }
 
 /** ISO 周编号(周一为一周之始). */
