@@ -62,10 +62,10 @@ const consoleData = {
           </div>
 
           <div class="chips" id="c-chips">
-            <button type="button" data-tok="@" data-route="insert prefix — project">@ project</button>
-            <button type="button" data-tok="=" data-route="insert prefix — decision">= decision</button>
-            <button type="button" data-tok="!" data-route="insert prefix — risk">! risk</button>
-            <button type="button" data-tok=">" data-route="insert prefix — next">&gt; next</button>
+            <button type="button" class="chip-project" data-tok="@" data-route="insert prefix — project"><span class="tok">@</span> project</button>
+            <button type="button" class="chip-decision" data-tok="=" data-route="insert prefix — decision"><span class="tok">=</span> decision</button>
+            <button type="button" class="chip-risk" data-tok="!" data-route="insert prefix — risk"><span class="tok">!</span> risk</button>
+            <button type="button" class="chip-next" data-tok=">" data-route="insert prefix — next"><span class="tok">&gt;</span> next</button>
           </div>
 
           <div class="entries" id="c-entries">
@@ -272,9 +272,12 @@ const consoleData = {
   // ---- 渲染 ----
   const input = $<HTMLInputElement>('c-input');
   const preview = $('c-preview');
+  const chipEls = [...document.querySelectorAll<HTMLButtonElement>('#c-chips button')];
 
   const renderPreviewChip = () => {
     const t = input.value.trim();
+    const first = t.charAt(0);
+    for (const chip of chipEls) chip.classList.toggle('active', chip.dataset.tok === first);
     if (!t) {
       preview.className = 'type-preview';
       preview.textContent = '';
@@ -352,9 +355,9 @@ const consoleData = {
           return b;
         };
         actions.append(
-          mk('✓ done', 'ca', () => useCarry(i, 'done')),
+          mk('✓ done', 'ca ca-done', () => useCarry(i, 'done')),
           mk('→ still next', 'ca ca-amber', () => useCarry(i, 'next')),
-          mk('× drop', 'ca', () => useCarry(i, 'dropped')),
+          mk('× drop', 'ca ca-drop', () => useCarry(i, 'dropped')),
         );
         row.append(actions);
       }
@@ -819,6 +822,8 @@ const consoleData = {
     padding: 8px 20px 16px 43px;
   }
   .chips button {
+    --tone: var(--ej-text-2);
+    --tone-rgb: 200, 200, 205;
     padding: 3px 10px;
     border-radius: 999px;
     cursor: pointer;
@@ -832,9 +837,30 @@ const consoleData = {
     letter-spacing: 0.06em;
     transition: all 120ms var(--ej-ease);
   }
+  .chips button.chip-decision {
+    --tone: var(--ej-blue-2);
+    --tone-rgb: 76, 194, 255;
+  }
+  .chips button.chip-risk {
+    --tone: var(--ej-rose);
+    --tone-rgb: 255, 157, 157;
+  }
+  .chips button.chip-next {
+    --tone: var(--ej-amber-2);
+    --tone-rgb: 245, 158, 11;
+  }
+  .chips button .tok {
+    color: var(--tone);
+    font-weight: 600;
+  }
   .chips button:hover {
-    border-color: rgba(255, 255, 255, 0.22);
+    border-color: rgba(var(--tone-rgb), 0.4);
     color: var(--ej-text-2);
+  }
+  .chips button.active {
+    border-color: rgba(var(--tone-rgb), 0.5);
+    background: rgba(var(--tone-rgb), 0.08);
+    color: var(--tone);
   }
 
   .entries {
@@ -846,7 +872,7 @@ const consoleData = {
     padding: 18px 20px;
     color: var(--ej-dim);
     font-family: var(--ej-mono);
-    font-size: 11.5px;
+    font-size: 12px;
   }
   .entries :global(.entry-row) {
     display: flex;
@@ -874,9 +900,9 @@ const consoleData = {
   .entries :global(.entry-text) {
     flex: 1;
     min-width: 0;
-    color: var(--ej-text-2);
+    color: #e8e8ea;
     font-family: var(--ej-mono);
-    font-size: 12.5px;
+    font-size: 13px;
     line-height: 1.55;
     overflow-wrap: break-word;
   }
@@ -945,9 +971,9 @@ const consoleData = {
   .carry :global(.carry-text) {
     flex: 1;
     min-width: 0;
-    color: var(--ej-text-2);
+    color: #e8e8ea;
     font-family: var(--ej-mono);
-    font-size: 11.5px;
+    font-size: 12.5px;
     line-height: 1.5;
   }
   .carry :global(.carry-text.strike) {
@@ -980,14 +1006,30 @@ const consoleData = {
     font-weight: 500;
     transition: all 120ms var(--ej-ease);
   }
-  .carry :global(.ca:hover) {
-    border-color: rgba(255, 255, 255, 0.3);
-    color: #f0f0f2;
+  .carry :global(.ca-done) {
+    color: #b4b4bc;
+  }
+  .carry :global(.ca-done:hover) {
+    border-color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.07);
+    color: #f5f5f6;
+  }
+  .carry :global(.ca-amber) {
+    color: rgba(252, 211, 77, 0.75);
   }
   .carry :global(.ca-amber:hover) {
     border-color: rgba(245, 158, 11, 0.55);
     background: rgba(245, 158, 11, 0.12);
     color: var(--ej-amber-2);
+  }
+  .carry :global(.ca-drop) {
+    color: var(--ej-mut-2);
+  }
+  .carry :global(.ca-drop:hover) {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--ej-mut-2);
+    text-decoration: line-through;
+    text-decoration-color: rgba(255, 255, 255, 0.4);
   }
 
   .syntax {
@@ -1087,7 +1129,7 @@ const consoleData = {
     overflow-y: auto;
     padding: 14px 18px;
     font-family: var(--ej-mono);
-    font-size: 11.5px;
+    font-size: 12px;
     line-height: 1.75;
   }
   .md :global(.md-h2) {

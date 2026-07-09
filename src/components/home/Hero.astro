@@ -39,7 +39,7 @@ const synced = syncedAt
 
       <div class="card-head">
         <span class="card-label">Subject readout</span>
-        <span class="clock"><span id="jst-clock">--:--</span> JST <span class="blink" aria-hidden="true">▍</span></span>
+        <span class="clock"><span id="jst-clock">--:--</span> JST</span>
       </div>
 
       <div class="identity">
@@ -196,6 +196,7 @@ const synced = syncedAt
     text-shadow: 0 0 14px rgba(255, 122, 192, 0.45);
   }
 
+  /* hover = 对焦: 取景角亮起并微张, 扫描线扫过肖像一次. 静止时只留 status 脉冲点. */
   .card {
     position: relative;
     overflow: hidden;
@@ -207,11 +208,24 @@ const synced = syncedAt
       0 1px 2px rgba(0, 0, 0, 0.7),
       0 16px 40px -20px rgba(0, 0, 0, 0.9),
       inset 0 1px 0 rgba(255, 255, 255, 0.055);
+    transition: border-color 200ms var(--ej-ease);
+  }
+  .card:hover {
+    border-color: rgba(255, 255, 255, 0.16);
   }
   .tick {
     position: absolute;
     width: 9px;
     height: 9px;
+    transition:
+      border-color 200ms var(--ej-ease),
+      width 220ms var(--ej-ease),
+      height 220ms var(--ej-ease);
+  }
+  .card:hover .tick {
+    border-color: rgba(255, 255, 255, 0.52);
+    width: 12px;
+    height: 12px;
   }
   .tick.tl { top: 7px; left: 7px; border-top: 1px solid rgba(255, 255, 255, 0.24); border-left: 1px solid rgba(255, 255, 255, 0.24); }
   .tick.tr { top: 7px; right: 7px; border-top: 1px solid rgba(255, 255, 255, 0.24); border-right: 1px solid rgba(255, 255, 255, 0.24); }
@@ -241,10 +255,6 @@ const synced = syncedAt
     font-size: 10.5px;
     font-weight: 500;
     font-variant-numeric: tabular-nums;
-  }
-  .blink {
-    color: var(--ej-blue);
-    animation: ej-blink 1.1s steps(1, end) infinite;
   }
 
   .identity {
@@ -276,6 +286,27 @@ const synced = syncedAt
     top: 0;
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(255, 122, 192, 0.55), transparent);
+  }
+  .card:hover .scanline {
+    animation: ej-scan 1s var(--ej-ease) both;
+  }
+  @keyframes ej-scan {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    70% {
+      opacity: 0.9;
+    }
+    to {
+      transform: translateY(52px);
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card:hover .scanline {
+      animation: none;
+    }
   }
   .who {
     display: grid;
