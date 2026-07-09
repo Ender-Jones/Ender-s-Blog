@@ -15,7 +15,7 @@ const papers = research.papers;
       <div class="panels">
         {papers.map((p) => (
           <a class:list={['panel', `tone-${p.tone}`]} href={`/research/#${p.anchor}`} data-route={`→ /research/#${p.anchor}`}>
-            <span class="topbar" aria-hidden="true"></span>
+            <span class="linebar" aria-hidden="true"></span>
             <span class="status-row">
               <span class="dot" aria-hidden="true"></span>
               <span class="status">{p.status}</span>
@@ -90,7 +90,7 @@ const papers = research.papers;
     position: relative;
     overflow: hidden;
     display: block;
-    padding: 18px 20px;
+    padding: 18px 20px 18px 24px;
     text-decoration: none;
     transition: background 180ms var(--ej-ease);
   }
@@ -108,25 +108,22 @@ const papers = research.papers;
   .panel:hover {
     background: rgba(255, 255, 255, 0.02);
   }
-  .topbar {
+  /* the-line 词汇: 常亮的状态色侧条(低强度), hover 时呼吸到满 */
+  .linebar {
     position: absolute;
-    top: 0;
-    left: 20px;
-    right: 20px;
-    height: 2px;
+    left: 0;
+    top: 16px;
+    bottom: 16px;
+    width: 2px;
     border-radius: 2px;
     background: var(--tone);
-    box-shadow: 0 0 9px rgba(var(--tone-rgb), 0.5);
-    opacity: 0;
-    transform: scaleX(0.4);
-    transform-origin: left;
-    transition:
-      opacity 180ms var(--ej-ease),
-      transform 240ms var(--ej-ease);
+    box-shadow: 0 0 8px rgba(var(--tone-rgb), 0.35);
+    opacity: 0.55;
+    transition: opacity 200ms var(--ej-ease), box-shadow 200ms var(--ej-ease);
   }
-  .panel:hover .topbar {
+  .panel:hover .linebar {
     opacity: 1;
-    transform: scaleX(1);
+    box-shadow: 0 0 12px rgba(var(--tone-rgb), 0.6);
   }
   .status-row {
     display: flex;
@@ -248,6 +245,12 @@ const papers = research.papers;
     .panel:not(:last-child) {
       border-right: none;
       border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+    }
+  }
+  @media (max-width: 560px) {
+    .sub,
+    .protocol {
+      display: none;
     }
   }
 </style>

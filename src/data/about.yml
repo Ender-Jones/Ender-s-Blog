@@ -6,11 +6,14 @@ lead: >-
 
 paras:
   - >-
-    I am a PhD candidate in affective computing in Tokyo/Chiba, working on
-    contactless stress estimation from facial video, rPPG and EDA. Before the
-    research there was writing, and before the writing there was a long detour —
-    the essay below tells that part better than a bio can.
+    I am a PhD candidate in Tokyo/Chiba. My research asks a simple question:
+    can a machine tell how stressed you are just by looking? The notebook
+    catches me mid-turn — from reading pulse and skin signals out of video,
+    toward asking whether the big vision-language models can learn to feel
+    any of it.
   - >-
+    Before the research there was writing, and before the writing there was
+    a long detour — the essay below tells that part better than a bio can.
     I write in three languages, think mostly in two, and keep the important
     things in one place: this notebook.
 

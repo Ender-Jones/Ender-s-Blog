@@ -8,8 +8,8 @@ hero:
   kicker: Affective Computing — Tokyo / Chiba
   claim: Teaching machines how a body feels
   body: >-
-    Contactless stress estimation from facial video, rPPG and EDA.
-    A research notebook, a personal archive, and proof that I am still working.
+    Can a camera tell how stressed you are? A research notebook,
+    a personal archive, and proof that I am still working.
 
 # Subject readout 卡(主页右上): 点点引导行 + 带脉冲点的 status 行.
 readout:

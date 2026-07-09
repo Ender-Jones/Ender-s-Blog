@@ -162,4 +162,21 @@ const isActive = (href: string) => path === href || path.startsWith(href);
       gap: 14px;
     }
   }
+  @media (max-width: 560px) {
+    /* EN/中 还是视觉占位, 移动端先让位给导航本体 */
+    .divider,
+    .lang {
+      display: none;
+    }
+    .right {
+      gap: 12px;
+    }
+    .link {
+      font-size: 11px;
+      letter-spacing: 0.05em;
+    }
+    .name {
+      font-size: 16px;
+    }
+  }
 </style>
