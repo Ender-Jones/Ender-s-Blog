@@ -1,0 +1,1411 @@
+---
+// 录入台(本地模式): 捕获 ≤10s · 三出口 carry-over · 日终仪式 · 生成当日 markdown 块.
+// 逻辑日以 04:00 JST 为界(凌晨的活算前一天). 真 push 在 go-live 时由 D1 + Pages Function 接管;
+// 本地模式的 "copy the day" 把整块 markdown 复制到剪贴板, 粘进月度文件再 git push 即可.
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import RouteHint from '../../components/home/RouteHint.astro';
+import { getWorklogDays } from '../../lib/worklogDays';
+
+const worklogs = await getCollection('worklogs');
+const days = getWorklogDays(worklogs);
+
+// carry-over 候选: 最近几个带 > next 的日子(逻辑日在客户端才知道, 由客户端挑"今天之前"的最新一天)
+const latestDay = days[0];
+const consoleData = {
+  nextDays: days
+    .filter((d) => d.items.some((i) => i.type === 'next'))
+    .slice(0, 5)
+    .map((d) => ({ date: d.date, texts: d.items.filter((i) => i.type === 'next').map((i) => i.text) })),
+  lastNote: latestDay?.date ?? '',
+  noteDays: days.map((d) => d.date),
+};
+---
+
+<BaseLayout title="Entry console — Ender Jones" description="Worklog entry console." noindex>
+  <RouteHint />
+  <main>
+    <header class="head reveal" style="--reveal-i: 0;">
+      <div>
+        <p class="kicker">WORKLOG — ENTRY CONSOLE · APPEND-ONLY</p>
+        <h1>Log today<span class="caret" aria-hidden="true"></span></h1>
+        <p class="sub">One line is enough. Your future self is the reader.</p>
+      </div>
+      <div class="who">
+        <span class="avatar" aria-hidden="true"></span>
+        <span class="who-col">
+          <span class="who-name">@Ender-Jones</span>
+          <span class="who-mode"><span class="mode-dot" aria-hidden="true"></span>LOCAL MODE · real push lands at go-live</span>
+        </span>
+      </div>
+    </header>
+
+    <section class="grid reveal" style="--reveal-i: 1;">
+      <div class="col-l">
+        <div class="card capture">
+          <div class="date-strip">
+            <span class="ds-left">
+              <span class="ds-date" id="c-date">----------</span>
+              <span class="ds-wd" id="c-wd"></span>
+              <span class="ds-night" id="c-night" hidden>night session — counts until 04:00</span>
+            </span>
+            <span class="ds-right">
+              <span class="ds-last" id="c-last"></span>
+              <span class="ds-clock"><span id="c-clock">--:--:--</span> JST <span class="blink" aria-hidden="true">▍</span></span>
+            </span>
+          </div>
+
+          <div class="input-row">
+            <span class="prompt" aria-hidden="true">▸</span>
+            <input id="c-input" type="text" placeholder="type what happened… Enter to log" autocomplete="off" />
+            <span class="type-preview" id="c-preview"></span>
+          </div>
+
+          <div class="chips" id="c-chips">
+            <button type="button" data-tok="@" data-route="insert prefix — project">@ project</button>
+            <button type="button" data-tok="=" data-route="insert prefix — decision">= decision</button>
+            <button type="button" data-tok="!" data-route="insert prefix — risk">! risk</button>
+            <button type="button" data-tok=">" data-route="insert prefix — next">&gt; next</button>
+          </div>
+
+          <div class="entries" id="c-entries">
+            <p class="empty" id="c-empty">nothing logged yet today — one line is enough.</p>
+          </div>
+        </div>
+
+        <div class="card carry" id="c-carry-card" hidden>
+          <div class="carry-head">
+            <span class="carry-label">CARRY-OVER — NEXT FROM <span id="c-carry-from"></span></span>
+            <span class="carry-hint">zero-thought resume</span>
+          </div>
+          <div id="c-carry"></div>
+        </div>
+
+        <div class="syntax">
+          <span class="syn-label">SYNTAX</span>
+          <span><span class="s-done">✓</span> done <span class="syn-dim">(no prefix)</span></span>
+          <span><span class="s-project">@</span> project</span>
+          <span><span class="s-decision">=</span> decision</span>
+          <span><span class="s-risk">!</span> risk</span>
+          <span><span class="s-next">&gt;</span> next</span>
+          <span><span class="s-dropped">~</span> dropped</span>
+          <span class="syn-tail">same glyphs work in the markdown</span>
+        </div>
+      </div>
+
+      <div class="col-r">
+        <div class="card file">
+          <div class="goes">
+            <span class="goes-label">WHERE THIS GOES</span>
+            <span class="goes-text">every line appends to <span class="goes-path" id="c-path2">content/worklogs/….md</span> · <span id="c-go-close">close the day</span> hands you the commit · your one public sentence becomes the homepage <span id="c-go-now">NOW</span></span>
+          </div>
+          <div class="file-head">
+            <span class="file-path" id="c-path">content/worklogs/….md</span>
+            <span class="file-meta"><span>local · draft</span><span class="diff" id="c-diff">+0 −0</span></span>
+          </div>
+          <div class="md" id="c-md"></div>
+          <div class="commit">
+            <div class="ritual" id="c-ritual" hidden>
+              <div class="rit-head">
+                <span class="rit-label">DAY CLOSE — UNDER A MINUTE</span>
+                <button type="button" id="c-rit-x" data-route="not yet — keep logging">× not yet</button>
+              </div>
+              <p class="rit-recap" id="c-recap"></p>
+              <div class="rit-next" id="c-rit-next-wrap">
+                <span class="rit-sub">SAVE POINT — FIRST THING TOMORROW</span>
+                <input id="c-rit-next" type="text" placeholder="one line — logged as > next" autocomplete="off" />
+              </div>
+              <p class="rit-havenext" id="c-rit-havenext" hidden><span>save point ✓</span> — <span id="c-rit-nextprev"></span></p>
+              <div class="rit-public">
+                <div class="rit-public-head">
+                  <span class="rit-sub rit-sub-pink"><span class="pink-dot" aria-hidden="true"></span>PUBLIC LINE — HOMEPAGE “NOW”</span>
+                  <span class="rit-count" id="c-count">0/140</span>
+                </div>
+                <input id="c-summary" type="text" maxlength="140" placeholder="one sentence for everyone else…" autocomplete="off" />
+              </div>
+              <div class="rit-energy">
+                <span class="rit-sub">ENERGY</span>
+                <span class="e-dots" id="c-energy">
+                  <button type="button" data-n="1">1</button>
+                  <button type="button" data-n="2">2</button>
+                  <button type="button" data-n="3">3</button>
+                  <button type="button" data-n="4">4</button>
+                  <button type="button" data-n="5">5</button>
+                </span>
+                <span class="rit-opt">optional — patterns, not grades</span>
+              </div>
+            </div>
+            <div class="commit-bar">
+              <span class="commit-msg" id="c-msg">nothing to commit</span>
+              <button type="button" id="c-commit" disabled>nothing to commit</button>
+            </div>
+            <div id="c-commit-lines"></div>
+          </div>
+        </div>
+
+        <div class="card trail-card">
+          <div class="trail-head">
+            <span class="trail-label">LOG TRAIL — 26 WEEKS</span>
+            <a href="/worklog/" data-route="→ /worklog/ — the full log">worklog →</a>
+          </div>
+          <div class="trail" id="c-trail"></div>
+          <p class="trail-note" id="c-trailnote">pink — a day with a note · amber — today · gaps are neutral, nothing counts against you.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<script is:inline type="application/json" id="c-data" set:html={JSON.stringify(consoleData)} />
+
+<script>
+  type EntryType = 'project' | 'done' | 'decision' | 'risk' | 'next' | 'dropped';
+  type Entry = { type: EntryType; text: string; time: string };
+
+  const RAW = JSON.parse(document.getElementById('c-data')!.textContent || '{}') as {
+    nextDays: { date: string; texts: string[] }[];
+    lastNote: string;
+    noteDays: string[];
+  };
+
+  const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
+    document.getElementById(id) as T;
+
+  const TYPE_META: Record<EntryType, { label: string; cls: string }> = {
+    project: { label: 'PROJECT', cls: 't-project' },
+    done: { label: 'DONE', cls: 't-done' },
+    decision: { label: 'DECISION', cls: 't-decision' },
+    risk: { label: 'RISK', cls: 't-risk' },
+    next: { label: 'NEXT', cls: 't-next' },
+    dropped: { label: 'DROPPED', cls: 't-dropped' },
+  };
+  const SECTION: Record<EntryType, string> = {
+    project: 'Project',
+    done: 'Done',
+    decision: 'Decision',
+    risk: 'Risk',
+    next: 'Next',
+    dropped: 'Dropped',
+  };
+
+  // ---- 逻辑日: JST − 4h(凌晨算前一天) ----
+  const jstNow = () => new Date(Date.now() + 9 * 3600_000);
+  const iso = (d: Date) => d.toISOString().slice(0, 10);
+  const logicalDate = () => iso(new Date(jstNow().getTime() - 4 * 3600_000));
+  const isNightSession = () => iso(jstNow()) !== logicalDate();
+  const jstClock = () => jstNow().toISOString().slice(11, 19);
+  const jstHM = () => jstNow().toISOString().slice(11, 16);
+
+  const today = logicalDate();
+  const month = today.slice(0, 7);
+  const filePath = `content/worklogs/${month}.md`;
+  const LS_KEY = `ej-console-${today}`;
+
+  // carry-over = 逻辑日"今天之前"最近一天的 next
+  const carrySource = RAW.nextDays.find((d) => d.date < today);
+  const DATA = {
+    carry: carrySource?.texts ?? [],
+    carryFrom: carrySource?.date ?? '',
+    lastNote: RAW.lastNote,
+    noteDays: RAW.noteDays,
+  };
+
+  // ---- 状态 ----
+  type State = {
+    entries: Entry[];
+    usedCarry: number[];
+    droppedCarry: number[];
+    committed: boolean;
+    summary: string;
+    energy: number;
+  };
+  const state: State = {
+    entries: [],
+    usedCarry: [],
+    droppedCarry: [],
+    committed: false,
+    summary: '',
+    energy: 0,
+  };
+  let ritualOpen = false;
+  let ritualNext = '';
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
+    if (saved && Array.isArray(saved.entries)) Object.assign(state, saved);
+  } catch {}
+
+  const save = () => {
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify(state));
+    } catch {}
+  };
+
+  const parse = (t: string): { type: EntryType; text: string } => {
+    const map: Record<string, EntryType> = {
+      '@': 'project',
+      '=': 'decision',
+      '!': 'risk',
+      '>': 'next',
+      '~': 'dropped',
+    };
+    const c = t.charAt(0);
+    if (map[c]) return { type: map[c], text: t.slice(1).trim() };
+    return { type: 'done', text: t };
+  };
+
+  // ---- markdown 生成(和站点解析器同一格式) ----
+  const mdLines = (): string[] => {
+    const lines = [`## ${today}`];
+    if (state.energy) lines.push(`<!-- energy: ${state.energy} -->`);
+    for (const type of ['project', 'done', 'decision', 'risk', 'next', 'dropped'] as EntryType[]) {
+      const items = state.entries.filter((e) => e.type === type);
+      if (!items.length) continue;
+      lines.push('', `### ${SECTION[type]}`);
+      for (const item of items)
+        lines.push(type === 'dropped' ? `- ~~${item.text}~~` : `- ${item.text}`);
+    }
+    if (state.summary.trim()) lines.push('', '### Public', `- ${state.summary.trim()}`);
+    return lines;
+  };
+
+  // ---- 渲染 ----
+  const input = $<HTMLInputElement>('c-input');
+  const preview = $('c-preview');
+
+  const renderPreviewChip = () => {
+    const t = input.value.trim();
+    if (!t) {
+      preview.className = 'type-preview';
+      preview.textContent = '';
+      return;
+    }
+    const p = parse(t);
+    preview.className = `type-preview on ${TYPE_META[p.type].cls}`;
+    preview.textContent = `→ ${TYPE_META[p.type].label}`;
+  };
+
+  const renderEntries = () => {
+    const box = $('c-entries');
+    box.querySelectorAll('.entry-row').forEach((n) => n.remove());
+    $('c-empty').hidden = state.entries.length > 0;
+    state.entries.forEach((entry, i) => {
+      const row = document.createElement('div');
+      row.className = 'entry-row';
+      const badge = document.createElement('span');
+      badge.className = `badge ${TYPE_META[entry.type].cls}`;
+      badge.textContent = TYPE_META[entry.type].label;
+      const text = document.createElement('span');
+      text.className = 'entry-text';
+      text.textContent = entry.text;
+      const time = document.createElement('span');
+      time.className = 'entry-time';
+      time.textContent = entry.time;
+      const del = document.createElement('button');
+      del.className = 'entry-del';
+      del.type = 'button';
+      del.textContent = '×';
+      del.addEventListener('click', () => {
+        state.entries.splice(i, 1);
+        state.committed = false;
+        save();
+        renderAll();
+      });
+      row.append(badge, text, time, del);
+      box.append(row);
+    });
+  };
+
+  const renderCarry = () => {
+    const card = $('c-carry-card');
+    if (!DATA.carry.length) {
+      card.hidden = true;
+      return;
+    }
+    card.hidden = false;
+    $('c-carry-from').textContent = DATA.carryFrom;
+    const box = $('c-carry');
+    box.textContent = '';
+    DATA.carry.forEach((text, i) => {
+      const used = state.usedCarry.includes(i);
+      const dropped = state.droppedCarry.includes(i);
+      const row = document.createElement('div');
+      row.className = 'carry-row' + (used || dropped ? ' spent' : '');
+      const t = document.createElement('span');
+      t.className = 'carry-text' + (used || dropped ? ' strike' : '');
+      t.textContent = text;
+      row.append(t);
+      if (used || dropped) {
+        const label = document.createElement('span');
+        label.className = 'carry-spent';
+        label.textContent = dropped ? 'DROPPED —' : 'LOGGED ✓';
+        row.append(label);
+      } else {
+        const actions = document.createElement('span');
+        actions.className = 'carry-actions';
+        const mk = (label: string, cls: string, fn: () => void) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = cls;
+          b.textContent = label;
+          b.addEventListener('click', fn);
+          return b;
+        };
+        actions.append(
+          mk('✓ done', 'ca', () => useCarry(i, 'done')),
+          mk('→ still next', 'ca ca-amber', () => useCarry(i, 'next')),
+          mk('× drop', 'ca', () => useCarry(i, 'dropped')),
+        );
+        row.append(actions);
+      }
+      box.append(row);
+    });
+  };
+
+  const useCarry = (i: number, type: EntryType) => {
+    if (type === 'dropped') state.droppedCarry.push(i);
+    else state.usedCarry.push(i);
+    addEntry(type, DATA.carry[i]);
+  };
+
+  const renderMd = () => {
+    const box = $('c-md');
+    box.textContent = '';
+    const lines = mdLines();
+    for (const line of lines) {
+      const div = document.createElement('div');
+      div.textContent = line || ' ';
+      if (line.startsWith('## ')) div.className = 'md-h2';
+      else if (line.startsWith('### ')) div.className = 'md-h3';
+      else if (line.startsWith('<!--')) div.className = 'md-dim';
+      else if (line.startsWith('- ~~')) div.className = 'md-dropped';
+      else div.className = 'md-line';
+      box.append(div);
+    }
+    $('c-diff').textContent = `+${lines.length} −0`;
+  };
+
+  const renderGoes = () => {
+    $('c-go-close').className = state.entries.length ? 'go-on-amber' : 'go-off';
+    $('c-go-now').className = state.committed ? 'go-on-pink' : 'go-off';
+  };
+
+  const renderCommit = () => {
+    const btn = $<HTMLButtonElement>('c-commit');
+    const msg = $('c-msg');
+    const n = state.entries.length;
+    msg.textContent = n ? `worklog: ${today} (${n} ${n === 1 ? 'entry' : 'entries'})` : 'nothing to commit';
+    const canClose = n > 0 && !state.committed;
+    btn.disabled = !canClose;
+    btn.className = state.committed ? 'done' : ritualOpen ? 'push' : '';
+    btn.textContent = state.committed
+      ? '✓ copied — paste & push'
+      : ritualOpen
+        ? 'copy the day →'
+        : n
+          ? 'close the day'
+          : 'nothing to commit';
+    btn.dataset.route = state.committed
+      ? `pasted into ${filePath}? then: git push`
+      : ritualOpen
+        ? 'local mode — copies the markdown block'
+        : n
+          ? 'day close — recap · save point · public line · energy'
+          : 'log something first';
+  };
+
+  const renderRitual = () => {
+    $('c-ritual').hidden = !ritualOpen || state.committed;
+    if (!ritualOpen) return;
+    const counts: Partial<Record<EntryType, number>> = {};
+    for (const e of state.entries) counts[e.type] = (counts[e.type] ?? 0) + 1;
+    const parts: string[] = [];
+    if (counts.done) parts.push(`${counts.done} done`);
+    if (counts.decision) parts.push(`${counts.decision} decision${counts.decision === 1 ? '' : 's'}`);
+    if (counts.risk) parts.push(`${counts.risk} risk${counts.risk === 1 ? '' : 's'}`);
+    if (counts.dropped) parts.push(`${counts.dropped} dropped`);
+    if (counts.next) parts.push(`${counts.next} next`);
+    $('c-recap').textContent =
+      (parts.length ? parts.join(' · ') : `${state.entries.length} notes`) + ' — proof, not memory.';
+    const nexts = state.entries.filter((e) => e.type === 'next');
+    $('c-rit-next-wrap').hidden = nexts.length > 0;
+    $('c-rit-havenext').hidden = nexts.length === 0;
+    if (nexts.length) $('c-rit-nextprev').textContent = `“${nexts[nexts.length - 1].text}”`;
+    $('c-count').textContent = `${state.summary.length}/140`;
+    $('c-energy')
+      .querySelectorAll('button')
+      .forEach((b) => b.classList.toggle('on', Number(b.dataset.n) <= state.energy));
+  };
+
+  const renderTrail = () => {
+    const box = $('c-trail');
+    box.textContent = '';
+    const noteSet = new Set(DATA.noteDays);
+    if (state.committed) noteSet.add(today);
+    const base = new Date(`${today}T12:00:00Z`);
+    for (let i = 181; i >= 0; i--) {
+      const d = iso(new Date(base.getTime() - i * 86400_000));
+      const cell = document.createElement('span');
+      const note = noteSet.has(d);
+      cell.className = 'cell' + (note ? ' note' : '') + (i === 0 ? ' today' : '');
+      cell.title = i === 0 ? `today${note ? ' · note ready' : ' — nothing yet, no penalty'}` : d + (note ? ' · note' : '');
+      box.append(cell);
+    }
+    $('c-trailnote').textContent = state.committed
+      ? 'copied — today turns pink inside its amber frame once pushed. gaps stay neutral: no streaks, no guilt.'
+      : 'pink — a day with a note · amber — today · gaps are neutral, nothing counts against you.';
+  };
+
+  const renderAll = () => {
+    renderEntries();
+    renderCarry();
+    renderMd();
+    renderGoes();
+    renderCommit();
+    renderRitual();
+    renderTrail();
+    renderPreviewChip();
+  };
+
+  const addEntry = (type: EntryType, text: string) => {
+    if (!text.trim()) return;
+    state.entries.push({ type, text: text.trim(), time: jstHM() });
+    state.committed = false;
+    save();
+    renderAll();
+  };
+
+  // ---- 事件 ----
+  input.addEventListener('input', renderPreviewChip);
+  input.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    const p = parse(input.value.trim());
+    if (!p.text) return;
+    input.value = '';
+    addEntry(p.type, p.text);
+  });
+
+  $('c-chips')
+    .querySelectorAll<HTMLButtonElement>('button')
+    .forEach((chip) => {
+      chip.addEventListener('click', () => {
+        input.value = `${chip.dataset.tok} ${input.value.replace(/^[@=!>~]\s*/, '')}`;
+        input.focus();
+        renderPreviewChip();
+      });
+    });
+
+  $('c-commit').addEventListener('click', async () => {
+    if (state.committed || !state.entries.length) return;
+    if (!ritualOpen) {
+      ritualOpen = true;
+      renderCommit();
+      renderRitual();
+      $<HTMLInputElement>('c-summary').value = state.summary;
+      return;
+    }
+    // copy the day (本地模式的 push)
+    const nextVal = ritualNext.trim();
+    if (nextVal && !state.entries.some((e) => e.type === 'next')) {
+      state.entries.push({ type: 'next', text: nextVal, time: jstHM() });
+      ritualNext = '';
+    }
+    const block = mdLines().join('\n') + '\n';
+    let copied = false;
+    try {
+      await navigator.clipboard.writeText(block);
+      copied = true;
+    } catch {}
+    state.committed = true;
+    ritualOpen = false;
+    save();
+    renderAll();
+    const lines = $('c-commit-lines');
+    lines.textContent = '';
+    const note = document.createElement('p');
+    note.className = 'commit-line';
+    note.innerHTML = `<span>✓</span> ${copied ? 'copied to clipboard' : 'select the preview above to copy'} — paste into <b>${filePath}</b>, then <b>git push</b>`;
+    lines.append(note);
+  });
+
+  $('c-rit-x').addEventListener('click', () => {
+    ritualOpen = false;
+    renderCommit();
+    renderRitual();
+  });
+  $<HTMLInputElement>('c-rit-next').addEventListener('input', (e) => {
+    ritualNext = (e.target as HTMLInputElement).value;
+  });
+  $<HTMLInputElement>('c-summary').addEventListener('input', (e) => {
+    state.summary = (e.target as HTMLInputElement).value.slice(0, 140);
+    state.committed = false;
+    save();
+    $('c-count').textContent = `${state.summary.length}/140`;
+    renderMd();
+    renderCommit();
+  });
+  $('c-energy')
+    .querySelectorAll<HTMLButtonElement>('button')
+    .forEach((b) => {
+      b.addEventListener('click', () => {
+        const n = Number(b.dataset.n);
+        state.energy = state.energy === n ? 0 : n;
+        save();
+        renderRitual();
+        renderMd();
+      });
+    });
+
+  // ---- 时钟与日期条 ----
+  $('c-date').textContent = today;
+  $('c-wd').textContent = new Date(`${today}T12:00:00Z`)
+    .toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' })
+    .toUpperCase();
+  $('c-night').hidden = !isNightSession();
+  if (DATA.lastNote) {
+    const ago = Math.max(
+      0,
+      Math.round((new Date(`${today}T12:00:00Z`).getTime() - new Date(`${DATA.lastNote}T12:00:00Z`).getTime()) / 86400_000),
+    );
+    $('c-last').textContent = `last note ${DATA.lastNote} · ${ago}d ago`;
+  }
+  $('c-path').textContent = filePath;
+  $('c-path2').textContent = filePath;
+  const tick = () => {
+    $('c-clock').textContent = jstClock();
+  };
+  tick();
+  setInterval(tick, 1000);
+
+  renderAll();
+</script>
+
+<style>
+  .head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    padding: clamp(40px, 6vh, 60px) 0 0;
+  }
+  .kicker {
+    margin: 0 0 14px;
+    color: #82828c;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+  }
+  h1 {
+    margin: 0;
+    color: var(--ej-text);
+    font-family: var(--ej-serif);
+    font-size: clamp(30px, 3.2vw, 40px);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1.05;
+  }
+  .caret {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.075em;
+    margin-left: 0.14em;
+    border-radius: 1px;
+    background: var(--ej-pink);
+    box-shadow: 0 0 16px rgba(255, 122, 192, 0.6);
+    animation: ej-caret 1.15s linear infinite;
+  }
+  .sub {
+    margin: 12px 0 0;
+    color: var(--ej-text-3);
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .who {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 4px;
+  }
+  .avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: url('/img/author/ang.JPG') center / cover;
+    filter: grayscale(0.3);
+  }
+  .who-col {
+    display: grid;
+    gap: 2px;
+  }
+  .who-name {
+    color: #e8e8ea;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 600;
+  }
+  .who-mode {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+  .mode-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--ej-blue);
+    box-shadow: 0 0 6px rgba(76, 194, 255, 0.8);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+    padding: 26px 0 clamp(48px, 8vh, 76px);
+  }
+  .col-l,
+  .col-r {
+    display: grid;
+    gap: 14px;
+    min-width: 0;
+  }
+  .card {
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 12px;
+    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.7),
+      0 16px 40px -20px rgba(0, 0, 0, 0.9),
+      inset 0 1px 0 rgba(255, 255, 255, 0.055);
+    overflow: hidden;
+    transition: border-color 180ms ease;
+  }
+  .card:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .date-strip {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 14px;
+    flex-wrap: wrap;
+    padding: 14px 20px 12px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.09);
+  }
+  .ds-left {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .ds-date {
+    color: var(--ej-text);
+    font-family: var(--ej-mono);
+    font-size: 15px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .ds-wd {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+  }
+  .ds-night {
+    color: var(--ej-amber-2);
+    font-family: var(--ej-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.06em;
+  }
+  .ds-right {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .ds-last {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+  }
+  .ds-clock {
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: 11px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .blink {
+    color: var(--ej-blue);
+    animation: ej-blink 1.1s steps(1, end) infinite;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px 6px;
+  }
+  .prompt {
+    flex-shrink: 0;
+    color: var(--ej-pink);
+    font-family: var(--ej-mono);
+    font-size: 15px;
+    text-shadow: 0 0 10px rgba(255, 122, 192, 0.6);
+  }
+  #c-input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #f0f0f2;
+    font-family: var(--ej-mono);
+    font-size: 14px;
+    caret-color: var(--ej-pink);
+    padding: 6px 0;
+  }
+  #c-input::placeholder {
+    color: #5f5f68;
+  }
+  .type-preview {
+    flex-shrink: 0;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    color: transparent;
+    font-family: var(--ej-mono);
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    transition: all 120ms var(--ej-ease);
+  }
+  .type-preview.on {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  .t-project { color: var(--ej-text-2); border-color: rgba(255, 255, 255, 0.22); }
+  .t-done { color: #e8e8ea; background: rgba(255, 255, 255, 0.08); }
+  .t-decision { color: var(--ej-blue-2); border-color: rgba(76, 194, 255, 0.38); }
+  .t-risk { color: var(--ej-rose); border-color: rgba(255, 120, 120, 0.4); }
+  .t-next { color: var(--ej-amber-2); background: rgba(245, 158, 11, 0.14); }
+  .t-dropped { color: var(--ej-mut); border-color: rgba(255, 255, 255, 0.16); }
+
+  .chips {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 8px 20px 16px 43px;
+  }
+  .chips button {
+    padding: 3px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    background: transparent;
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    transition: all 120ms var(--ej-ease);
+  }
+  .chips button:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+    color: var(--ej-text-2);
+  }
+
+  .entries {
+    border-top: 1px dashed rgba(255, 255, 255, 0.09);
+    padding: 6px 0 8px;
+  }
+  .empty {
+    margin: 0;
+    padding: 18px 20px;
+    color: var(--ej-dim);
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+  }
+  .entry-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 8px 14px 8px 20px;
+    transition: background 120ms ease;
+  }
+  .entry-row:hover {
+    background: rgba(255, 255, 255, 0.018);
+  }
+  .badge {
+    flex-shrink: 0;
+    width: 74px;
+    text-align: center;
+    padding: 2px 0;
+    border-radius: 4px;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    font-family: var(--ej-mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+  }
+  .entry-text {
+    flex: 1;
+    min-width: 0;
+    color: var(--ej-text-2);
+    font-family: var(--ej-mono);
+    font-size: 12.5px;
+    line-height: 1.55;
+    overflow-wrap: break-word;
+  }
+  .entry-time {
+    flex-shrink: 0;
+    color: var(--ej-dim);
+    font-family: var(--ej-mono);
+    font-size: 10px;
+    font-variant-numeric: tabular-nums;
+  }
+  .entry-del {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.03);
+    color: #9a9aa2;
+    font-size: 12px;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 120ms ease;
+  }
+  .entry-row:hover .entry-del {
+    opacity: 1;
+  }
+
+  .carry {
+    padding: 16px 20px 12px;
+  }
+  .carry-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .carry-label {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+  }
+  .carry-hint {
+    color: var(--ej-dim);
+    font-family: var(--ej-mono);
+    font-size: 9.5px;
+    font-weight: 500;
+  }
+  .carry-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 2px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+    transition: opacity 160ms ease;
+  }
+  .carry-row:last-child {
+    border-bottom: none;
+  }
+  .carry-row.spent {
+    opacity: 0.4;
+  }
+  .carry-text {
+    flex: 1;
+    min-width: 0;
+    color: var(--ej-text-2);
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    line-height: 1.5;
+  }
+  .carry-text.strike {
+    color: var(--ej-mut);
+    text-decoration: line-through;
+  }
+  .carry-spent {
+    flex-shrink: 0;
+    color: var(--ej-dim);
+    font-family: var(--ej-mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+  }
+  .carry-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .ca {
+    padding: 2px 9px;
+    border-radius: 5px;
+    cursor: pointer;
+    white-space: nowrap;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    transition: all 120ms var(--ej-ease);
+  }
+  .ca:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #f0f0f2;
+  }
+  .ca-amber:hover {
+    border-color: rgba(245, 158, 11, 0.55);
+    background: rgba(245, 158, 11, 0.12);
+    color: var(--ej-amber-2);
+  }
+
+  .syntax {
+    display: flex;
+    align-items: baseline;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+    padding: 12px 2px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--ej-dim);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+  }
+  .syn-label {
+    letter-spacing: 0.18em;
+    color: var(--ej-mut-2);
+  }
+  .syn-dim,
+  .syn-tail {
+    color: #5f5f66;
+  }
+  .syn-tail {
+    margin-left: auto;
+  }
+  .s-done { color: #e8e8ea; }
+  .s-project { color: var(--ej-text-2); }
+  .s-decision { color: var(--ej-blue-2); }
+  .s-risk { color: var(--ej-rose); }
+  .s-next { color: var(--ej-amber-2); }
+  .s-dropped { color: var(--ej-mut-2); }
+
+  .goes {
+    display: grid;
+    gap: 5px;
+    padding: 12px 18px 11px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.09);
+  }
+  .goes-label {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+  }
+  .goes-text {
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    line-height: 1.75;
+  }
+  .goes-path {
+    color: var(--ej-text-2);
+  }
+  .go-off {
+    color: #5f5f66;
+    transition: all 300ms ease;
+  }
+  .go-on-amber {
+    color: var(--ej-amber-2);
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.45);
+    transition: all 300ms ease;
+  }
+  .go-on-pink {
+    color: var(--ej-pink-2);
+    text-shadow: 0 0 10px rgba(255, 122, 192, 0.4);
+    transition: all 300ms ease;
+  }
+  .file-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+  }
+  .file-path {
+    color: var(--ej-text-2);
+    font-family: var(--ej-mono);
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .file-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    color: var(--ej-dim);
+    font-family: var(--ej-mono);
+    font-size: 10px;
+    font-weight: 500;
+  }
+  .diff {
+    color: var(--ej-mut);
+  }
+  .md {
+    max-height: 320px;
+    overflow-y: auto;
+    padding: 14px 18px;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    line-height: 1.75;
+  }
+  .md-h2 {
+    color: var(--ej-text-2);
+    font-weight: 600;
+  }
+  .md-h3 {
+    color: var(--ej-text-2);
+    font-weight: 600;
+  }
+  .md-dim {
+    color: var(--ej-dim);
+  }
+  .md-line {
+    color: var(--ej-text-3);
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+  .md-dropped {
+    color: var(--ej-dim);
+    text-decoration: line-through;
+  }
+
+  .commit {
+    border-top: 1px dashed rgba(255, 255, 255, 0.09);
+    padding: 13px 18px 15px;
+  }
+  .ritual {
+    margin-bottom: 12px;
+    border: 1px solid rgba(245, 158, 11, 0.28);
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.05), rgba(245, 158, 11, 0.015));
+    padding: 12px 14px;
+  }
+  .rit-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 9px;
+  }
+  .rit-label {
+    color: var(--ej-amber-2);
+    font-family: var(--ej-mono);
+    font-size: 9.5px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+  }
+  #c-rit-x {
+    padding: 2px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    white-space: nowrap;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    transition: all 120ms var(--ej-ease);
+  }
+  #c-rit-x:hover {
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #f0f0f2;
+  }
+  .rit-recap {
+    margin: 0 0 10px;
+    color: #e8e8ea;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    line-height: 1.6;
+  }
+  .rit-sub {
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+  }
+  .rit-sub-pink {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .pink-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--ej-pink);
+    box-shadow: 0 0 6px rgba(255, 122, 192, 0.8);
+  }
+  .rit-next {
+    display: grid;
+    gap: 5px;
+    margin-bottom: 11px;
+  }
+  .rit-next input,
+  .rit-public input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.32);
+    border: 1px solid rgba(245, 158, 11, 0.28);
+    border-radius: 7px;
+    outline: none;
+    color: #f0f0f2;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    padding: 8px 11px;
+    caret-color: var(--ej-amber-2);
+  }
+  .rit-public input {
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #e8e8ea;
+    caret-color: var(--ej-pink);
+  }
+  .rit-next input::placeholder,
+  .rit-public input::placeholder {
+    color: #5f5f68;
+  }
+  .rit-havenext {
+    margin: 0 0 11px;
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    line-height: 1.5;
+  }
+  .rit-havenext span:first-child {
+    color: var(--ej-amber-2);
+    font-weight: 600;
+  }
+  .rit-public {
+    display: grid;
+    gap: 5px;
+    margin-bottom: 11px;
+  }
+  .rit-public-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .rit-count {
+    color: var(--ej-dim);
+    font-family: var(--ej-mono);
+    font-size: 9px;
+    font-variant-numeric: tabular-nums;
+  }
+  .rit-energy {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .e-dots {
+    display: flex;
+    gap: 5px;
+  }
+  .e-dots button {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    color: var(--ej-dim);
+    font-family: var(--ej-mono);
+    font-size: 10px;
+    font-weight: 600;
+    transition: all 120ms var(--ej-ease);
+  }
+  .e-dots button:hover {
+    border-color: rgba(255, 255, 255, 0.26);
+    color: var(--ej-text-2);
+  }
+  .e-dots button.on {
+    border-color: rgba(245, 158, 11, 0.5);
+    background: rgba(245, 158, 11, 0.16);
+    color: var(--ej-amber-2);
+  }
+  .rit-opt {
+    color: var(--ej-dim);
+    font-family: var(--ej-mono);
+    font-size: 9px;
+  }
+
+  .commit-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .commit-msg {
+    flex: 1;
+    min-width: 0;
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #c-commit {
+    flex-shrink: 0;
+    padding: 8px 18px;
+    border-radius: 8px;
+    white-space: nowrap;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    background: #17171a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--ej-text);
+    cursor: pointer;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    transition: all 120ms var(--ej-ease);
+  }
+  #c-commit:disabled {
+    color: var(--ej-dim);
+    cursor: default;
+  }
+  #c-commit:not(:disabled):hover {
+    background: var(--ej-amber);
+    border-color: var(--ej-amber);
+    color: #0a0a0b;
+    transform: translateY(-1px);
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.6),
+      0 10px 28px -8px rgba(245, 158, 11, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  #c-commit.done {
+    background: rgba(76, 194, 255, 0.1);
+    border-color: rgba(76, 194, 255, 0.35);
+    color: var(--ej-blue-2);
+  }
+  #c-commit.done:hover {
+    background: rgba(76, 194, 255, 0.1);
+    border-color: rgba(76, 194, 255, 0.35);
+    color: var(--ej-blue-2);
+    transform: none;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+  .commit-line {
+    margin: 9px 0 0;
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+  }
+  .commit-line span {
+    color: var(--ej-blue);
+  }
+  .commit-line b {
+    color: var(--ej-text-2);
+    font-weight: 500;
+  }
+
+  .trail-card {
+    padding: 15px 18px 13px;
+  }
+  .trail-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 11px;
+  }
+  .trail-label {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+  }
+  .trail-head a {
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 120ms var(--ej-ease);
+  }
+  .trail-head a:hover {
+    color: var(--ej-pink-2);
+    text-shadow: 0 0 12px rgba(255, 122, 192, 0.5);
+  }
+  .trail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(7, 13px);
+    grid-auto-columns: 13px;
+    gap: 3px;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .trail :global(.cell) {
+    border-radius: 2.5px;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid transparent;
+    transition: background 300ms ease, box-shadow 300ms ease;
+  }
+  .trail :global(.cell.note) {
+    background: rgba(255, 122, 192, 0.38);
+  }
+  .trail :global(.cell.today) {
+    border-color: rgba(245, 158, 11, 0.85);
+  }
+  .trail :global(.cell.today.note) {
+    background: rgba(255, 122, 192, 0.5);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.55);
+  }
+  .trail-note {
+    margin: 11px 0 0;
+    color: var(--ej-dim);
+    font-family: var(--ej-mono);
+    font-size: 9.5px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 980px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  }
+</style>
