@@ -1,6 +1,7 @@
 # Research 数据入口 — 主页面板和 /research/ 页都从这里读.
-# tone 决定状态点/悬停条的颜色: pink=published · blue=under review(点会呼吸) · amber=in writing.
-# links 里没有的键就不渲染(paper/code 都可留空); timeline 想加学历节点照模板取消注释即可.
+# tone 决定状态点/悬停条的颜色: pink=published · blue=signal/audit · amber=in writing.
+# ⚠ 数字纪律: J-BHI 见刊前不放任何未发表数字; KICS 的旧数字也不复述(对外口径: preliminary).
+# links 里没有的键就不渲染; timeline 学历节点照模板取消注释即可.
 
 subtitle: one line, three papers
 protocol: UBFC-PHYS · TSST-INSPIRED
@@ -9,26 +10,27 @@ papers:
   - status: Published
     tone: pink
     title: EDA-augmented CCT-LSTM for stress-task classification
-    dek: "First result: adding EDA lifts macro-F1 under a strict subject-level protocol."
+    dek: "The first public station of this line — contact signals join the video."
     venue: KICS · short paper
     anchor: kics-2025
     abstract: >-
-      Reproduces CCT-LSTM for stress-task classification on UBFC-PHYS and augments it
-      with electrodermal activity. Under a strict subject-level split, EDA fusion lifts
-      macro-F1 from 0.73 to 0.83 — the first result on this line.
+      Reproduces CCT-LSTM for stress-task classification on UBFC-Phys and augments
+      it with wrist-worn EDA under a subject-level protocol. Preliminary by design —
+      the journal version extends and re-evaluates it.
     contribution: Designed the fusion setup and the subject-level evaluation protocol; ran all experiments.
     links: {}
-  - status: Under review
+  - status: Absorbed
     tone: blue
     title: A reliability audit of remote-PPG under social stress
-    dek: "Why EDA is necessary: rPPG degrades exactly when stress happens."
-    venue: ISPACS 2026 · submitted
+    dek: "Why contact signals stay: rPPG degrades exactly when stress happens."
+    venue: audit → journal, §motivation
     anchor: ispacs-2026
     abstract: >-
       Audits how remote photoplethysmography behaves when the subject is actually
       stressed — motion, expression, and autonomic load degrade the signal precisely
-      in the moments that matter. The audit motivates contact-signal augmentation.
-    contribution: Built the audit pipeline and the motion-artifact analysis; first author.
+      in the moments that matter. The audit outlived its venue: it now motivates
+      the journal version.
+    contribution: Built the audit pipeline and the motion-artifact analysis.
     links: {}
   - status: In writing
     tone: amber
@@ -37,34 +39,36 @@ papers:
     venue: IEEE J-BHI · target
     anchor: ieee-j-bhi
     abstract: >-
-      The consolidated journal account: strict subject-level protocol, full ablation
-      grid, paired statistics, and the negative results kept in — written to be
-      reproduced, not just cited.
+      The consolidated account: a faithful reproduction of the baseline, a
+      leakage-safe re-evaluation under subject-level splits and multiple seeds,
+      and an honest diagnostic of what fine-grained stress levels the data can
+      and cannot support — written to be reproduced, fully open on release.
     contribution: In writing now — the day-by-day trail is on the worklog.
     links: {}
 
 metric:
-  label: Headline metric
-  value: 0.73 → 0.83
+  label: Protocol
+  value: 7-fold × 5 seeds
   notes:
-    - macro-F1 with EDA fusion
-    - subject-level 7-fold · 3 seeds
+    - subject-level splits, never sample-level
+    - paired statistics, corrected
   honesty: >-
-    Numbers under a strict protocol: subject-level splits, multiple seeds, paired
-    statistics — smaller headline, but it holds.
+    The headline number lands with the journal — until then,
+    the protocol is the promise.
 
-keywords: multimodal video · cross-modal fusion · temporal modeling
+keywords: multimodal video · reproducibility · temporal modeling
 keywords_next: "next: VLM / MLLM for affect"
 whats_next: >-
-  Vision-language directions for emotion recognition — probing whether VLM/MLLM
-  representations can read affect the way contact signals do.
+  Vision-language directions for emotion recognition — the second journal's
+  question, opened after this one ships: can VLM/MLLM representations read
+  affect the way contact signals do?
 
 timeline:
   - when: "2026"
     label: IEEE J-BHI journal version — in writing
     tone: amber
   - when: "2026"
-    label: ISPACS 2026 — reliability audit submitted
+    label: Remote-PPG reliability audit — folded into the journal
     tone: blue
   - when: "2025"
     label: KICS short paper — EDA-augmented CCT-LSTM published
@@ -78,15 +82,15 @@ timeline:
   #   tone: gray
 
 # ↓ 研究现状(About 页使用)
-focus: Stress detection from multi-modal physiological signals.
+focus: A reproducible re-evaluation of video-based stress estimation.
 abstract: |
-  Reproducing CCT-LSTM on BP4D++ with EDA augmentation; exploring 3-class
-  severity classification and visual-physiological fusion. Considering
-  VLM/LLM directions for emotion recognition next.
+  Reproducing and honestly re-evaluating multimodal stress-task classification
+  (CCT-LSTM with EDA augmentation) on UBFC-Phys — the journal version is in
+  writing. Vision-language directions are planned next.
 tags:
   - affective computing
   - multi-modal DL
-  - vision transformers
+  - reproducibility
   - stress detection
   - VLM/LLM
-updated: 2026-05-01
+updated: 2026-07-10

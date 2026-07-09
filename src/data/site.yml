@@ -4,24 +4,22 @@ role: PhD candidate
 location: Tokyo, Japan
 avatar: /img/author/ang.JPG
 hero_portrait: /img/author/identity-portrait.jpg
-research_oneliner: Stress detection from multi-modal physiological signals.
+research_oneliner: A reproducible re-evaluation of video-based stress estimation.
 about_lead: I keep this site as a research notebook, personal archive, and proof that I am still working.
 
 identity:
   terminal_title: 'EnderJones@Chiba,Japan: ~/Blog'
   role_detail: PhD Candidate · AI / Affective Computing
-  focus_label: Contactless Stress Estimation
+  focus_label: Video-based Stress Estimation
   stack:
     - PyTorch
     - Time-series
     - Multimodal ML
-  thesis: estimating graded stress from facial video, rPPG, EDA, and behavior signals.
+  thesis: estimating stress from facial video and physiological signals — reproduced faithfully, evaluated honestly.
   signals:
     - rPPG
     - EDA
-    - HRV
     - landmarks
-    - gaze
   models:
     - CCT-LSTM
     - multimodal fusion
