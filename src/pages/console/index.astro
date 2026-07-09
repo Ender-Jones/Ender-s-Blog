@@ -368,6 +368,11 @@ const consoleData = {
     addEntry(type, DATA.carry[i]);
   };
 
+  // 昨天的 next 不给出口(done / still next / drop)就不准关今天 — 迁移即对抗
+  const pendingCarry = () =>
+    DATA.carry.filter((_, i) => !state.usedCarry.includes(i) && !state.droppedCarry.includes(i))
+      .length;
+
   const renderMd = () => {
     const box = $('c-md');
     box.textContent = '';
@@ -394,24 +399,29 @@ const consoleData = {
     const btn = $<HTMLButtonElement>('c-commit');
     const msg = $('c-msg');
     const n = state.entries.length;
+    const pending = pendingCarry();
     msg.textContent = n ? `worklog: ${today} (${n} ${n === 1 ? 'entry' : 'entries'})` : 'nothing to commit';
-    const canClose = n > 0 && !state.committed;
+    const canClose = n > 0 && !state.committed && pending === 0;
     btn.disabled = !canClose;
     btn.className = state.committed ? 'done' : ritualOpen ? 'push' : '';
     btn.textContent = state.committed
       ? '✓ copied — paste & push'
       : ritualOpen
         ? 'copy the day →'
-        : n
-          ? 'close the day'
-          : 'nothing to commit';
+        : n && pending
+          ? `triage carry-over first (${pending})`
+          : n
+            ? 'close the day'
+            : 'nothing to commit';
     btn.dataset.route = state.committed
       ? `pasted into ${filePath}? then: git push`
       : ritualOpen
         ? 'local mode — copies the markdown block'
-        : n
-          ? 'day close — recap · save point · public line · energy'
-          : 'log something first';
+        : n && pending
+          ? "yesterday's next needs an exit — done / still next / drop"
+          : n
+            ? 'day close — recap · save point · public line · energy'
+            : 'log something first';
   };
 
   const renderRitual = () => {
@@ -496,7 +506,7 @@ const consoleData = {
     });
 
   $('c-commit').addEventListener('click', async () => {
-    if (state.committed || !state.entries.length) return;
+    if (state.committed || !state.entries.length || pendingCarry() > 0) return;
     if (!ritualOpen) {
       ritualOpen = true;
       renderCommit();
@@ -794,12 +804,12 @@ const consoleData = {
   .type-preview.on {
     border-color: rgba(255, 255, 255, 0.1);
   }
-  .t-project { color: var(--ej-text-2); border-color: rgba(255, 255, 255, 0.22); }
-  .t-done { color: #e8e8ea; background: rgba(255, 255, 255, 0.08); }
-  .t-decision { color: var(--ej-blue-2); border-color: rgba(76, 194, 255, 0.38); }
-  .t-risk { color: var(--ej-rose); border-color: rgba(255, 120, 120, 0.4); }
-  .t-next { color: var(--ej-amber-2); background: rgba(245, 158, 11, 0.14); }
-  .t-dropped { color: var(--ej-mut); border-color: rgba(255, 255, 255, 0.16); }
+  :global(.t-project) { color: var(--ej-text-2); border-color: rgba(255, 255, 255, 0.22); }
+  :global(.t-done) { color: #e8e8ea; background: rgba(255, 255, 255, 0.08); }
+  :global(.t-decision) { color: var(--ej-blue-2); border-color: rgba(76, 194, 255, 0.38); }
+  :global(.t-risk) { color: var(--ej-rose); border-color: rgba(255, 120, 120, 0.4); }
+  :global(.t-next) { color: var(--ej-amber-2); background: rgba(245, 158, 11, 0.14); }
+  :global(.t-dropped) { color: var(--ej-mut); border-color: rgba(255, 255, 255, 0.16); }
 
   .chips {
     display: flex;
@@ -838,17 +848,17 @@ const consoleData = {
     font-family: var(--ej-mono);
     font-size: 11.5px;
   }
-  .entry-row {
+  .entries :global(.entry-row) {
     display: flex;
     align-items: baseline;
     gap: 12px;
     padding: 8px 14px 8px 20px;
     transition: background 120ms ease;
   }
-  .entry-row:hover {
+  .entries :global(.entry-row:hover) {
     background: rgba(255, 255, 255, 0.018);
   }
-  .badge {
+  .entries :global(.badge) {
     flex-shrink: 0;
     width: 74px;
     text-align: center;
@@ -861,7 +871,7 @@ const consoleData = {
     font-weight: 600;
     letter-spacing: 0.14em;
   }
-  .entry-text {
+  .entries :global(.entry-text) {
     flex: 1;
     min-width: 0;
     color: var(--ej-text-2);
@@ -870,14 +880,14 @@ const consoleData = {
     line-height: 1.55;
     overflow-wrap: break-word;
   }
-  .entry-time {
+  .entries :global(.entry-time) {
     flex-shrink: 0;
     color: var(--ej-dim);
     font-family: var(--ej-mono);
     font-size: 10px;
     font-variant-numeric: tabular-nums;
   }
-  .entry-del {
+  .entries :global(.entry-del) {
     flex-shrink: 0;
     width: 20px;
     height: 20px;
@@ -892,7 +902,7 @@ const consoleData = {
     opacity: 0;
     transition: opacity 120ms ease;
   }
-  .entry-row:hover .entry-del {
+  .entries :global(.entry-row:hover .entry-del) {
     opacity: 1;
   }
 
@@ -918,7 +928,7 @@ const consoleData = {
     font-size: 9.5px;
     font-weight: 500;
   }
-  .carry-row {
+  .carry :global(.carry-row) {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -926,13 +936,13 @@ const consoleData = {
     border-bottom: 1px solid rgba(255, 255, 255, 0.045);
     transition: opacity 160ms ease;
   }
-  .carry-row:last-child {
+  .carry :global(.carry-row:last-child) {
     border-bottom: none;
   }
-  .carry-row.spent {
+  .carry :global(.carry-row.spent) {
     opacity: 0.4;
   }
-  .carry-text {
+  .carry :global(.carry-text) {
     flex: 1;
     min-width: 0;
     color: var(--ej-text-2);
@@ -940,11 +950,11 @@ const consoleData = {
     font-size: 11.5px;
     line-height: 1.5;
   }
-  .carry-text.strike {
+  .carry :global(.carry-text.strike) {
     color: var(--ej-mut);
     text-decoration: line-through;
   }
-  .carry-spent {
+  .carry :global(.carry-spent) {
     flex-shrink: 0;
     color: var(--ej-dim);
     font-family: var(--ej-mono);
@@ -952,12 +962,12 @@ const consoleData = {
     font-weight: 500;
     letter-spacing: 0.1em;
   }
-  .carry-actions {
+  .carry :global(.carry-actions) {
     display: flex;
     gap: 6px;
     flex-shrink: 0;
   }
-  .ca {
+  .carry :global(.ca) {
     padding: 2px 9px;
     border-radius: 5px;
     cursor: pointer;
@@ -970,11 +980,11 @@ const consoleData = {
     font-weight: 500;
     transition: all 120ms var(--ej-ease);
   }
-  .ca:hover {
+  .carry :global(.ca:hover) {
     border-color: rgba(255, 255, 255, 0.3);
     color: #f0f0f2;
   }
-  .ca-amber:hover {
+  .carry :global(.ca-amber:hover) {
     border-color: rgba(245, 158, 11, 0.55);
     background: rgba(245, 158, 11, 0.12);
     color: var(--ej-amber-2);
@@ -1080,23 +1090,23 @@ const consoleData = {
     font-size: 11.5px;
     line-height: 1.75;
   }
-  .md-h2 {
+  .md :global(.md-h2) {
     color: var(--ej-text-2);
     font-weight: 600;
   }
-  .md-h3 {
+  .md :global(.md-h3) {
     color: var(--ej-text-2);
     font-weight: 600;
   }
-  .md-dim {
+  .md :global(.md-dim) {
     color: var(--ej-dim);
   }
-  .md-line {
+  .md :global(.md-line) {
     color: var(--ej-text-3);
     white-space: pre-wrap;
     overflow-wrap: break-word;
   }
-  .md-dropped {
+  .md :global(.md-dropped) {
     color: var(--ej-dim);
     text-decoration: line-through;
   }
@@ -1323,16 +1333,16 @@ const consoleData = {
       0 1px 2px rgba(0, 0, 0, 0.7),
       inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
-  .commit-line {
+  .commit :global(.commit-line) {
     margin: 9px 0 0;
     color: #9a9aa2;
     font-family: var(--ej-mono);
     font-size: 10.5px;
   }
-  .commit-line span {
+  .commit :global(.commit-line span) {
     color: var(--ej-blue);
   }
-  .commit-line b {
+  .commit :global(.commit-line b) {
     color: var(--ej-text-2);
     font-weight: 500;
   }
