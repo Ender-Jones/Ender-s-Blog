@@ -181,7 +181,6 @@ const showToc = tocItems.length >= 3;
       var q = quotes[qi];
       quote.textContent = q.lang === 'fr' ? q.text : '“' + q.text + '”';
       trans.textContent = q.trans || '';
-      trans.style.display = q.trans ? '' : 'none';
       source.textContent = q.source;
       lang.textContent = (q.lang || 'en').toUpperCase();
     };
@@ -402,6 +401,11 @@ const showToc = tocItems.length >= 3;
   .body-grid.no-toc {
     grid-template-columns: minmax(0, 1fr);
   }
+  /* 无 ToC 的短文(诗等)居中, 不然 720px 列孤悬左侧 */
+  .body-grid.no-toc article {
+    margin-inline: auto;
+    width: 100%;
+  }
   article {
     max-width: 720px;
     min-width: 0;
@@ -563,10 +567,11 @@ const showToc = tocItems.length >= 3;
     opacity: 0.7;
   }
 
-  /* 文尾 coda: 全宽区块, 与主页 coda 同一套词汇 — 无装饰线, 只有一条全宽发丝分隔 */
+  /* 文尾 coda: 全宽区块, 与主页 coda 同一套词汇 — 无装饰线, 只有一条全宽发丝分隔.
+     高度恒定: 引文区预留 3 行、译文区预留 1 行, 换引文不再抖动页面. */
   .coda-sec {
     margin: clamp(56px, 9vh, 88px) 0 0;
-    padding: clamp(44px, 7vh, 64px) 0 clamp(8px, 2vh, 16px);
+    padding: clamp(44px, 7vh, 64px) 0 clamp(48px, 7vh, 72px);
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     max-width: 820px;
   }
@@ -579,7 +584,7 @@ const showToc = tocItems.length >= 3;
     font-weight: 300;
     line-height: 1.45;
     text-wrap: pretty;
-    min-height: 2.8em;
+    min-height: 4.4em;
     opacity: 1;
     transform: translateY(0);
     transition:
@@ -594,6 +599,7 @@ const showToc = tocItems.length >= 3;
   .coda-trans {
     margin: 12px 0 0;
     max-width: 58ch;
+    min-height: 1.65em;
     color: var(--ej-mut);
     font-family: var(--ej-sans);
     font-size: 13.5px;
