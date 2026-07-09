@@ -9,7 +9,7 @@
 |---|---|
 | 写新文章 | `src/content/posts/<slug>.mdx` — frontmatter 抄旁边任意一篇; 配图放 `public/img/posts/` |
 | 手写 worklog | `src/content/worklogs/YYYY-MM.md` — 一月一个文件, 追加 `## YYYY-MM-DD` 小节 |
-| 加/改 coda 引文 | `src/data/quotes.yml` |
+| 加/改 coda 引文 | `src/data/quotes.yml` — 文章想固定某条: frontmatter 写 `coda: <id>`, 不写则随机 |
 | 新 tag 注册 | `src/data/tags.yml` — 文章用了没注册的 tag 构建会报错, 这是故意的 |
 | 改身份/联系方式 | `src/data/site.yml` |
 | 改颜色/字体/动效 | `src/styles/tokens.css` — 全站唯一的设计令牌来源 |

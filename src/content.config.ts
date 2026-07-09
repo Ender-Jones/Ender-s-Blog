@@ -60,6 +60,7 @@ const posts = defineCollection({
       image_credit: text.optional(),
       cover_mode: coverMode.optional(),
       marginalia: marginalia.optional(),
+      coda: text.optional(), // 固定文尾 coda: 填 src/data/quotes.yml 里某条的 id
     })
     .strict(),
 });

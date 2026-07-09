@@ -92,6 +92,7 @@ export type HomeData = {
 };
 
 export type Quote = {
+  id?: string;
   text: string;
   trans?: string;
   source: string;

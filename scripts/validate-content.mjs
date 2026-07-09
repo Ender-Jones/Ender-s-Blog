@@ -43,6 +43,10 @@ function checkPost(file) {
   if (image && image.startsWith('/') && !existsSync(join(PUBLIC, image))) {
     fail(file, `frontmatter image not found in public${image}`);
   }
+  const coda = readFrontmatterValue(fm, 'coda');
+  if (coda && !quoteIds.has(coda)) {
+    fail(file, `coda "${coda}" has no matching id in src/data/quotes.yml`);
+  }
 }
 
 function checkWorklog(file) {
@@ -91,11 +95,14 @@ const registeredTags = new Set(
 
 // quotes.yml 最低限
 const quotesSource = readFileSync(join(ROOT, 'src/data/quotes.yml'), 'utf8');
-const quoteTexts = [...quotesSource.matchAll(/^ +- +text:/gm)].length;
+const quoteTexts = [...quotesSource.matchAll(/^ +text:/gm)].length;
 const quoteSources = [...quotesSource.matchAll(/^ +source:/gm)].length;
 if (quoteTexts !== quoteSources) {
   fail(join(ROOT, 'src/data/quotes.yml'), `every quote needs a source (${quoteTexts} text / ${quoteSources} source)`);
 }
+const quoteIds = new Set(
+  [...quotesSource.matchAll(/^ +- +id: *([a-z0-9-]+) *$/gm)].map((m) => m[1]),
+);
 
 const posts = listMarkdownFiles(join(CONTENT, 'posts'));
 const worklogs = listMarkdownFiles(join(CONTENT, 'worklogs'));
