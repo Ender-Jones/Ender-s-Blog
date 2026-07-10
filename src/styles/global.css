@@ -63,6 +63,88 @@ html.ej-splash-active .reveal {
   }
 }
 
+/* —— 按钮词汇(全站统一, 最多这几种; tone 用 --btn-tone/--btn-tone-rgb 换色) ——
+   .ej-link  文字箭头链接: 静默灰 → hover 染语义色 + 辉光 + 右移 2px
+   .ej-pill  胶囊: 静默灰字 → hover 实心填色 + 深字 + neon 投影(footer 为原型)
+   .ej-orb   圆形微钮(⟳ 等): 发丝圆环 → hover 半圈旋转 + 染色 + 微光 */
+.ej-link {
+  --btn-tone: var(--ej-pink-2);
+  --btn-tone-rgb: 255, 122, 192;
+  display: inline-block;
+  color: #9a9aa2;
+  font-family: var(--ej-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 120ms var(--ej-ease);
+}
+
+.ej-link:hover {
+  color: var(--btn-tone);
+  text-shadow: 0 0 12px rgba(var(--btn-tone-rgb), 0.5);
+  transform: translateX(2px);
+}
+
+.ej-link--blue {
+  --btn-tone: var(--ej-blue-2);
+  --btn-tone-rgb: 76, 194, 255;
+}
+
+.ej-link--amber {
+  --btn-tone: var(--ej-amber-2);
+  --btn-tone-rgb: 245, 158, 11;
+}
+
+.ej-pill {
+  --btn-fill: var(--ej-pink);
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-family: var(--ej-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #9a9aa2;
+  transition: all 120ms var(--ej-ease);
+}
+
+.ej-pill:hover {
+  color: #0a0a0b;
+  background: var(--btn-fill);
+  box-shadow: 0 6px 18px -6px var(--btn-fill);
+}
+
+.ej-pill--ghost:hover {
+  color: var(--ej-text);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
+.ej-orb {
+  --btn-tone-rgb: 255, 122, 192;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: var(--ej-mut-2);
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+  transition: all 220ms var(--ej-ease);
+}
+
+.ej-orb:hover {
+  border-color: rgba(var(--btn-tone-rgb), 0.5);
+  color: var(--ej-pink-2);
+  background: rgba(var(--btn-tone-rgb), 0.06);
+  box-shadow: 0 0 14px -2px rgba(var(--btn-tone-rgb), 0.45);
+  transform: rotate(180deg);
+}
+
 /* 跨页过渡: 原生 cross-document View Transitions — 支持的浏览器 200ms 交叉淡入,
    其余(如 Firefox)静默降级为普通跳转. nav 有自己的 transition name, 换页时稳住不动. */
 @view-transition {

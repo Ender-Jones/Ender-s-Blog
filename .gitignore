@@ -13,3 +13,6 @@ dist/
 
 # logs
 npm-debug.log*
+
+# never ships: personal source materials (resume, research snapshots)
+private/

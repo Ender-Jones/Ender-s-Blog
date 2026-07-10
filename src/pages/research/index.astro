@@ -80,7 +80,7 @@ const signalRows = [
     <section class="tl reveal" style="--reveal-i: 3;">
       <div class="sec-head">
         <h2>Timeline</h2>
-        {hasCv && <a class="cv" href="/cv.pdf" data-route="↓ cv.pdf">download CV ↓</a>}
+        {hasCv && <a class="ej-link ej-link--amber" href="/cv.pdf" data-route="↓ cv.pdf">download CV ↓</a>}
       </div>
       <div class="tl-list">
         {research.timeline.map((t) => (
@@ -97,7 +97,7 @@ const signalRows = [
       <div class="next-card">
         <span class="next-label">WHAT'S NEXT</span>
         <p class="next-text">{research.whats_next}</p>
-        <a class="next-link" href="/worklog/" data-route="→ /worklog/ — the day-by-day version of this page">the day-by-day version of this page →</a>
+        <a class="ej-link next-link" href="/worklog/" data-route="→ /worklog/ — the day-by-day version of this page">the day-by-day version of this page →</a>
       </div>
     </section>
   </main>
@@ -421,21 +421,6 @@ const signalRows = [
   .tl {
     padding: clamp(48px, 7vh, 68px) 0 0;
   }
-  .cv {
-    color: #9a9aa2;
-    font-family: var(--ej-mono);
-    font-size: 12px;
-    font-weight: 500;
-    text-decoration: none;
-    padding-bottom: 2px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-    transition: all 120ms var(--ej-ease);
-  }
-  .cv:hover {
-    color: var(--ej-amber-2);
-    border-bottom-color: rgba(245, 158, 11, 0.55);
-    text-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
-  }
   .tl-list {
     position: relative;
     padding: 4px 0;
@@ -511,16 +496,6 @@ const signalRows = [
   }
   .next-link {
     justify-self: start;
-    color: #9a9aa2;
-    font-family: var(--ej-mono);
-    font-size: 11.5px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 120ms var(--ej-ease);
-  }
-  .next-link:hover {
-    color: var(--ej-pink-2);
-    text-shadow: 0 0 12px rgba(255, 122, 192, 0.5);
   }
 
   @media (max-width: 980px) {

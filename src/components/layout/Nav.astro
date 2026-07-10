@@ -7,24 +7,23 @@ const links = [
 ];
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || path.startsWith(href);
+const isZh = path === '/zh/' || path.startsWith('/zh/');
 ---
 
 <nav>
   <div class="inner">
-    <span class="fade-accent" aria-hidden="true"></span>
     <a class="logo" href="/" data-route="→ / — home">
       <span class="name">Ender Jones</span>
       <span class="caret" aria-hidden="true"></span>
-      <span class="suffix">research notebook</span>
     </a>
     <div class="right">
       {links.map((l) => (
         <a class:list={['link', { active: isActive(l.href) }]} href={l.href} data-route={l.route}>{l.label}</a>
       ))}
       <span class="divider" aria-hidden="true"></span>
-      <span class="lang" title="中文版 — planned">
-        <span class="lang-on">EN</span>
-        <span class="lang-off" data-route="中文版 — planned">中</span>
+      <span class="lang">
+        <a class:list={['lang-a', { on: !isZh }]} href="/" data-route="→ / — english">EN</a>
+        <a class:list={['lang-a', { on: isZh }]} href="/zh/" data-route="→ /zh/ — 中文(施工中)">中</a>
       </span>
     </div>
   </div>
@@ -54,15 +53,6 @@ const isActive = (href: string) => path === href || path.startsWith(href);
     height: 46px;
     padding: 0 40px;
   }
-  .fade-accent {
-    position: absolute;
-    bottom: -1px;
-    left: 40px;
-    width: 210px;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.3), transparent);
-    pointer-events: none;
-  }
   .logo {
     display: flex;
     align-items: baseline;
@@ -88,12 +78,6 @@ const isActive = (href: string) => path === href || path.startsWith(href);
       0 0 20px rgba(255, 122, 192, 0.35);
     animation: ej-caret 1.3s linear infinite;
   }
-  .suffix {
-    margin-left: 7px;
-    color: var(--ej-mut-2);
-    font-family: var(--ej-mono);
-    font-size: 11px;
-  }
   .right {
     display: flex;
     align-items: center;
@@ -112,11 +96,13 @@ const isActive = (href: string) => path === href || path.startsWith(href);
     transition: color 120ms var(--ej-ease);
   }
   .link:hover {
-    color: var(--ej-text);
+    color: var(--ej-pink-2);
+    text-shadow: 0 0 12px rgba(255, 122, 192, 0.45);
   }
   .link.active {
     color: var(--ej-text);
     border-bottom-color: rgba(255, 122, 192, 0.55);
+    text-shadow: none;
   }
   .divider {
     width: 1px;
@@ -132,31 +118,23 @@ const isActive = (href: string) => path === href || path.startsWith(href);
     font-size: 10px;
     background: rgba(0, 0, 0, 0.25);
   }
-  .lang-on {
-    padding: 3px 9px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--ej-text);
-  }
-  .lang-off {
+  .lang-a {
     padding: 3px 9px;
     border-radius: 999px;
     color: var(--ej-mut-2);
-    cursor: pointer;
+    text-decoration: none;
     transition: color 120ms ease;
   }
-  .lang-off:hover {
+  .lang-a:hover {
+    color: var(--ej-text);
+  }
+  .lang-a.on {
+    background: rgba(255, 255, 255, 0.08);
     color: var(--ej-text);
   }
   @media (max-width: 720px) {
     .inner {
       padding: 0 20px;
-    }
-    .fade-accent {
-      left: 20px;
-    }
-    .suffix {
-      display: none;
     }
     .right {
       gap: 14px;

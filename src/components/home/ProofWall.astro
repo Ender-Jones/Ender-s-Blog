@@ -49,8 +49,8 @@ const now = nowLine
       <div class="head">
         <span class="label">Proof of work — 26 weeks</span>
         <span class="links">
-          <a class="lk lk-pink" href="/worklog/" data-route="→ /worklog/ — the full log">worklog →</a>
-          <a class="lk lk-blue" href="https://github.com/Ender-Jones" target="_blank" rel="noopener" data-route="↗ github.com/Ender-Jones">github ↗</a>
+          <a class="ej-link" href="/worklog/" data-route="→ /worklog/ — the full log">worklog →</a>
+          <a class="ej-link ej-link--blue" href="https://github.com/Ender-Jones" target="_blank" rel="noopener" data-route="↗ github.com/Ender-Jones">github ↗</a>
         </span>
       </div>
 
@@ -133,22 +133,6 @@ const now = nowLine
     align-items: baseline;
     gap: 18px;
   }
-  .lk {
-    color: #9a9aa2;
-    font-family: var(--ej-mono);
-    font-size: 11.5px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 120ms var(--ej-ease);
-  }
-  .lk-pink:hover {
-    color: var(--ej-pink-2);
-    text-shadow: 0 0 12px rgba(255, 122, 192, 0.5);
-  }
-  .lk-blue:hover {
-    color: var(--ej-blue-2);
-    text-shadow: 0 0 12px rgba(76, 194, 255, 0.5);
-  }
 
   .wall {
     display: block;
@@ -183,13 +167,14 @@ const now = nowLine
     border-radius: 3.5px;
     border: 1px solid transparent;
   }
+  /* 色阶向"饱和的品牌粉"收束, 不向白: 最热的一格 = 全站的 alive 色本身 */
   .cell.l0 { background: rgba(255, 255, 255, 0.045); }
-  .cell.l1 { background: rgba(255, 122, 192, 0.18); }
-  .cell.l2 { background: rgba(255, 122, 192, 0.36); }
-  .cell.l3 { background: rgba(255, 138, 199, 0.6); }
+  .cell.l1 { background: rgba(255, 122, 192, 0.15); }
+  .cell.l2 { background: rgba(255, 122, 192, 0.34); }
+  .cell.l3 { background: rgba(255, 122, 192, 0.58); }
   .cell.l4 {
-    background: #ffcfe7;
-    box-shadow: 0 0 7px rgba(255, 122, 192, 0.28);
+    background: var(--ej-pink);
+    box-shadow: 0 0 9px rgba(255, 122, 192, 0.5);
   }
   .cell.today {
     border-color: rgba(245, 158, 11, 0.85);
@@ -240,10 +225,10 @@ const now = nowLine
     border-radius: 3px;
   }
   .sw.l0 { background: rgba(255, 255, 255, 0.045); }
-  .sw.l1 { background: rgba(255, 122, 192, 0.18); }
-  .sw.l2 { background: rgba(255, 122, 192, 0.36); }
-  .sw.l3 { background: rgba(255, 138, 199, 0.6); }
-  .sw.l4 { background: #ffcfe7; }
+  .sw.l1 { background: rgba(255, 122, 192, 0.15); }
+  .sw.l2 { background: rgba(255, 122, 192, 0.34); }
+  .sw.l3 { background: rgba(255, 122, 192, 0.58); }
+  .sw.l4 { background: var(--ej-pink); }
   .lg-div {
     width: 1px;
     height: 10px;

@@ -30,6 +30,7 @@ const claimHead = words.length > 1 ? words.slice(0, -1).join(' ') + ' ' : '';
     <span class="bar"><span class="fill"></span></span>
     <span class="label">AUTO — CLICK OR ANY KEY TO SKIP</span>
   </span>
+  <span class="zh-hint">中文 — 右上角 EN / 中</span>
 </div>
 
 <script is:inline>
@@ -174,6 +175,18 @@ const claimHead = words.length > 1 ? words.slice(0, -1).join(' ') + ' ' : '';
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.14em;
+  }
+  .zh-hint {
+    position: absolute;
+    bottom: clamp(26px, 5vw, 56px);
+    right: clamp(32px, 6vw, 88px);
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    opacity: 0;
+    animation: ej-line-in 780ms cubic-bezier(0.16, 0.72, 0.26, 1) 1500ms both;
   }
   @keyframes ej-line-in {
     0% {

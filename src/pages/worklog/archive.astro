@@ -18,7 +18,7 @@ const weeks = groupByWeek(days, todayIso);
     <section class="reveal" style="--reveal-i: 0;">
       <p class="kicker">WORKLOG — ARCHIVE</p>
       <h1>Every week.<span class="caret" aria-hidden="true"></span></h1>
-      <p class="sub">{days.length} logged days across {weeks.length} weeks · <a href="/worklog/" data-route="→ /worklog/">back to worklog →</a></p>
+      <p class="sub">{days.length} logged days across {weeks.length} weeks · <a class="ej-link" href="/worklog/" data-route="→ /worklog/">back to worklog →</a></p>
     </section>
 
     <section class="weeks-sec reveal" style="--reveal-i: 1;">
@@ -60,18 +60,6 @@ const weeks = groupByWeek(days, todayIso);
     margin: 18px 0 0;
     color: var(--ej-text-3);
     font-size: 14px;
-  }
-  .sub a {
-    color: #9a9aa2;
-    font-family: var(--ej-mono);
-    font-size: 12px;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-    padding-bottom: 2px;
-    transition: color 120ms var(--ej-ease);
-  }
-  .sub a:hover {
-    color: var(--ej-text);
   }
   .weeks-sec {
     padding: clamp(40px, 6vh, 56px) 0 clamp(56px, 8vh, 72px);

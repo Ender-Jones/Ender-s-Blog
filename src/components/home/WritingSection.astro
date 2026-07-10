@@ -26,7 +26,7 @@ const fMin = minutes(featured.body);
   <div class="wrap">
     <div class="head">
       <h2>Writing <span class="sub">essays · poems · research notes</span></h2>
-      <a class="all" href="/posts/" data-route="→ /posts/ — the archive">all writing →</a>
+      <a class="ej-link" href="/posts/" data-route="→ /posts/ — the archive">all writing →</a>
     </div>
 
     <a class="featured" href={href(featured.id)} data-route={`→ ${href(featured.id)}`}>
@@ -93,20 +93,6 @@ const fMin = minutes(featured.body);
     font-size: 11.5px;
     font-weight: 500;
     margin-left: 10px;
-  }
-  .all {
-    color: #9a9aa2;
-    font-family: var(--ej-mono);
-    font-size: 12px;
-    font-weight: 500;
-    text-decoration: none;
-    padding-bottom: 2px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-    transition: all 120ms var(--ej-ease);
-  }
-  .all:hover {
-    color: var(--ej-text);
-    border-bottom-color: rgba(255, 255, 255, 0.35);
   }
 
   .featured {

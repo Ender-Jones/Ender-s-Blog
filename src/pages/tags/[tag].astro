@@ -40,7 +40,7 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
     <section class="reveal" style="--reveal-i: 0;">
       <p class="kicker">FILED UNDER</p>
       <h1>#{label}<span class="caret" aria-hidden="true"></span></h1>
-      <p class="sub">{sorted.length} post{sorted.length === 1 ? '' : 's'} · <a href="/posts/" data-route="→ /posts/ — the archive">all writing →</a></p>
+      <p class="sub">{sorted.length} post{sorted.length === 1 ? '' : 's'} · <a class="ej-link" href="/posts/" data-route="→ /posts/ — the archive">all writing →</a></p>
     </section>
 
     <section class="list reveal" style="--reveal-i: 1;">
@@ -92,18 +92,6 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
     margin: 18px 0 0;
     color: var(--ej-text-3);
     font-size: 14px;
-  }
-  .sub a {
-    color: #9a9aa2;
-    font-family: var(--ej-mono);
-    font-size: 12px;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-    padding-bottom: 2px;
-    transition: color 120ms var(--ej-ease);
-  }
-  .sub a:hover {
-    color: var(--ej-text);
   }
 
   .list {

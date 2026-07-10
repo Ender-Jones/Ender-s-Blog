@@ -72,7 +72,7 @@ const hasArchive = weeks.length > RECENT;
       <div class="trail-card">
         <div class="trail-head">
           <span class="trail-label">LOG TRAIL — 26 WEEKS</span>
-          <a class="console-link" href="/console/" data-route="→ /console/ — write access only">entry console →</a>
+          <a class="ej-link" href="/console/" data-route="→ /console/ — write access only">entry console →</a>
         </div>
         <div class="trail-flex">
           <div class="trail-grid" role="img" aria-label="26-week log trail">
@@ -99,7 +99,7 @@ const hasArchive = weeks.length > RECENT;
     <section class="weeks-sec reveal" style="--reveal-i: 2;">
       <WorklogWeeks weeks={recentWeeks} />
       {hasArchive && (
-        <a class="archive-link" href="/worklog/archive/" data-route="→ /worklog/archive/">earlier weeks → archive</a>
+        <a class="ej-link archive-link" href="/worklog/archive/" data-route="→ /worklog/archive/">earlier weeks → archive</a>
       )}
     </section>
 
@@ -239,17 +239,6 @@ const hasArchive = weeks.length > RECENT;
     font-weight: 500;
     letter-spacing: 0.2em;
   }
-  .console-link {
-    color: #9a9aa2;
-    font-family: var(--ej-mono);
-    font-size: 11.5px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: color 120ms ease;
-  }
-  .console-link:hover {
-    color: var(--ej-pink-2);
-  }
   .trail-flex {
     display: flex;
     align-items: center;
@@ -325,19 +314,7 @@ const hasArchive = weeks.length > RECENT;
     padding: clamp(44px, 7vh, 64px) 0 0;
   }
   .archive-link {
-    display: inline-block;
     margin: -18px 0 0;
-    color: #9a9aa2;
-    font-family: var(--ej-mono);
-    font-size: 11.5px;
-    font-weight: 500;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-    padding-bottom: 2px;
-    transition: color 120ms ease;
-  }
-  .archive-link:hover {
-    color: var(--ej-text);
   }
 
   .legend-sec {

@@ -10,7 +10,7 @@ const first = quotes[0];
     <blockquote id="coda-quote">{first.lang === 'fr' ? first.text : `“${first.text}”`}</blockquote>
     <div class="meta-row">
       <p class="source">— <span id="coda-source">{first.source}</span></p>
-      <button id="coda-reroll" type="button" data-route="⟳ another quote">⟳ again</button>
+      <button id="coda-reroll" class="ej-orb" type="button" aria-label="another quote" data-route="⟳ another quote">⟳</button>
     </div>
   </div>
 </section>
@@ -79,7 +79,7 @@ const first = quotes[0];
   }
   .meta-row {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 18px;
     margin-top: 16px;
   }
@@ -95,25 +95,9 @@ const first = quotes[0];
   .source.fade {
     opacity: 0;
   }
-  button {
-    padding: 3px 12px;
-    border-radius: 999px;
-    cursor: pointer;
-    white-space: nowrap;
+  /* ⟳ 圆钮定位在行尾固定位置, 不随出处长短漂移 */
+  #coda-reroll {
+    margin-left: auto;
     flex-shrink: 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: transparent;
-    color: var(--ej-mut-2);
-    font-family: var(--ej-mono);
-    font-size: 10.5px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    transition: all 120ms var(--ej-ease);
-  }
-  button:hover {
-    border-color: rgba(255, 122, 192, 0.45);
-    background: rgba(255, 122, 192, 0.07);
-    color: var(--ej-pink-2);
-    text-shadow: 0 0 12px rgba(255, 122, 192, 0.4);
   }
 </style>

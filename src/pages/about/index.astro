@@ -32,7 +32,7 @@ const nowRows = [
           {about.paras.map((p) => (
             <p>{p}</p>
           ))}
-          <a class="essay" href={about.essay_link.href} data-route={`→ ${about.essay_link.href}`}>{about.essay_link.label}</a>
+          <a class="ej-link essay" href={about.essay_link.href} data-route={`→ ${about.essay_link.href}`}>{about.essay_link.label}</a>
         </div>
       </div>
     </section>
@@ -55,7 +55,7 @@ const nowRows = [
     <section class="system reveal" style="--reveal-i: 2;">
       <h2>{about.system.title}</h2>
       <p class="sys-body">{about.system.body}</p>
-      <a class="sys-link" href={about.system.link} data-route={`→ ${about.system.link}`}>{about.system.link_label}</a>
+      <a class="ej-link sys-link" href={about.system.link} data-route={`→ ${about.system.link}`}>{about.system.link_label}</a>
     </section>
 
     <section class="now reveal" style="--reveal-i: 3;">
@@ -187,19 +187,6 @@ const nowRows = [
   }
   .essay {
     justify-self: start;
-    color: #9a9aa2;
-    font-family: var(--ej-mono);
-    font-size: 11.5px;
-    font-weight: 500;
-    text-decoration: none;
-    padding-bottom: 2px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-    transition: all 120ms var(--ej-ease);
-  }
-  .essay:hover {
-    color: var(--ej-pink-2);
-    border-bottom-color: rgba(255, 122, 192, 0.5);
-    text-shadow: 0 0 12px rgba(255, 122, 192, 0.4);
   }
 
   .notebook,
@@ -286,18 +273,7 @@ const nowRows = [
     text-wrap: pretty;
   }
   .sys-link {
-    display: inline-block;
     margin-top: 14px;
-    color: #9a9aa2;
-    font-family: var(--ej-mono);
-    font-size: 11.5px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 120ms var(--ej-ease);
-  }
-  .sys-link:hover {
-    color: var(--ej-pink-2);
-    text-shadow: 0 0 12px rgba(255, 122, 192, 0.5);
   }
 
   .now-head {

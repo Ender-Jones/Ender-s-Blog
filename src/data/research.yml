@@ -73,13 +73,15 @@ timeline:
   - when: "2025"
     label: KICS short paper — EDA-augmented CCT-LSTM published
     tone: pink
-  # ↓ 学历/身份节点: 把年份补上后取消注释(tone: gray = 中性节点)
-  # - when: "20XX"
-  #   label: PhD, Affective Computing — Tokyo/Chiba
-  #   tone: gray
-  # - when: "20XX"
-  #   label: M.Eng — TUIS
-  #   tone: gray
+  - when: "2025"
+    label: PhD course started — informatics, affective computing line
+    tone: gray
+  - when: "2023"
+    label: M.S. — graph mining for phishing detection, then the turn to affect
+    tone: gray
+  - when: "2019"
+    label: B.S., informatics — Tokyo/Chiba
+    tone: gray
 
 # ↓ 研究现状(About 页使用)
 focus: A reproducible re-evaluation of video-based stress estimation.
