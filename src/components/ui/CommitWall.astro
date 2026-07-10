@@ -1,0 +1,106 @@
+---
+// 全站唯一的 commit 墙: 数据源 = github 贡献快照(任何 push 都算), 色阶收束到品牌粉.
+// cell 尺寸可调(主页 17 / 其他 13), 月份标签可开关. 今天 = 琥珀框.
+import activity from '../../data/github-activity.json';
+
+interface Props {
+  cell?: number;
+  months?: boolean;
+}
+
+const { cell = 17, months = true } = Astro.props;
+const gap = cell >= 15 ? 3.5 : 3;
+const radius = cell >= 15 ? 3.5 : 2.5;
+
+const DAYS = 182;
+const counts = new Map<string, number>(
+  (activity.days ?? []).map((d: { date: string; count: number }) => [d.date, d.count]),
+);
+const todayIso = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Tokyo' });
+const base = new Date(`${todayIso}T12:00:00Z`);
+const level = (c: number) => (c === 0 ? 0 : c <= 2 ? 1 : c <= 5 ? 2 : c <= 10 ? 3 : 4);
+
+const cells = Array.from({ length: DAYS }, (_, i) => {
+  const dt = new Date(base.getTime() - (DAYS - 1 - i) * 86400000);
+  const iso = dt.toISOString().slice(0, 10);
+  const count = counts.get(iso) ?? 0;
+  return {
+    iso,
+    count,
+    level: level(count),
+    isToday: i === DAYS - 1,
+    firstOfMonth: iso.slice(8, 10) === '01',
+    month: dt.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase(),
+  };
+});
+
+const monthLabels = Array.from({ length: Math.ceil(DAYS / 7) }, (_, col) => {
+  const week = cells.slice(col * 7, col * 7 + 7);
+  return week.find((c) => c.firstOfMonth)?.month ?? '';
+});
+---
+
+<span class="wall-wrap" style={`--cell: ${cell}px; --gap: ${gap}px; --rad: ${radius}px;`}>
+  <span class="grid" role="img" aria-label="26-week contribution wall">
+    {cells.map((c) => (
+      <span
+        class:list={['cell', `l${c.level}`, { today: c.isToday }]}
+        title={`${c.iso}: ${c.count} commit${c.count === 1 ? '' : 's'}${c.isToday ? ' · today' : ''}`}></span>
+    ))}
+  </span>
+  {months && (
+    <span class="months" aria-hidden="true">
+      {monthLabels.map((m) => (
+        <span class="month">{m}</span>
+      ))}
+    </span>
+  )}
+</span>
+
+<style>
+  .wall-wrap {
+    display: grid;
+    gap: 7px;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  .grid {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(7, var(--cell));
+    grid-auto-columns: var(--cell);
+    gap: var(--gap);
+  }
+  .cell {
+    border-radius: var(--rad);
+    border: 1px solid transparent;
+  }
+  /* 色阶向"饱和的品牌粉"收束: 最热的一格 = 全站的 alive 色本身 */
+  .cell.l0 { background: rgba(255, 255, 255, 0.045); }
+  .cell.l1 { background: rgba(255, 122, 192, 0.15); }
+  .cell.l2 { background: rgba(255, 122, 192, 0.34); }
+  .cell.l3 { background: rgba(255, 122, 192, 0.58); }
+  .cell.l4 {
+    background: var(--ej-pink);
+    box-shadow: 0 0 9px rgba(255, 122, 192, 0.5);
+  }
+  .cell.today {
+    border-color: rgba(245, 158, 11, 0.85);
+    box-shadow: 0 0 9px rgba(245, 158, 11, 0.45);
+  }
+  .months {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: var(--cell);
+    gap: var(--gap);
+  }
+  .month {
+    color: #63636b;
+    font-family: var(--ej-mono);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    overflow: visible;
+  }
+</style>

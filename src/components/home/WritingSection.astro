@@ -2,7 +2,7 @@
 // §3 Writing: pinned 精选卡 + 最新三行(签名式行悬停: 侧条·标题右移·缩略图滑入).
 import { getCollection } from 'astro:content';
 
-const posts = await getCollection('posts');
+const posts = (await getCollection('posts')).filter((p) => p.data.language === 'en');
 const byDateDesc = [...posts].sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const featured = byDateDesc.find((p) => p.data.pinned) ?? byDateDesc[byDateDesc.length - 1];

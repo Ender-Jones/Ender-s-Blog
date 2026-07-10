@@ -5,7 +5,7 @@
   counter-reset: ej-section;
   color: #b8b8c0;
   font-family: var(--ej-sans);
-  font-size: 16px;
+  font-size: 16.5px;
   line-height: 1.75;
 }
 
@@ -17,7 +17,7 @@
   text-wrap: pretty;
 }
 
-.prose h2 {
+.prose > h2 {
   counter-increment: ej-section;
   margin: 52px 0 16px;
   scroll-margin-top: 84px;
@@ -29,7 +29,7 @@
   line-height: 1.2;
 }
 
-.prose h2::before {
+.prose > h2::before {
   content: '§' counter(ej-section, decimal-leading-zero);
   display: block;
   margin-bottom: 8px;

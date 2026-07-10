@@ -4,9 +4,9 @@ import BaseLayout from '../../components/layout/BaseLayout.astro';
 import RouteHint from '../../components/home/RouteHint.astro';
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('posts')).sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
-);
+const posts = (await getCollection('posts'))
+  .filter((p) => p.data.language === 'en')
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const newestId = posts[0]?.id;
 
 const fmtDate = (d: Date) =>

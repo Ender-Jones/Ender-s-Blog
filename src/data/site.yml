@@ -46,10 +46,10 @@ socials:
 
 comments:
   giscus:
-    repo: Ender-Jones/personal_blog_astro
-    repo_id: R_kgDOSdXdqA
+    repo: Ender-Jones/Ender-s-Blog
+    repo_id: R_kgDOTUHT4w
     category: General
-    category_id: DIC_kwDOSdXdqM4C9Odq
+    category_id: DIC_kwDOTUHT484DA4bJ
     mapping: pathname
     strict: "0"
     reactions_enabled: "1"

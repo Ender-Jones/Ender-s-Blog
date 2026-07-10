@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import RouteHint from '../../components/home/RouteHint.astro';
 import WorklogWeeks from '../../components/worklog/WorklogWeeks.astro';
+import CommitWall from '../../components/ui/CommitWall.astro';
 import { getNowLine, getWorklogDays, groupByWeek } from '../../lib/worklogDays';
 
 const worklogs = await getCollection('worklogs');
@@ -27,16 +28,6 @@ const savePoint = (() => {
   }
   return undefined;
 })();
-
-// Trail: 26 周, 有记录的日子 = 粉, 今天 = 琥珀框.
-const noteSet = new Set(days.map((d) => d.date));
-const DAYS = 182;
-const base = new Date(`${todayIso}T12:00:00Z`);
-const trail = Array.from({ length: DAYS }, (_, i) => {
-  const dt = new Date(base.getTime() - (DAYS - 1 - i) * 86400000);
-  const iso = dt.toISOString().slice(0, 10);
-  return { iso, note: noteSet.has(iso), isToday: i === DAYS - 1 };
-});
 
 const weeks = groupByWeek(days, todayIso);
 const RECENT = 4;
@@ -75,21 +66,19 @@ const hasArchive = weeks.length > RECENT;
           <a class="ej-link" href="/console/" data-route="→ /console/ — write access only">entry console →</a>
         </div>
         <div class="trail-flex">
-          <div class="trail-grid" role="img" aria-label="26-week log trail">
-            {trail.map((c) => (
-              <span
-                class:list={['t-cell', { note: c.note, today: c.isToday }]}
-                title={`${c.iso}${c.note ? ' · note' : ''}${c.isToday ? ' · today' : ''}`}></span>
-            ))}
-          </div>
+          <CommitWall cell={13} />
           <div class="trail-side">
-            <p class="trail-note">one cell per day. a note pushed turns it pink; gaps stay neutral — no streaks are kept, nothing resets.</p>
+            <p class="trail-note">one cell per day, and any push counts — code, experiments, this site. gaps stay neutral: no streaks are kept, nothing resets.</p>
             <span class="legend">
-              <span class="sw sw-note"></span><span>note</span>
+              <span>less</span>
+              <span class="sw l0"></span>
+              <span class="sw l1"></span>
+              <span class="sw l2"></span>
+              <span class="sw l3"></span>
+              <span class="sw l4"></span>
+              <span>more</span>
               <span class="lg-div"></span>
               <span class="sw sw-today"></span><span>today</span>
-              <span class="lg-div"></span>
-              <span class="sw sw-empty"></span><span>a day, neutrally</span>
             </span>
           </div>
         </div>
@@ -245,27 +234,6 @@ const hasArchive = weeks.length > RECENT;
     gap: 36px;
     flex-wrap: wrap;
   }
-  .trail-grid {
-    display: grid;
-    grid-auto-flow: column;
-    grid-template-rows: repeat(7, 13px);
-    grid-auto-columns: 13px;
-    gap: 3px;
-    max-width: 100%;
-    overflow-x: auto;
-  }
-  .t-cell {
-    border-radius: 2.5px;
-    background: rgba(255, 255, 255, 0.045);
-    border: 1px solid transparent;
-  }
-  .t-cell.note {
-    background: rgba(255, 122, 192, 0.38);
-    box-shadow: 0 0 5px rgba(255, 122, 192, 0.1);
-  }
-  .t-cell.today {
-    border-color: rgba(245, 158, 11, 0.85);
-  }
   .trail-side {
     flex: 1;
     min-width: 230px;
@@ -293,15 +261,14 @@ const hasArchive = weeks.length > RECENT;
     height: 10px;
     border-radius: 3px;
   }
-  .sw-note {
-    background: rgba(255, 122, 192, 0.38);
-  }
+  .sw.l0 { background: rgba(255, 255, 255, 0.045); }
+  .sw.l1 { background: rgba(255, 122, 192, 0.15); }
+  .sw.l2 { background: rgba(255, 122, 192, 0.34); }
+  .sw.l3 { background: rgba(255, 122, 192, 0.58); }
+  .sw.l4 { background: var(--ej-pink); }
   .sw-today {
     border: 1px solid rgba(245, 158, 11, 0.85);
     background: transparent;
-  }
-  .sw-empty {
-    background: rgba(255, 255, 255, 0.045);
   }
   .lg-div {
     width: 1px;

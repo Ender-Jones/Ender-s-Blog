@@ -3,7 +3,7 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import RouteHint from '../../components/home/RouteHint.astro';
-import { quotes } from '../../lib/data';
+import { quotes, site } from '../../lib/data';
 import 'katex/dist/katex.min.css';
 import '../../styles/prose.css';
 
@@ -18,9 +18,9 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
 
-const posts = (await getCollection('posts')).sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
-);
+const posts = (await getCollection('posts'))
+  .filter((p) => p.data.language === post.data.language)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const idx = posts.findIndex((p) => p.id === post.id);
 const newer = idx > 0 ? posts[idx - 1] : undefined;
 const older = idx < posts.length - 1 ? posts[idx + 1] : undefined;
@@ -44,6 +44,7 @@ const tocItems = toc.map((h) => {
   return { ...h, num: h.depth === 2 ? String(n).padStart(2, '0') : '' };
 });
 const showToc = tocItems.length >= 3;
+const giscus = site.comments?.giscus;
 ---
 
 <BaseLayout title={`${post.data.title} — Ender Jones`} description={post.data.description} ogImage={post.data.image} noindex>
@@ -59,6 +60,11 @@ const showToc = tocItems.length >= 3;
         <span class="div" aria-hidden="true"></span>
         <span class:list={['kind-chip', `tone-${tone}`]}><span class="kind-dot" aria-hidden="true"></span>{kindChip}</span>
         <span class="meta">{fmtDate(post.data.date)} · {post.data.language.toUpperCase()} · {minutes} min read</span>
+        {post.data.i18n_alt && (
+          <a class="ej-link" href={post.data.i18n_alt} data-route={`→ ${post.data.i18n_alt}`}>
+            {post.data.language === 'en' ? '中文版 →' : 'EN version →'}
+          </a>
+        )}
       </div>
       <h1>{post.data.title}</h1>
       {post.data.description && <p class="dek">{post.data.description}</p>}
@@ -108,16 +114,29 @@ const showToc = tocItems.length >= 3;
           )}
         </nav>
 
-        {post.data.comments && (
+        {post.data.comments && giscus && (
           <section class="comments">
             <div class="cm-head">
               <span class="cm-label">COMMENTS</span>
-              <span class="cm-note">giscus · wired at go-live</span>
+              <span class="cm-note">via GitHub Discussions</span>
             </div>
-            <div class="cm-panel">
-              <p>Comments live in GitHub Discussions via giscus.<br />Reactions and replies land in the repo — nothing else is stored.</p>
-              <span class="cm-btn">Sign in with GitHub</span>
-            </div>
+            <script
+              is:inline
+              src="https://giscus.app/client.js"
+              data-repo={giscus.repo}
+              data-repo-id={giscus.repo_id}
+              data-category={giscus.category}
+              data-category-id={giscus.category_id}
+              data-mapping="pathname"
+              data-strict="0"
+              data-reactions-enabled="1"
+              data-emit-metadata="0"
+              data-input-position="bottom"
+              data-theme="transparent_dark"
+              data-lang="en"
+              data-loading="lazy"
+              crossorigin="anonymous"
+              async></script>
           </section>
         )}
 
@@ -535,37 +554,6 @@ const showToc = tocItems.length >= 3;
   }
   .cm-note {
     letter-spacing: 0.02em;
-  }
-  .cm-panel {
-    display: grid;
-    place-items: center;
-    gap: 12px;
-    padding: 34px 24px;
-    border: 1px dashed rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.008);
-  }
-  .cm-panel p {
-    margin: 0;
-    color: var(--ej-mut);
-    font-size: 13.5px;
-    text-align: center;
-    line-height: 1.6;
-  }
-  .cm-btn {
-    padding: 8px 20px;
-    border-radius: 8px;
-    background: #17171a;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    color: #e8e8ea;
-    font-family: var(--ej-mono);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.7),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    opacity: 0.7;
   }
 
   /* 文尾 coda: 全宽分隔线下的居中终止和弦(诗的体系) — 引文/译文/出处/⟳ 全部居中,

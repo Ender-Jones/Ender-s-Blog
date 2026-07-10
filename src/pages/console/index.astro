@@ -5,6 +5,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import RouteHint from '../../components/home/RouteHint.astro';
+import activity from '../../data/github-activity.json';
 import { getWorklogDays } from '../../lib/worklogDays';
 
 const worklogs = await getCollection('worklogs');
@@ -18,7 +19,7 @@ const consoleData = {
     .slice(0, 5)
     .map((d) => ({ date: d.date, texts: d.items.filter((i) => i.type === 'next').map((i) => i.text) })),
   lastNote: latestDay?.date ?? '',
-  noteDays: days.map((d) => d.date),
+  activityDays: activity.days ?? [],
 };
 ---
 
@@ -175,7 +176,7 @@ const consoleData = {
   const RAW = JSON.parse(document.getElementById('c-data')!.textContent || '{}') as {
     nextDays: { date: string; texts: string[] }[];
     lastNote: string;
-    noteDays: string[];
+    activityDays: { date: string; count: number }[];
   };
 
   const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
@@ -217,7 +218,7 @@ const consoleData = {
     carry: carrySource?.texts ?? [],
     carryFrom: carrySource?.date ?? '',
     lastNote: RAW.lastNote,
-    noteDays: RAW.noteDays,
+    counts: new Map(RAW.activityDays.map((d) => [d.date, d.count])),
   };
 
   // ---- 状态 ----
@@ -468,20 +469,23 @@ const consoleData = {
   const renderTrail = () => {
     const box = $('c-trail');
     box.textContent = '';
-    const noteSet = new Set(DATA.noteDays);
-    if (state.committed) noteSet.add(today);
     const base = new Date(`${today}T12:00:00Z`);
+    const level = (c: number) => (c === 0 ? 0 : c <= 2 ? 1 : c <= 5 ? 2 : c <= 10 ? 3 : 4);
     for (let i = 181; i >= 0; i--) {
       const d = iso(new Date(base.getTime() - i * 86400_000));
+      let count = DATA.counts.get(d) ?? 0;
+      if (i === 0 && state.committed) count += 1;
       const cell = document.createElement('span');
-      const note = noteSet.has(d);
-      cell.className = 'cell' + (note ? ' note' : '') + (i === 0 ? ' today' : '');
-      cell.title = i === 0 ? `today${note ? ' · note ready' : ' — nothing yet, no penalty'}` : d + (note ? ' · note' : '');
+      cell.className = `cell l${level(count)}` + (i === 0 ? ' today' : '');
+      cell.title =
+        i === 0
+          ? `today · ${count} commit${count === 1 ? '' : 's'}${state.committed ? ' (incl. this one)' : ' — nothing counts against you'}`
+          : `${d}: ${count} commit${count === 1 ? '' : 's'}`;
       box.append(cell);
     }
     $('c-trailnote').textContent = state.committed
-      ? 'copied — today turns pink inside its amber frame once pushed.\ngaps stay neutral: no streaks, no guilt.'
-      : 'pink — a day with a note · amber — today\ngaps are neutral, nothing counts against you.';
+      ? 'copied — once pushed, today deepens a shade inside its amber frame.\ngaps stay neutral: no streaks, no guilt.'
+      : 'any push turns the day pink · amber — today\ngaps are neutral, nothing counts against you.';
   };
 
   const renderAll = () => {
@@ -1449,19 +1453,20 @@ const consoleData = {
   }
   .trail :global(.cell) {
     border-radius: 2.5px;
-    background: rgba(255, 255, 255, 0.045);
     border: 1px solid transparent;
     transition: background 300ms ease, box-shadow 300ms ease;
   }
-  .trail :global(.cell.note) {
-    background: rgba(255, 122, 192, 0.38);
+  .trail :global(.cell.l0) { background: rgba(255, 255, 255, 0.045); }
+  .trail :global(.cell.l1) { background: rgba(255, 122, 192, 0.15); }
+  .trail :global(.cell.l2) { background: rgba(255, 122, 192, 0.34); }
+  .trail :global(.cell.l3) { background: rgba(255, 122, 192, 0.58); }
+  .trail :global(.cell.l4) {
+    background: var(--ej-pink);
+    box-shadow: 0 0 9px rgba(255, 122, 192, 0.5);
   }
   .trail :global(.cell.today) {
     border-color: rgba(245, 158, 11, 0.85);
-  }
-  .trail :global(.cell.today.note) {
-    background: rgba(255, 122, 192, 0.5);
-    box-shadow: 0 0 10px rgba(245, 158, 11, 0.55);
+    box-shadow: 0 0 9px rgba(245, 158, 11, 0.45);
   }
   .trail-note {
     margin: 11px 0 0;

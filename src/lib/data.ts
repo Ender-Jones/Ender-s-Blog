@@ -1,5 +1,6 @@
 import aboutYaml from '../data/about.yml';
 import homeYaml from '../data/home.yml';
+import zhYaml from '../data/zh.yml';
 import quotesYaml from '../data/quotes.yml';
 import researchYaml from '../data/research.yml';
 import siteYaml from '../data/site.yml';
@@ -138,8 +139,14 @@ export type SocialDisplayLink = {
 export const site = siteYaml as SiteData;
 export const research = researchYaml as ResearchData;
 export const tagMeta = tagsYaml as Record<string, TagMeta>;
+export type ZhData = {
+  hero: { kicker: string; claim: string; body: string };
+  notes: string[];
+};
+
 export const home = homeYaml as HomeData;
 export const about = aboutYaml as AboutData;
+export const zh = zhYaml as ZhData;
 export const quotes = (quotesYaml as { quotes: Quote[] }).quotes;
 
 export function getSocialLinks(siteData = site): SocialDisplayLink[] {

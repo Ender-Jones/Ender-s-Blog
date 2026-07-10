@@ -1,14 +1,224 @@
 ---
+// /zh/ 中文着陆页(方案 B): 中文 hero + 中文文章列表; worklog/research 保持英文.
+// 文案入口: src/data/zh.yml. 中文文章 = posts 里 language: zh 的条目(翻译中标题暂为英文).
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import RouteHint from '../../components/home/RouteHint.astro';
-import PagePlaceholder from '../../components/layout/PagePlaceholder.astro';
+import { zh } from '../../lib/data';
+
+const posts = (await getCollection('posts'))
+  .filter((p) => p.data.language === 'zh')
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' });
+const toneOf = (kind: string) => (kind === 'poem' || kind === 'essay' ? 'pink' : 'blue');
+const kindZh: Record<string, string> = {
+  essay: '随笔',
+  poem: '诗',
+  note: '笔记',
+  'research-note': '研究笔记',
+  'field-report': '实录',
+};
+const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
 ---
 
-<BaseLayout title="中文版 — Ender Jones" description="中文版施工中." noindex>
+<BaseLayout title="Ender Jones — 研究笔记本" description={zh.hero.body} noindex>
   <RouteHint />
-  <PagePlaceholder
-    kicker="中文版 — 施工中"
-    title="还在暗房里."
-    note="中文版正在准备. 眼下英文版是完整的 — 笔记本先开工, 翻译随后."
-  />
+  <main style="--ej-page-w: 980px;">
+    <section class="reveal" style="--reveal-i: 0;">
+      <p class="kicker">{zh.hero.kicker}</p>
+      <h1>{zh.hero.claim}<span class="caret" aria-hidden="true"></span></h1>
+      <p class="sub">{zh.hero.body}</p>
+      <div class="notes">
+        {zh.notes.map((n) => (
+          <p class="note-line">{n}</p>
+        ))}
+      </div>
+    </section>
+
+    <section class="list reveal" style="--reveal-i: 1;">
+      <div class="sec-head">
+        <h2>文章 <span class="sec-sub">翻译进行中</span></h2>
+        <a class="ej-link" href="/posts/" data-route="→ /posts/ — 英文档案">English archive →</a>
+      </div>
+      {posts.map((p) => (
+        <a class:list={['row', `tone-${toneOf(p.data.kind)}`]} href={href(p.id)} data-route={`→ ${href(p.id)}`}>
+          <span class="bar" aria-hidden="true"></span>
+          <span class="date">{fmtDate(p.data.date)}</span>
+          <span class="mid">
+            <strong class="title">{p.data.title}</strong>
+          </span>
+          <span class="meta">{kindZh[p.data.kind] ?? p.data.kind}</span>
+        </a>
+      ))}
+    </section>
+
+    <section class="foot reveal" style="--reveal-i: 2;">
+      <a class="ej-link ej-link--amber" href="/worklog/" data-route="→ /worklog/">worklog(EN)→</a>
+      <a class="ej-link ej-link--blue" href="/research/" data-route="→ /research/">research(EN)→</a>
+      <a class="ej-link" href="/about/" data-route="→ /about/">about(EN)→</a>
+    </section>
+  </main>
 </BaseLayout>
+
+<style>
+  .kicker {
+    margin: 0 0 18px;
+    padding-top: clamp(48px, 8vh, 76px);
+    color: #82828c;
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+  }
+  h1 {
+    margin: 0;
+    color: var(--ej-text);
+    font-family: var(--ej-serif);
+    font-size: clamp(34px, 4.4vw, 54px);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+  }
+  .caret {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.07em;
+    margin-left: 0.14em;
+    border-radius: 1px;
+    background: var(--ej-pink);
+    box-shadow: 0 0 18px rgba(255, 122, 192, 0.55);
+    animation: ej-caret 1.15s linear infinite;
+  }
+  .sub {
+    margin: 18px 0 0;
+    max-width: 40em;
+    color: var(--ej-text-3);
+    font-size: 15.5px;
+    line-height: 1.9;
+    text-wrap: pretty;
+  }
+  .notes {
+    display: grid;
+    gap: 4px;
+    margin-top: 16px;
+  }
+  .note-line {
+    margin: 0;
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    line-height: 1.8;
+  }
+
+  .list {
+    padding: clamp(36px, 6vh, 52px) 0 0;
+  }
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  h2 {
+    margin: 0;
+    color: var(--ej-text);
+    font-family: var(--ej-serif);
+    font-size: 26px;
+    font-weight: 400;
+  }
+  .sec-sub {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 11px;
+    font-weight: 500;
+    margin-left: 10px;
+  }
+  .row {
+    --tone: var(--ej-pink);
+    --tone-rgb: 255, 122, 192;
+    position: relative;
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr) 90px;
+    gap: 20px;
+    align-items: baseline;
+    padding: 17px 12px 17px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+    text-decoration: none;
+    transition: background 180ms var(--ej-ease);
+  }
+  .row.tone-blue {
+    --tone: var(--ej-blue);
+    --tone-rgb: 76, 194, 255;
+  }
+  .row:hover {
+    background: rgba(255, 255, 255, 0.014);
+  }
+  .bar {
+    position: absolute;
+    left: 0;
+    top: 14px;
+    bottom: 14px;
+    width: 2px;
+    border-radius: 2px;
+    background: var(--tone);
+    box-shadow: 0 0 9px rgba(var(--tone-rgb), 0.55);
+    opacity: 0;
+    transform: scaleY(0.55);
+    transition:
+      opacity 180ms var(--ej-ease),
+      transform 220ms var(--ej-ease);
+  }
+  .row:hover .bar {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  .date {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .mid {
+    min-width: 0;
+  }
+  .title {
+    color: var(--ej-text-2);
+    font-family: var(--ej-serif);
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 1.4;
+    transition:
+      color 180ms ease,
+      transform 220ms var(--ej-ease);
+    display: inline-block;
+  }
+  .row:hover .title {
+    color: #fff;
+    transform: translateX(4px);
+  }
+  .meta {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: 11.5px;
+    text-align: right;
+  }
+
+  .foot {
+    display: flex;
+    gap: 26px;
+    flex-wrap: wrap;
+    padding: clamp(40px, 6vh, 56px) 0 clamp(56px, 8vh, 72px);
+  }
+
+  @media (max-width: 720px) {
+    .row {
+      grid-template-columns: 96px minmax(0, 1fr);
+    }
+    .meta {
+      display: none;
+    }
+  }
+</style>

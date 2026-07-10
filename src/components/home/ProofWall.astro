@@ -2,36 +2,8 @@
 // §4 Proof of work: 26 周墙(任何 push = 粉色梯度, 今天 = 琥珀框, 空白中性) + NOW 线.
 // 数据: src/data/github-activity.json(构建期快照; 刷新 → npm run activity:cache).
 import { getCollection } from 'astro:content';
-import activity from '../../data/github-activity.json';
+import CommitWall from '../ui/CommitWall.astro';
 import { getNowLine, getWorklogDays } from '../../lib/worklogDays';
-
-const DAYS = 182;
-const counts = new Map<string, number>(
-  (activity.days ?? []).map((d: { date: string; count: number }) => [d.date, d.count]),
-);
-
-const todayIso = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Tokyo' });
-const base = new Date(`${todayIso}T12:00:00Z`);
-const level = (c: number) => (c === 0 ? 0 : c <= 2 ? 1 : c <= 5 ? 2 : c <= 10 ? 3 : 4);
-
-const cells = Array.from({ length: DAYS }, (_, i) => {
-  const dt = new Date(base.getTime() - (DAYS - 1 - i) * 86400000);
-  const iso = dt.toISOString().slice(0, 10);
-  const count = counts.get(iso) ?? 0;
-  return {
-    iso,
-    count,
-    level: level(count),
-    isToday: i === DAYS - 1,
-    firstOfMonth: iso.slice(8, 10) === '01',
-    month: dt.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' }).toUpperCase(),
-  };
-});
-
-const monthLabels = Array.from({ length: Math.ceil(DAYS / 7) }, (_, col) => {
-  const week = cells.slice(col * 7, col * 7 + 7);
-  return week.find((c) => c.firstOfMonth)?.month ?? '';
-});
 
 const worklogs = await getCollection('worklogs');
 const nowLine = getNowLine(worklogs, getWorklogDays(worklogs));
@@ -56,20 +28,7 @@ const now = nowLine
 
       <a class="wall" href="/worklog/" data-route="→ /worklog/ — the full log">
         <span class="wall-flex">
-          <span class="grid-wrap">
-            <span class="grid">
-              {cells.map((c) => (
-                <span
-                  class:list={['cell', `l${c.level}`, { today: c.isToday }]}
-                  title={`${c.iso}: ${c.count} commit${c.count === 1 ? '' : 's'}${c.isToday ? ' · today' : ''}`}></span>
-              ))}
-            </span>
-            <span class="months">
-              {monthLabels.map((m) => (
-                <span class="month">{m}</span>
-              ))}
-            </span>
-          </span>
+          <CommitWall cell={17} />
           <span class="side">
             <span class="caption">any push — code, experiments, this site — turns the day pink. history needs no color, and gaps count against nothing.</span>
             <span class="legend">
@@ -149,51 +108,6 @@ const now = nowLine
     align-items: flex-start;
     gap: 40px;
     flex-wrap: wrap;
-  }
-  .grid-wrap {
-    display: grid;
-    gap: 7px;
-    max-width: 100%;
-    overflow-x: auto;
-  }
-  .grid {
-    display: grid;
-    grid-auto-flow: column;
-    grid-template-rows: repeat(7, 17px);
-    grid-auto-columns: 17px;
-    gap: 3.5px;
-  }
-  .cell {
-    border-radius: 3.5px;
-    border: 1px solid transparent;
-  }
-  /* 色阶向"饱和的品牌粉"收束, 不向白: 最热的一格 = 全站的 alive 色本身 */
-  .cell.l0 { background: rgba(255, 255, 255, 0.045); }
-  .cell.l1 { background: rgba(255, 122, 192, 0.15); }
-  .cell.l2 { background: rgba(255, 122, 192, 0.34); }
-  .cell.l3 { background: rgba(255, 122, 192, 0.58); }
-  .cell.l4 {
-    background: var(--ej-pink);
-    box-shadow: 0 0 9px rgba(255, 122, 192, 0.5);
-  }
-  .cell.today {
-    border-color: rgba(245, 158, 11, 0.85);
-    box-shadow: 0 0 9px rgba(245, 158, 11, 0.45);
-  }
-  .months {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 17px;
-    gap: 3.5px;
-  }
-  .month {
-    color: #63636b;
-    font-family: var(--ej-mono);
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    white-space: nowrap;
-    overflow: visible;
   }
   .side {
     flex: 1;
