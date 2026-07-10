@@ -1,0 +1,274 @@
+---
+// 字体决策实验页(不索引不外链, 定夺后可删): 同一份真实内容 × 四套字体方案 + 两档字号.
+// 方案 A 不覆盖变量 = 线上现状; B/C/D 只换 --ej-serif/sans/mono 三个变量, 其余全部同源.
+import '@fontsource-variable/lexend/index.css';
+import '@fontsource-variable/jetbrains-mono/index.css';
+import '@fontsource/intel-one-mono/index.css';
+import '@fontsource/intel-one-mono/500.css';
+import '@fontsource-variable/fira-code/index.css';
+import '@fontsource/noto-sans/index.css';
+import '@fontsource/noto-sans/500.css';
+import '@fontsource/source-serif-pro/index.css';
+import '@fontsource/source-serif-pro/400-italic.css';
+import '@fontsource/source-serif-pro/600.css';
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import { about, home, zh } from '../../lib/data';
+
+const SCHEMES = [
+  {
+    key: 'A',
+    name: '现状 · Newsreader + Geist + Geist Mono',
+    why: 'Vercel 的开源双子: 高 x-height、开阔字腔, 本身就是为屏幕可读性设计的; serif 负责人味.',
+    vars: '',
+  },
+  {
+    key: 'B',
+    name: '候选一 · Newsreader + Lexend + JetBrains Mono',
+    why: 'Lexend 为降低视觉拥挤而设计(阅读流畅性研究出身); JetBrains Mono 字高更高、字距更宽.',
+    vars: `--ej-sans: 'Lexend Variable', system-ui, sans-serif; --ej-mono: 'JetBrains Mono Variable', monospace;`,
+  },
+  {
+    key: 'C',
+    name: '候选二 · Newsreader + Lexend + Intel One Mono',
+    why: 'Intel One Mono 与低视力开发者共同设计 — mono 可读性这条轴上的"极端"选项.',
+    vars: `--ej-sans: 'Lexend Variable', system-ui, sans-serif; --ej-mono: 'Intel One Mono', monospace;`,
+  },
+  {
+    key: 'D',
+    name: 'V2 复刻 · Source Serif + Noto Sans + Fira Code',
+    why: '你 V2 的三件套原样搬来对照 — 熟悉感也是一种可读性.',
+    vars: `--ej-serif: 'Source Serif Pro', Georgia, serif; --ej-sans: 'Noto Sans', system-ui, sans-serif; --ej-mono: 'Fira Code Variable', monospace;`,
+  },
+];
+
+const SCALES = [
+  { name: '上线档 · 10–17.5(当前)', vars: '' },
+  {
+    name: '极端 ADHD 档 · 13–18.5(全站无一处小于 13px)',
+    vars: '--ej-fs-micro: 13px; --ej-fs-meta: 13.5px; --ej-fs-label: 14px; --ej-fs-small: 14.5px; --ej-fs-note: 15px; --ej-fs-ui: 16px; --ej-fs-body: 17px; --ej-fs-lede: 18.5px;',
+  },
+];
+
+const CODE = `def subject_level_split(df, k=7, seed=0):
+    subjects = df.subject.unique()
+    rng = np.random.default_rng(seed)
+    rng.shuffle(subjects)          # never sample-level
+    return np.array_split(subjects, k)`;
+---
+
+<BaseLayout title="Type lab — Ender Jones" description="Font decision lab." noindex>
+  <main style="--ej-page-w: 980px;">
+    <section class="reveal" style="--reveal-i: 0;">
+      <p class="ej-kicker">TYPE LAB — SAME CONTENT, DIFFERENT VOICES</p>
+      <h1 class="ej-h1 ej-h1--sm">读感对照.<span class="ej-caret" aria-hidden="true"></span></h1>
+      <p class="ej-sub">
+        评法: 先读中文段, 再读英文段, 然后扫一遍 mono 行和最小的标签. 哪个方案让你"读完了才意识到在读", 哪个就赢.
+        中文在四个方案里都走系统黑体(苹方), 这是刻意的 — 是否自托管 Noto Sans SC 是上线时的网络问题, 不是今天的排版问题.
+      </p>
+    </section>
+
+    <section class="lab reveal" style="--reveal-i: 1;">
+      {SCHEMES.map((s) => (
+        <article class="ej-card block" style={s.vars || undefined}>
+          <header class="blk-head">
+            <span class="blk-key">{s.key}</span>
+            <span class="blk-name">{s.name}</span>
+          </header>
+          <p class="blk-why">{s.why}</p>
+
+          <div class="sp">
+            <p class="sp-kicker">AFFECTIVE COMPUTING — TOKYO / CHIBA</p>
+            <p class="sp-h1">{home.hero.claim}</p>
+            <p class="sp-lede">{about.paras[0]}</p>
+            <p class="sp-lede" lang="zh">{zh.hero.body}</p>
+            <div class="sp-log">
+              <span class="sp-badge">WEEK 28</span>
+              <span class="sp-date">THU 07-09</span>
+              <span class="sp-line"><i class="pfx">✓</i>Confirmed statistical handling: paired t + Cohen's dz only; drop Wilcoxon (n=3, min p=0.25).</span>
+            </div>
+            <div class="sp-log">
+              <span class="sp-badge sp-badge--amber">NEXT</span>
+              <span class="sp-date">FRI 07-10</span>
+              <span class="sp-line"><i class="pfx pfx--amber">&gt;</i>Review the V3 pages, then build the entry console — the last big piece.</span>
+            </div>
+            <pre class="sp-code"><code>{CODE}</code></pre>
+            <div class="sp-colo">
+              {about.colophon.map((line) => (
+                <p>{line}</p>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+    </section>
+
+    <section class="reveal" style="--reveal-i: 2;">
+      <p class="ej-kicker" style="padding-top: clamp(28px, 5vh, 44px);">SCALE — 同字体, 两档字号</p>
+      <p class="ej-sub">上面定字体, 这里定尺度. 极端档 = "全站没有小于 13px 的字"的代价预览: 标签变重, 卡片变高, 仪表盘感变弱 — 换来零眯眼.</p>
+    </section>
+
+    <section class="lab reveal" style="--reveal-i: 3;">
+      {SCALES.map((sc) => (
+        <article class="ej-card block" style={sc.vars || undefined}>
+          <header class="blk-head">
+            <span class="blk-name">{sc.name}</span>
+          </header>
+          <div class="sp">
+            <p class="sp-lede">{home.hero.body}</p>
+            <div class="sp-log">
+              <span class="sp-badge">WEEK 28</span>
+              <span class="sp-date">THU 07-09</span>
+              <span class="sp-line"><i class="pfx">✓</i>Homepage shipped in the V3 darkroom design: splash, readout, live strip, proof wall, coda.</span>
+            </div>
+            <div class="sp-colo">
+              <p>{about.colophon[0]}</p>
+            </div>
+          </div>
+        </article>
+      ))}
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .lab {
+    display: grid;
+    gap: 14px;
+    padding: clamp(28px, 4vh, 40px) 0 0;
+  }
+  .block {
+    padding: 20px 24px 22px;
+  }
+  .blk-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .blk-key {
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 122, 192, 0.4);
+    color: var(--ej-pink-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-label);
+    font-weight: 600;
+  }
+  .blk-name {
+    color: var(--ej-text);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-note);
+    font-weight: 500;
+  }
+  .blk-why {
+    margin: 8px 0 0;
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-small);
+    line-height: 1.65;
+  }
+
+  .sp {
+    display: grid;
+    gap: 14px;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px dashed rgba(255, 255, 255, 0.09);
+  }
+  .sp-kicker {
+    margin: 0;
+    color: #82828c;
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-label);
+    font-weight: 500;
+    letter-spacing: 0.24em;
+  }
+  .sp-h1 {
+    margin: -6px 0 0;
+    color: var(--ej-text);
+    font-family: var(--ej-serif);
+    font-size: clamp(26px, 3vw, 34px);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+  }
+  .sp-lede {
+    margin: 0;
+    max-width: 62ch;
+    color: #b8b8c0;
+    font-family: var(--ej-sans);
+    font-size: var(--ej-fs-lede);
+    line-height: 1.75;
+    text-wrap: pretty;
+  }
+  .sp-log {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    min-width: 0;
+  }
+  .sp-badge {
+    flex-shrink: 0;
+    padding: 2px 8px;
+    border: 1px solid rgba(255, 122, 192, 0.4);
+    border-radius: 4px;
+    color: var(--ej-pink-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-micro);
+    font-weight: 500;
+    letter-spacing: 0.16em;
+  }
+  .sp-badge--amber {
+    border-color: rgba(245, 158, 11, 0.45);
+    color: var(--ej-amber-2);
+  }
+  .sp-date {
+    flex-shrink: 0;
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-label);
+    font-variant-numeric: tabular-nums;
+  }
+  .sp-line {
+    min-width: 0;
+    color: var(--ej-text-3);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-small);
+    line-height: 1.6;
+  }
+  .pfx {
+    margin-right: 8px;
+    color: var(--ej-pink);
+    font-style: normal;
+  }
+  .pfx--amber {
+    color: var(--ej-amber);
+  }
+  .sp-code {
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    overflow-x: auto;
+  }
+  .sp-code code {
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-small);
+    line-height: 1.7;
+    color: #c4c4cb;
+  }
+  .sp-colo {
+    display: grid;
+    gap: 3px;
+  }
+  .sp-colo p {
+    margin: 0;
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-note);
+    line-height: 1.75;
+  }
+</style>

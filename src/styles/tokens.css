@@ -10,15 +10,16 @@
   --ej-sans: 'Geist Variable', 'Geist', system-ui, sans-serif;
 
   /* type scale — 全站功能性字号只从这 8 档取(serif 展示标题/clamp 除外).
-     调可读性 = 改这里一行, 全站跟走; 不再往组件里写裸 px. */
-  --ej-fs-micro: 9.5px; /* 地板: 大写微徽章/图例 */
-  --ej-fs-meta: 10.5px; /* mono 说明/图注/hint */
-  --ej-fs-label: 11.5px; /* kicker/日期/键名/按钮 */
-  --ej-fs-small: 12.5px; /* chip/mono 正文/代码 */
-  --ej-fs-note: 13.5px; /* 次要 sans 文本/desc */
-  --ej-fs-ui: 14.5px; /* UI 段落 */
-  --ej-fs-body: 15.5px; /* 页面正文段落 */
-  --ej-fs-lede: 17px; /* 文章正文(prose) */
+     调可读性 = 改这里一行, 全站跟走; 不再往组件里写裸 px.
+     档位数字对齐 Vercel/Geist 系整数; 家规: 成句的内容不得低于 note 档(chrome 标签才允许 micro/meta). */
+  --ej-fs-micro: 10px; /* 地板: 大写微徽章/图例 */
+  --ej-fs-meta: 11px; /* mono 说明/图注/hint */
+  --ej-fs-label: 12px; /* kicker/日期/键名/按钮 */
+  --ej-fs-small: 13px; /* chip/mono 正文/代码 */
+  --ej-fs-note: 14px; /* 次要 sans 文本/desc; 成句内容的下限 */
+  --ej-fs-ui: 15px; /* UI 段落 */
+  --ej-fs-body: 16px; /* 页面正文段落 */
+  --ej-fs-lede: 17.5px; /* 文章正文(prose) */
 
   /* ink — grays, brightest to dimmest */
   --ej-text: #f5f5f6;
