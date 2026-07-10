@@ -1,0 +1,10 @@
+# Cloudflare Pages 配置 — functions/ 三接口 + D1 当日工作区.
+# database_id 在 CF 控制台建库后回填(README「部署」节); 本地开发不需要它(miniflare 本地库).
+name = "enders-blog"
+compatibility_date = "2026-07-01"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "EJ_DB"
+database_name = "enders-blog-worklog"
+database_id = "REPLACE-AT-GO-LIVE"

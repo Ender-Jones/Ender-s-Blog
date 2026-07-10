@@ -46,6 +46,24 @@ Go-live 清单(上线那天做):
 3. 建每日 04:00 JST 的定时重建(deploy hook + GitHub Actions cron).
 4. 移除主页的 `noindex`.
 
+## TODO(当前, 按要紧程度; 完成一条删一条)
+
+**印 要做的**
+1. 字体/字号定夺: 开 `/dev/type-lab/` 读一遍四个方案 + 两档字号, 说结论(换=改 tokens.css 三行; 不换=删这页).
+2. 翻译 `src/content/posts/zh/` 下 4 篇副本(直接在原文上改写); 顺便决定 research 页要不要中文(倾向: 不要).
+3. 用两天新字号档, 汇报小字读感.
+
+**共写**
+4. ADHD worklog 方法论 essay(About 页 "a longer essay is coming" 的兑现).
+
+**机器侧(在做/待触发)**
+5. 后端预制: Pages Functions(记/改/close)+ D1 schema + Access 骨架, wrangler 本地跑通 → 之后只剩 CF 控制台点击(有截图级步骤).
+6. CV 新口径英文单页起草(草稿给印审, 定稿放 public/cv.pdf — research 页按钮会自动出现).
+7. go-live 那天: 上面「部署」节的 4 步 + Access 保护 /console/ + giscus 主题微调(如需).
+
+**低优先**
+8. 真机移动端过一遍; photography 区设计; quotes.yml 扩充.
+
 ## 血统
 
 V1 Jekyll (`Ender-Jones.github.io`, 已归档) → V2 Astro (`personal_blog_astro`, 内容与工程层的来源) → V3(本仓库, claude design 交接的「暗房里的生命体征」设计).
