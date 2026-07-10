@@ -95,7 +95,7 @@ const giscus = site.comments?.giscus;
 
         <nav class="prevnext">
           {older ? (
-            <a class="pv" href={href(older.id)} data-route={`→ ${href(older.id)}`}>
+            <a class="ej-card pv" href={href(older.id)} data-route={`→ ${href(older.id)}`}>
               <span class="pv-arrow">← PREVIOUS</span>
               <strong>{older.data.title}</strong>
               <span class="pv-meta">{fmtDate(older.data.date)} · {kindShort(older.data.kind)}</span>
@@ -330,9 +330,6 @@ const giscus = site.comments?.giscus;
     background: rgba(255, 255, 255, 0.12);
   }
   .kind-chip {
-    --tone: var(--ej-pink);
-    --tone-2: var(--ej-pink-2);
-    --tone-rgb: 255, 122, 192;
     display: inline-flex;
     align-items: center;
     gap: 7px;
@@ -346,11 +343,6 @@ const giscus = site.comments?.giscus;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     white-space: nowrap;
-  }
-  .kind-chip.tone-blue {
-    --tone: var(--ej-blue);
-    --tone-2: var(--ej-blue-2);
-    --tone-rgb: 76, 194, 255;
   }
   .kind-dot {
     width: 5px;
@@ -478,14 +470,7 @@ const giscus = site.comments?.giscus;
   .pv {
     display: block;
     padding: 16px 20px;
-    border-radius: 12px;
     text-decoration: none;
-    border: 1px solid rgba(255, 255, 255, 0.075);
-    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.7),
-      0 14px 34px -20px rgba(0, 0, 0, 0.9),
-      inset 0 1px 0 rgba(255, 255, 255, 0.055);
     transition: all 130ms var(--ej-ease);
   }
   .pv:hover {

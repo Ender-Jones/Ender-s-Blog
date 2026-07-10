@@ -29,7 +29,7 @@ const fMin = minutes(featured.body);
       <a class="ej-pill" href="/posts/" data-route="→ /posts/ — the archive">all writing →</a>
     </div>
 
-    <a class="featured" href={href(featured.id)} data-route={`→ ${href(featured.id)}`}>
+    <a class="ej-card featured" href={href(featured.id)} data-route={`→ ${href(featured.id)}`}>
       <span class="f-media">
         <span class="f-img" style={`background-image: url('${f.image}');`}></span>
         <span class="f-shade" aria-hidden="true"></span>
@@ -99,15 +99,8 @@ const fMin = minutes(featured.body);
     display: grid;
     grid-template-columns: 340px minmax(0, 1fr);
     min-height: 212px;
-    border: 1px solid rgba(255, 255, 255, 0.075);
-    border-radius: 12px;
     overflow: hidden;
     text-decoration: none;
-    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.7),
-      0 16px 40px -20px rgba(0, 0, 0, 0.9),
-      inset 0 1px 0 rgba(255, 255, 255, 0.055);
     transition: all 130ms var(--ej-ease);
   }
   .featured:hover {
@@ -241,8 +234,6 @@ const fMin = minutes(featured.body);
     margin-top: 6px;
   }
   .row {
-    --tone: var(--ej-pink);
-    --tone-rgb: 255, 122, 192;
     position: relative;
     display: grid;
     grid-template-columns: 110px minmax(0, 1fr) 130px;
@@ -252,10 +243,6 @@ const fMin = minutes(featured.body);
     border-bottom: 1px solid rgba(255, 255, 255, 0.055);
     text-decoration: none;
     transition: background 180ms var(--ej-ease);
-  }
-  .row.tone-blue {
-    --tone: var(--ej-blue);
-    --tone-rgb: 76, 194, 255;
   }
   .row:hover {
     background: rgba(255, 255, 255, 0.014);

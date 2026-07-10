@@ -12,7 +12,7 @@ const { kicker, title, note } = Astro.props;
 <main>
   <section class="ph reveal" style="--reveal-i: 0;">
     <p class="kicker">{kicker}</p>
-    <h1>{title}<span class="caret" aria-hidden="true"></span></h1>
+    <h1>{title}<span class="ej-caret" aria-hidden="true"></span></h1>
     <p class="note">{note}</p>
     <a class="home" href="/" data-route="→ / — home">← back to the notebook</a>
   </section>
@@ -42,16 +42,6 @@ const { kicker, title, note } = Astro.props;
     font-weight: 400;
     letter-spacing: -0.015em;
     line-height: 1.1;
-  }
-  .caret {
-    display: inline-block;
-    width: 0.5em;
-    height: 0.07em;
-    margin-left: 0.14em;
-    border-radius: 1px;
-    background: var(--ej-pink);
-    box-shadow: 0 0 18px rgba(255, 122, 192, 0.55);
-    animation: ej-caret 1.15s linear infinite;
   }
   .note {
     margin: 18px 0 0;

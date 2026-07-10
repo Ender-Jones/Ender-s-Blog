@@ -39,9 +39,9 @@ const hasArchive = weeks.length > RECENT;
   <RouteHint />
   <main style="--ej-page-w: 980px;">
     <section class="reveal" style="--reveal-i: 0;">
-      <p class="kicker">WORKLOG — PROOF, NOT MEMORY</p>
-      <h1>Still working.<span class="caret" aria-hidden="true"></span></h1>
-      <p class="sub">One line at a time, pushed to git at the end of each day. Days with nothing logged are just days — they count against nothing.</p>
+      <p class="ej-kicker">WORKLOG — PROOF, NOT MEMORY</p>
+      <h1 class="ej-h1">Still working.<span class="ej-caret" aria-hidden="true"></span></h1>
+      <p class="ej-sub">One line at a time, pushed to git at the end of each day. Days with nothing logged are just days — they count against nothing.</p>
 
       {now && (
         <div class="bar-now">
@@ -60,7 +60,7 @@ const hasArchive = weeks.length > RECENT;
     </section>
 
     <section class="trail-sec reveal" style="--reveal-i: 1;">
-      <div class="trail-card">
+      <div class="ej-card trail-card">
         <div class="trail-head">
           <span class="trail-label">LOG TRAIL — 26 WEEKS</span>
           <a class="ej-link" href="/console/" data-route="→ /console/ — write access only">entry console →</a>
@@ -107,42 +107,6 @@ const hasArchive = weeks.length > RECENT;
 </BaseLayout>
 
 <style>
-  .kicker {
-    margin: 0 0 18px;
-    padding-top: clamp(48px, 8vh, 76px);
-    color: #82828c;
-    font-family: var(--ej-mono);
-    font-size: 11.5px;
-    font-weight: 500;
-    letter-spacing: 0.24em;
-  }
-  h1 {
-    margin: 0;
-    color: var(--ej-text);
-    font-family: var(--ej-serif);
-    font-size: clamp(38px, 4.6vw, 58px);
-    font-weight: 400;
-    letter-spacing: -0.015em;
-    line-height: 1.05;
-  }
-  .caret {
-    display: inline-block;
-    width: 0.5em;
-    height: 0.07em;
-    margin-left: 0.14em;
-    border-radius: 1px;
-    background: var(--ej-pink);
-    box-shadow: 0 0 18px rgba(255, 122, 192, 0.55);
-    animation: ej-caret 1.15s linear infinite;
-  }
-  .sub {
-    margin: 18px 0 0;
-    max-width: 58ch;
-    color: var(--ej-text-3);
-    font-size: 15.5px;
-    line-height: 1.65;
-    text-wrap: pretty;
-  }
 
   .bar-now,
   .bar-save {
@@ -206,13 +170,6 @@ const hasArchive = weeks.length > RECENT;
   }
   .trail-card {
     padding: 18px 22px 16px;
-    border: 1px solid rgba(255, 255, 255, 0.075);
-    border-radius: 12px;
-    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.7),
-      0 16px 40px -20px rgba(0, 0, 0, 0.9),
-      inset 0 1px 0 rgba(255, 255, 255, 0.055);
   }
   .trail-head {
     display: flex;

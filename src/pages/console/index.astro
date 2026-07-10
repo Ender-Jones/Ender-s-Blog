@@ -43,7 +43,7 @@ const consoleData = {
 
     <section class="grid reveal" style="--reveal-i: 1;">
       <div class="col-l">
-        <div class="card capture">
+        <div class="ej-card card capture">
           <div class="date-strip">
             <span class="ds-left">
               <span class="ds-date" id="c-date">----------</span>
@@ -74,7 +74,7 @@ const consoleData = {
           </div>
         </div>
 
-        <div class="card carry" id="c-carry-card" hidden>
+        <div class="ej-card card carry" id="c-carry-card" hidden>
           <div class="carry-head">
             <span class="carry-label">CARRY-OVER — NEXT FROM <span id="c-carry-from"></span></span>
             <span class="carry-hint">zero-thought resume</span>
@@ -101,7 +101,7 @@ const consoleData = {
       </div>
 
       <div class="col-r">
-        <div class="card file">
+        <div class="ej-card card file">
           <div class="goes">
             <span class="goes-label">WHERE THIS GOES</span>
             <span class="goes-text">
@@ -154,7 +154,7 @@ const consoleData = {
           </div>
         </div>
 
-        <div class="card trail-card">
+        <div class="ej-card card trail-card">
           <div class="trail-head">
             <span class="trail-label">LOG TRAIL — 26 WEEKS</span>
             <a href="/worklog/" data-route="→ /worklog/ — the full log">worklog →</a>
@@ -709,13 +709,7 @@ const consoleData = {
     min-width: 0;
   }
   .card {
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: 12px;
-    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.7),
-      0 16px 40px -20px rgba(0, 0, 0, 0.9),
-      inset 0 1px 0 rgba(255, 255, 255, 0.055);
+    border-color: rgba(255, 255, 255, 0.09);
     overflow: hidden;
     transition: border-color 180ms ease;
   }

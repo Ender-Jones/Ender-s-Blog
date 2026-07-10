@@ -33,9 +33,9 @@ const groups = years.map((year) => ({
   <RouteHint />
   <main style="--ej-page-w: 980px;">
     <section class="reveal" style="--reveal-i: 0;">
-      <p class="kicker">WRITING — ESSAYS · POEMS · RESEARCH NOTES</p>
-      <h1>Writing.<span class="caret" aria-hidden="true"></span></h1>
-      <p class="sub">Slow essays, occasional poems, and notes written to be checked against later.</p>
+      <p class="ej-kicker">WRITING — ESSAYS · POEMS · RESEARCH NOTES</p>
+      <h1 class="ej-h1">Writing.<span class="ej-caret" aria-hidden="true"></span></h1>
+      <p class="ej-sub">Slow essays, occasional poems, and notes written to be checked against later.</p>
     </section>
 
     <section class="filter reveal" style="--reveal-i: 1;">
@@ -116,42 +116,6 @@ const groups = years.map((year) => ({
 </script>
 
 <style>
-  .kicker {
-    margin: 0 0 18px;
-    padding-top: clamp(48px, 8vh, 76px);
-    color: #82828c;
-    font-family: var(--ej-mono);
-    font-size: 11.5px;
-    font-weight: 500;
-    letter-spacing: 0.24em;
-  }
-  h1 {
-    margin: 0;
-    color: var(--ej-text);
-    font-family: var(--ej-serif);
-    font-size: clamp(38px, 4.6vw, 58px);
-    font-weight: 400;
-    letter-spacing: -0.015em;
-    line-height: 1.05;
-  }
-  .caret {
-    display: inline-block;
-    width: 0.5em;
-    height: 0.07em;
-    margin-left: 0.14em;
-    border-radius: 1px;
-    background: var(--ej-pink);
-    box-shadow: 0 0 18px rgba(255, 122, 192, 0.55);
-    animation: ej-caret 1.15s linear infinite;
-  }
-  .sub {
-    margin: 18px 0 0;
-    max-width: 58ch;
-    color: var(--ej-text-3);
-    font-size: 15.5px;
-    line-height: 1.65;
-    text-wrap: pretty;
-  }
 
   .filter {
     padding: clamp(28px, 4vh, 40px) 0 0;
@@ -225,8 +189,6 @@ const groups = years.map((year) => ({
   }
 
   .row {
-    --tone: var(--ej-pink);
-    --tone-rgb: 255, 122, 192;
     position: relative;
     display: grid;
     grid-template-columns: 110px minmax(0, 1fr) 150px;
@@ -236,10 +198,6 @@ const groups = years.map((year) => ({
     border-bottom: 1px solid rgba(255, 255, 255, 0.055);
     text-decoration: none;
     transition: background 180ms var(--ej-ease);
-  }
-  .row.tone-blue {
-    --tone: var(--ej-blue);
-    --tone-rgb: 76, 194, 255;
   }
   .row:hover {
     background: rgba(255, 255, 255, 0.014);

@@ -20,10 +20,10 @@ const signalRows = [
   <RouteHint />
   <main style="--ej-page-w: 980px;">
     <section class="reveal" style="--reveal-i: 0;">
-      <p class="kicker">RESEARCH — ONE LINE, IN MOTION</p>
-      <h1>Research.<span class="caret" aria-hidden="true"></span></h1>
+      <p class="ej-kicker">RESEARCH — ONE LINE, IN MOTION</p>
+      <h1 class="ej-h1">Research.<span class="ej-caret" aria-hidden="true"></span></h1>
       <p class="thesis">{site.identity.thesis}</p>
-      <p class="sub">{research.abstract}</p>
+      <p class="ej-sub">{research.abstract}</p>
       <p class="tags">{research.tags.join(' · ')}</p>
     </section>
 
@@ -33,7 +33,7 @@ const signalRows = [
         <span class="sec-meta">{research.protocol}</span>
       </div>
       {research.papers.map((p) => (
-        <article class:list={['paper', `tone-${p.tone}`]} id={p.anchor}>
+        <article class:list={['paper', 'ej-card', `tone-${p.tone}`]} id={p.anchor}>
           <span class="p-bar" aria-hidden="true"></span>
           <div class="p-status">
             <span class="p-dot" aria-hidden="true"></span>
@@ -56,19 +56,19 @@ const signalRows = [
 
     <section class="method reveal" style="--reveal-i: 2;">
       <div class="m-grid">
-        <div class="m-card">
+        <div class="ej-card m-card">
           <span class="m-label">Method &amp; signals</span>
           <div class="m-rows">
             {signalRows.map((row) => (
-              <span class="m-row">
-                <span class="m-key">{row.key}</span>
-                <span class="m-lead" aria-hidden="true"></span>
+              <span class="ej-dotrow">
+                <span class="k">{row.key}</span>
+                <span class="lead" aria-hidden="true"></span>
                 <span class="m-val">{row.value}</span>
               </span>
             ))}
           </div>
         </div>
-        <div class="m-card m-metric">
+        <div class="ej-card m-card m-metric">
           <span class="m-label"><span class="m-dot" aria-hidden="true"></span>{research.metric.label}</span>
           <span class="m-value">{research.metric.value}</span>
           <span class="m-note">{research.metric.notes.join(' · ')}</span>
@@ -95,7 +95,7 @@ const signalRows = [
     </section>
 
     <section class="next reveal" style="--reveal-i: 4;">
-      <div class="next-card">
+      <div class="ej-card next-card">
         <span class="next-label">WHAT'S NEXT</span>
         <p class="next-text">{research.whats_next}</p>
         <a class="ej-link next-link" href="/worklog/" data-route="→ /worklog/ — the day-by-day version of this page">the day-by-day version of this page →</a>
@@ -105,34 +105,6 @@ const signalRows = [
 </BaseLayout>
 
 <style>
-  .kicker {
-    margin: 0 0 18px;
-    padding-top: clamp(48px, 8vh, 76px);
-    color: #82828c;
-    font-family: var(--ej-mono);
-    font-size: 11.5px;
-    font-weight: 500;
-    letter-spacing: 0.24em;
-  }
-  h1 {
-    margin: 0;
-    color: var(--ej-text);
-    font-family: var(--ej-serif);
-    font-size: clamp(38px, 4.6vw, 58px);
-    font-weight: 400;
-    letter-spacing: -0.015em;
-    line-height: 1.05;
-  }
-  .caret {
-    display: inline-block;
-    width: 0.5em;
-    height: 0.07em;
-    margin-left: 0.14em;
-    border-radius: 1px;
-    background: var(--ej-pink);
-    box-shadow: 0 0 18px rgba(255, 122, 192, 0.55);
-    animation: ej-caret 1.15s linear infinite;
-  }
   .thesis {
     margin: 22px 0 0;
     max-width: 30ch;
@@ -143,14 +115,6 @@ const signalRows = [
     font-weight: 300;
     line-height: 1.45;
     text-wrap: balance;
-  }
-  .sub {
-    margin: 16px 0 0;
-    max-width: 62ch;
-    color: var(--ej-text-3);
-    font-size: 15px;
-    line-height: 1.7;
-    text-wrap: pretty;
   }
   .tags {
     margin: 14px 0 0;
@@ -190,28 +154,11 @@ const signalRows = [
     padding: clamp(48px, 7vh, 68px) 0 0;
   }
   .paper {
-    --tone: var(--ej-pink);
-    --tone-rgb: 255, 122, 192;
     position: relative;
     padding: 22px 26px 20px 30px;
     margin-bottom: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.075);
-    border-radius: 12px;
-    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.7),
-      0 16px 40px -20px rgba(0, 0, 0, 0.9),
-      inset 0 1px 0 rgba(255, 255, 255, 0.055);
     scroll-margin-top: 84px;
     transition: border-color 180ms var(--ej-ease);
-  }
-  .paper.tone-blue {
-    --tone: var(--ej-blue);
-    --tone-rgb: 76, 194, 255;
-  }
-  .paper.tone-amber {
-    --tone: var(--ej-amber);
-    --tone-rgb: 245, 158, 11;
   }
   .paper:hover {
     border-color: rgba(var(--tone-rgb), 0.28);
@@ -326,13 +273,6 @@ const signalRows = [
   }
   .m-card {
     padding: 20px 24px;
-    border: 1px solid rgba(255, 255, 255, 0.075);
-    border-radius: 12px;
-    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.7),
-      0 16px 40px -20px rgba(0, 0, 0, 0.9),
-      inset 0 1px 0 rgba(255, 255, 255, 0.055);
   }
   .m-label {
     display: flex;
@@ -356,29 +296,6 @@ const signalRows = [
     display: grid;
     gap: 2px;
     margin-top: 12px;
-  }
-  .m-row {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    padding: 7px 2px;
-  }
-  .m-key {
-    flex-shrink: 0;
-    color: var(--ej-mut-2);
-    font-family: var(--ej-mono);
-    font-size: 10.5px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    transition: color 120ms ease;
-  }
-  .m-lead {
-    flex: 1;
-    min-width: 14px;
-    border-bottom: 1px dotted rgba(255, 255, 255, 0.11);
-    transform: translateY(-3px);
-    transition: border-color 120ms ease;
   }
   .m-val {
     flex-shrink: 0;
@@ -427,17 +344,12 @@ const signalRows = [
     padding: 4px 0;
   }
   .tl-row {
-    --tone: var(--ej-pink);
-    --tone-rgb: 255, 122, 192;
     position: relative;
     display: flex;
     align-items: baseline;
     gap: 18px;
     padding: 10px 0 10px 2px;
   }
-  .tl-row.tone-blue { --tone: var(--ej-blue); --tone-rgb: 76, 194, 255; }
-  .tl-row.tone-amber { --tone: var(--ej-amber); --tone-rgb: 245, 158, 11; }
-  .tl-row.tone-gray { --tone: #8a8a94; --tone-rgb: 138, 138, 148; }
   .tl-when {
     flex-shrink: 0;
     width: 52px;
@@ -472,13 +384,6 @@ const signalRows = [
     display: grid;
     gap: 10px;
     padding: 20px 24px;
-    border: 1px solid rgba(255, 255, 255, 0.075);
-    border-radius: 12px;
-    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.7),
-      0 16px 40px -20px rgba(0, 0, 0, 0.9),
-      inset 0 1px 0 rgba(255, 255, 255, 0.055);
   }
   .next-label {
     color: var(--ej-mut-2);

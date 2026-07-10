@@ -23,8 +23,8 @@ const nowRows = [
   <RouteHint />
   <main style="--ej-page-w: 980px;">
     <section class="reveal" style="--reveal-i: 0;">
-      <p class="kicker">ABOUT — WHO KEEPS THIS NOTEBOOK</p>
-      <h1>About.<span class="caret" aria-hidden="true"></span></h1>
+      <p class="ej-kicker">ABOUT — WHO KEEPS THIS NOTEBOOK</p>
+      <h1 class="ej-h1">About.<span class="ej-caret" aria-hidden="true"></span></h1>
       <p class="lead">{about.lead}</p>
       <div class="intro">
         <span class="portrait" aria-hidden="true"></span>
@@ -38,13 +38,13 @@ const nowRows = [
     </section>
 
     <section class="notebook reveal" style="--reveal-i: 1;">
-      <div class="nb-card">
+      <div class="ej-card nb-card">
         <span class="nb-label">THIS NOTEBOOK, THREE WAYS</span>
         <div class="nb-rows">
           {about.notebook.map((row) => (
-            <span class="nb-row">
-              <span class="nb-key">{row.key}</span>
-              <span class="nb-lead" aria-hidden="true"></span>
+            <span class="ej-dotrow">
+              <span class="k">{row.key}</span>
+              <span class="lead" aria-hidden="true"></span>
               <span class="nb-val">{row.value}</span>
             </span>
           ))}
@@ -59,16 +59,16 @@ const nowRows = [
     </section>
 
     <section class="now reveal" style="--reveal-i: 3;">
-      <div class="now-card">
+      <div class="ej-card now-card">
         <div class="now-head">
           <span class="nb-label">NOW</span>
           <span class="now-clock"><span id="about-clock">--:--</span> JST</span>
         </div>
         <div class="nb-rows">
           {nowRows.map((row) => (
-            <span class="nb-row">
-              <span class="nb-key">{row.key}</span>
-              <span class="nb-lead" aria-hidden="true"></span>
+            <span class="ej-dotrow">
+              <span class="k">{row.key}</span>
+              <span class="lead" aria-hidden="true"></span>
               <span class="nb-val">{row.key === 'status' && <span class="pulse" aria-hidden="true"></span>}{row.value}</span>
             </span>
           ))}
@@ -86,9 +86,9 @@ const nowRows = [
       <h2>Reach me</h2>
       <div class="c-rows">
         {socials.map((s) => (
-          <a class:list={['c-row', `c-${s.key}`]} href={s.href} target={s.key === 'email' ? undefined : '_blank'} rel="noopener" data-route={s.key === 'email' ? `✉ ${s.value}` : `↗ ${s.value}`}>
-            <span class="c-label">{s.label}</span>
-            <span class="c-lead" aria-hidden="true"></span>
+          <a class:list={['c-row', 'ej-dotrow', `c-${s.key}`]} href={s.href} target={s.key === 'email' ? undefined : '_blank'} rel="noopener" data-route={s.key === 'email' ? `✉ ${s.value}` : `↗ ${s.value}`}>
+            <span class="k">{s.label}</span>
+            <span class="lead" aria-hidden="true"></span>
             <span class="c-val">{s.value}</span>
           </a>
         ))}
@@ -118,34 +118,6 @@ const nowRows = [
 </script>
 
 <style>
-  .kicker {
-    margin: 0 0 18px;
-    padding-top: clamp(48px, 8vh, 76px);
-    color: #82828c;
-    font-family: var(--ej-mono);
-    font-size: 11.5px;
-    font-weight: 500;
-    letter-spacing: 0.24em;
-  }
-  h1 {
-    margin: 0;
-    color: var(--ej-text);
-    font-family: var(--ej-serif);
-    font-size: clamp(38px, 4.6vw, 58px);
-    font-weight: 400;
-    letter-spacing: -0.015em;
-    line-height: 1.05;
-  }
-  .caret {
-    display: inline-block;
-    width: 0.5em;
-    height: 0.07em;
-    margin-left: 0.14em;
-    border-radius: 1px;
-    background: var(--ej-pink);
-    box-shadow: 0 0 18px rgba(255, 122, 192, 0.55);
-    animation: ej-caret 1.15s linear infinite;
-  }
   .lead {
     margin: 22px 0 0;
     max-width: 34ch;
@@ -196,13 +168,6 @@ const nowRows = [
   .nb-card,
   .now-card {
     padding: 18px 24px 16px;
-    border: 1px solid rgba(255, 255, 255, 0.075);
-    border-radius: 12px;
-    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.7),
-      0 16px 40px -20px rgba(0, 0, 0, 0.9),
-      inset 0 1px 0 rgba(255, 255, 255, 0.055);
   }
   .nb-label {
     color: var(--ej-mut);
@@ -217,29 +182,6 @@ const nowRows = [
     gap: 2px;
     margin-top: 10px;
   }
-  .nb-row {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    padding: 7px 2px;
-  }
-  .nb-key {
-    flex-shrink: 0;
-    color: var(--ej-mut-2);
-    font-family: var(--ej-mono);
-    font-size: 10.5px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    transition: color 120ms ease;
-  }
-  .nb-lead {
-    flex: 1;
-    min-width: 14px;
-    border-bottom: 1px dotted rgba(255, 255, 255, 0.11);
-    transform: translateY(-3px);
-    transition: border-color 120ms ease;
-  }
   .nb-val {
     flex-shrink: 0;
     max-width: 62%;
@@ -250,9 +192,7 @@ const nowRows = [
     line-height: 1.6;
     transition: color 120ms ease;
   }
-  .nb-row:hover .nb-key { color: var(--ej-text-2); }
-  .nb-row:hover .nb-lead { border-bottom-color: rgba(255, 255, 255, 0.22); }
-  .nb-row:hover .nb-val { color: #fff; }
+  .ej-dotrow:hover .nb-val { color: #fff; }
 
   .system {
     padding: clamp(44px, 6vh, 60px) 0 0;
@@ -348,28 +288,8 @@ const nowRows = [
     margin-top: 14px;
   }
   .c-row {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
     padding: 9px 2px;
     text-decoration: none;
-  }
-  .c-label {
-    flex-shrink: 0;
-    color: var(--ej-mut-2);
-    font-family: var(--ej-mono);
-    font-size: 10.5px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    transition: color 120ms ease;
-  }
-  .c-lead {
-    flex: 1;
-    min-width: 14px;
-    border-bottom: 1px dotted rgba(255, 255, 255, 0.11);
-    transform: translateY(-3px);
-    transition: border-color 120ms ease;
   }
   .c-val {
     flex-shrink: 0;
@@ -378,8 +298,6 @@ const nowRows = [
     font-size: 12.5px;
     transition: all 120ms var(--ej-ease);
   }
-  .c-row:hover .c-label { color: var(--ej-text-2); }
-  .c-row:hover .c-lead { border-bottom-color: rgba(255, 255, 255, 0.22); }
   .c-github:hover .c-val {
     color: var(--ej-blue-2);
     text-shadow: 0 0 12px rgba(76, 194, 255, 0.5);

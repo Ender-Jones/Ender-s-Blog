@@ -72,6 +72,97 @@ html.ej-splash-active .reveal {
 .tone-rose { --tone: var(--ej-rose); --tone-2: var(--ej-rose); --tone-rgb: 255, 157, 157; }
 .tone-gray { --tone: var(--ej-mut); --tone-2: var(--ej-mut); --tone-rgb: 138, 138, 148; }
 
+/* —— 页面结构 utility(≥3 处逐字重复才收编; 组件特有样式留在组件内) ——
+   .ej-kicker 页头引导行 · .ej-h1 页标题(--sm 小档) · .ej-caret 呼吸光标
+   .ej-sub 页头引文 · .ej-card 暗房卡壳(padding 归组件) · .ej-dotrow 点线键值行(k/lead 归它, val 归组件) */
+.ej-kicker {
+  margin: 0 0 18px;
+  padding-top: clamp(48px, 8vh, 76px);
+  color: #82828c;
+  font-family: var(--ej-mono);
+  font-size: var(--ej-fs-label);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+}
+
+.ej-h1 {
+  margin: 0;
+  color: var(--ej-text);
+  font-family: var(--ej-serif);
+  font-size: clamp(38px, 4.6vw, 58px);
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+}
+
+.ej-h1--sm {
+  font-size: clamp(34px, 4vw, 50px);
+}
+
+.ej-caret {
+  display: inline-block;
+  width: 0.5em;
+  height: 0.07em;
+  margin-left: 0.14em;
+  border-radius: 1px;
+  background: var(--ej-pink);
+  box-shadow: 0 0 18px rgba(255, 122, 192, 0.55);
+  animation: ej-caret 1.15s linear infinite;
+}
+
+.ej-sub {
+  margin: 18px 0 0;
+  max-width: 58ch;
+  color: var(--ej-text-3);
+  font-size: var(--ej-fs-body);
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.ej-card {
+  border: 1px solid rgba(255, 255, 255, 0.075);
+  border-radius: 12px;
+  background: linear-gradient(180deg, #0d0d10, #0a0a0c);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.7),
+    0 16px 40px -20px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+}
+
+.ej-dotrow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 2px;
+}
+
+.ej-dotrow > .k {
+  flex-shrink: 0;
+  color: var(--ej-mut-2);
+  font-family: var(--ej-mono);
+  font-size: var(--ej-fs-meta);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: color 120ms ease;
+}
+
+.ej-dotrow > .lead {
+  flex: 1;
+  min-width: 14px;
+  border-bottom: 1px dotted rgba(255, 255, 255, 0.11);
+  transform: translateY(-3px);
+  transition: border-color 120ms ease;
+}
+
+.ej-dotrow:hover > .k {
+  color: var(--ej-text-2);
+}
+
+.ej-dotrow:hover > .lead {
+  border-bottom-color: rgba(255, 255, 255, 0.22);
+}
+
 /* —— 按钮词汇(全站统一, 最多这几种; tone 用 --btn-tone/--btn-tone-rgb 换色) ——
    .ej-link  文字箭头链接: 静默灰 → hover 染语义色 + 辉光 + 右移 2px
    .ej-pill  胶囊: 静默灰字 → hover 实心填色 + 深字 + neon 投影(footer 为原型)

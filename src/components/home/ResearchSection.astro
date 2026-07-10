@@ -12,7 +12,7 @@ const papers = research.papers;
       <span class="protocol">{research.protocol}</span>
     </div>
     <div class="grid">
-      <div class="panels">
+      <div class="ej-card panels">
         {papers.map((p) => (
           <a class:list={['panel', `tone-${p.tone}`]} href={`/research/#${p.anchor}`} data-route={`→ /research/#${p.anchor}`}>
             <span class="linebar" aria-hidden="true"></span>
@@ -26,7 +26,7 @@ const papers = research.papers;
           </a>
         ))}
       </div>
-      <div class="metric">
+      <div class="ej-card metric">
         <span class="metric-label"><span class="metric-dot" aria-hidden="true"></span>{research.metric.label}</span>
         <span class="metric-value">{research.metric.value}</span>
         <span class="metric-note">{research.metric.notes.map((n, i) => (<>{i > 0 && <br />}{n}</>))}</span>
@@ -75,32 +75,15 @@ const papers = research.papers;
   .panels {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    border: 1px solid rgba(255, 255, 255, 0.075);
-    border-radius: 12px;
     overflow: hidden;
-    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.7),
-      0 16px 40px -20px rgba(0, 0, 0, 0.9),
-      inset 0 1px 0 rgba(255, 255, 255, 0.055);
   }
   .panel {
-    --tone: var(--ej-pink);
-    --tone-rgb: 255, 122, 192;
     position: relative;
     overflow: hidden;
     display: block;
     padding: 18px 20px 18px 24px;
     text-decoration: none;
     transition: background 180ms var(--ej-ease);
-  }
-  .panel.tone-blue {
-    --tone: var(--ej-blue);
-    --tone-rgb: 76, 194, 255;
-  }
-  .panel.tone-amber {
-    --tone: var(--ej-amber);
-    --tone-rgb: 245, 158, 11;
   }
   .panel:not(:last-child) {
     border-right: 1px solid rgba(255, 255, 255, 0.055);
@@ -186,13 +169,7 @@ const papers = research.papers;
     align-content: center;
     gap: 6px;
     padding: 20px 24px;
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: 12px;
-    background: linear-gradient(180deg, #0d0d10, #0a0a0c);
-    box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.7),
-      0 16px 40px -20px rgba(0, 0, 0, 0.9),
-      inset 0 1px 0 rgba(255, 255, 255, 0.055);
+    border-color: rgba(255, 255, 255, 0.09);
   }
   .metric-label {
     display: flex;
