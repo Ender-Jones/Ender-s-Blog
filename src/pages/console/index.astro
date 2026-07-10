@@ -84,12 +84,11 @@ const consoleData = {
         <div class="syntax">
           <div class="syn-row">
             <span class="syn-label">PREFIXES</span>
-            <span><span class="s-done">✓</span> done <span class="syn-dim">(no prefix)</span></span>
             <span><span class="s-project">@</span> project</span>
             <span><span class="s-decision">=</span> decision</span>
             <span><span class="s-risk">!</span> risk</span>
             <span><span class="s-next">&gt;</span> next</span>
-            <span><span class="s-dropped">~</span> dropped</span>
+            <span class="syn-dim">no prefix = done</span>
           </div>
           <div class="syn-row">
             <span class="syn-label">CARRY-OVER EXITS</span>
@@ -182,13 +181,13 @@ const consoleData = {
   const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
     document.getElementById(id) as T;
 
-  const TYPE_META: Record<EntryType, { label: string; cls: string }> = {
-    project: { label: 'PROJECT', cls: 't-project' },
-    done: { label: 'DONE', cls: 't-done' },
-    decision: { label: 'DECISION', cls: 't-decision' },
-    risk: { label: 'RISK', cls: 't-risk' },
-    next: { label: 'NEXT', cls: 't-next' },
-    dropped: { label: 'DROPPED', cls: 't-dropped' },
+  const TYPE_META: Record<EntryType, { label: string; cls: string; color: string; border: string; bg: string }> = {
+    project: { label: 'PROJECT', cls: 't-project', color: '#c8c8cd', border: 'rgba(255,255,255,0.22)', bg: 'transparent' },
+    done: { label: 'DONE', cls: 't-done', color: '#e8e8ea', border: 'transparent', bg: 'rgba(255,255,255,0.08)' },
+    decision: { label: 'DECISION', cls: 't-decision', color: '#9ed9ff', border: 'rgba(76,194,255,0.38)', bg: 'transparent' },
+    risk: { label: 'RISK', cls: 't-risk', color: '#ff9d9d', border: 'rgba(255,120,120,0.4)', bg: 'transparent' },
+    next: { label: 'NEXT', cls: 't-next', color: '#fcd34d', border: 'transparent', bg: 'rgba(245,158,11,0.14)' },
+    dropped: { label: 'DROPPED', cls: 't-dropped', color: '#8a8a94', border: 'rgba(255,255,255,0.16)', bg: 'transparent' },
   };
   const SECTION: Record<EntryType, string> = {
     project: 'Project',
@@ -292,11 +291,16 @@ const consoleData = {
     if (!t) {
       preview.className = 'type-preview';
       preview.textContent = '';
+      preview.style.cssText = '';
       return;
     }
     const p = parse(t);
-    preview.className = `type-preview on ${TYPE_META[p.type].cls}`;
-    preview.textContent = `→ ${TYPE_META[p.type].label}`;
+    const meta = TYPE_META[p.type];
+    preview.className = 'type-preview on';
+    preview.textContent = `→ ${meta.label}`;
+    preview.style.color = meta.color;
+    preview.style.borderColor = meta.border;
+    preview.style.background = meta.bg;
   };
 
   const renderEntries = () => {
@@ -808,15 +812,15 @@ const consoleData = {
     border-radius: 4px;
     white-space: nowrap;
     border: 1px solid transparent;
-    color: transparent;
     font-family: var(--ej-mono);
-    font-size: 9.5px;
+    font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.12em;
-    transition: all 120ms var(--ej-ease);
+    opacity: 0;
+    transition: opacity 120ms var(--ej-ease);
   }
   .type-preview.on {
-    border-color: rgba(255, 255, 255, 0.1);
+    opacity: 1;
   }
   :global(.t-project) { color: var(--ej-text-2); border-color: rgba(255, 255, 255, 0.22); }
   :global(.t-done) { color: #e8e8ea; background: rgba(255, 255, 255, 0.08); }
@@ -1049,9 +1053,9 @@ const consoleData = {
     margin-top: 4px;
     padding: 12px 2px 0;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
-    color: var(--ej-dim);
+    color: var(--ej-mut-2);
     font-family: var(--ej-mono);
-    font-size: 10.5px;
+    font-size: 11px;
   }
   .syn-row {
     display: flex;
@@ -1092,7 +1096,7 @@ const consoleData = {
     gap: 3px;
     color: var(--ej-mut);
     font-family: var(--ej-mono);
-    font-size: 10.5px;
+    font-size: 11px;
     line-height: 1.7;
   }
   .goes-line {
@@ -1341,7 +1345,7 @@ const consoleData = {
     min-width: 0;
     color: var(--ej-mut);
     font-family: var(--ej-mono);
-    font-size: 10.5px;
+    font-size: 11px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1461,9 +1465,9 @@ const consoleData = {
   }
   .trail-note {
     margin: 11px 0 0;
-    color: var(--ej-dim);
+    color: var(--ej-mut-2);
     font-family: var(--ej-mono);
-    font-size: 9.5px;
+    font-size: 10.5px;
     line-height: 1.7;
     white-space: pre-line;
   }

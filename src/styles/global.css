@@ -142,7 +142,16 @@ html.ej-splash-active .reveal {
   color: var(--ej-pink-2);
   background: rgba(var(--btn-tone-rgb), 0.06);
   box-shadow: 0 0 14px -2px rgba(var(--btn-tone-rgb), 0.45);
-  transform: rotate(180deg);
+}
+
+.ej-orb.spin {
+  animation: ej-orb-spin 480ms var(--ej-ease);
+}
+
+@keyframes ej-orb-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* 跨页过渡: 原生 cross-document View Transitions — 支持的浏览器 200ms 交叉淡入,

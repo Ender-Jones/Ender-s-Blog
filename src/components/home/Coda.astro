@@ -36,6 +36,9 @@ const first = quotes[0];
     show();
     btn.addEventListener('click', function () {
       if (quotes.length < 2 || fading) return;
+      btn.classList.remove('spin');
+      void btn.offsetWidth;
+      btn.classList.add('spin');
       var n = Math.floor(Math.random() * (quotes.length - 1));
       if (n >= qi) n += 1;
       fading = true;

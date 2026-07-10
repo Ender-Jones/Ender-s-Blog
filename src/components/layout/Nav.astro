@@ -1,9 +1,10 @@
 ---
+// tone = 悬停/激活的语义色: 作品与人=粉(公开/活着), worklog=琥珀(today/next 的家), research=蓝(信号/数据)
 const links = [
-  { label: 'Writing', href: '/posts/', route: '→ /posts/' },
-  { label: 'Worklog', href: '/worklog/', route: '→ /worklog/' },
-  { label: 'Research', href: '/research/', route: '→ /research/' },
-  { label: 'About', href: '/about/', route: '→ /about/' },
+  { label: 'Writing', href: '/posts/', route: '→ /posts/', tone: 'pink' },
+  { label: 'Worklog', href: '/worklog/', route: '→ /worklog/', tone: 'amber' },
+  { label: 'Research', href: '/research/', route: '→ /research/', tone: 'blue' },
+  { label: 'About', href: '/about/', route: '→ /about/', tone: 'pink' },
 ];
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || path.startsWith(href);
@@ -18,7 +19,7 @@ const isZh = path === '/zh/' || path.startsWith('/zh/');
     </a>
     <div class="right">
       {links.map((l) => (
-        <a class:list={['link', { active: isActive(l.href) }]} href={l.href} data-route={l.route}>{l.label}</a>
+        <a class:list={['link', `tone-${l.tone}`, { active: isActive(l.href) }]} href={l.href} data-route={l.route}>{l.label}</a>
       ))}
       <span class="divider" aria-hidden="true"></span>
       <span class="lang">
@@ -84,6 +85,8 @@ const isZh = path === '/zh/' || path.startsWith('/zh/');
     gap: 26px;
   }
   .link {
+    --t: var(--ej-pink-2);
+    --t-rgb: 255, 122, 192;
     color: var(--ej-text-3);
     font-family: var(--ej-mono);
     font-size: 12px;
@@ -95,13 +98,21 @@ const isZh = path === '/zh/' || path.startsWith('/zh/');
     border-bottom: 2px solid transparent;
     transition: color 120ms var(--ej-ease);
   }
+  .link.tone-amber {
+    --t: var(--ej-amber-2);
+    --t-rgb: 245, 158, 11;
+  }
+  .link.tone-blue {
+    --t: var(--ej-blue-2);
+    --t-rgb: 76, 194, 255;
+  }
   .link:hover {
-    color: var(--ej-pink-2);
-    text-shadow: 0 0 12px rgba(255, 122, 192, 0.45);
+    color: var(--t);
+    text-shadow: 0 0 12px rgba(var(--t-rgb), 0.45);
   }
   .link.active {
     color: var(--ej-text);
-    border-bottom-color: rgba(255, 122, 192, 0.55);
+    border-bottom-color: rgba(var(--t-rgb), 0.55);
     text-shadow: none;
   }
   .divider {

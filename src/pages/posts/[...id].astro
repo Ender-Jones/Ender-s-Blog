@@ -185,6 +185,9 @@ const showToc = tocItems.length >= 3;
     show();
     btn.addEventListener('click', function () {
       if (quotes.length < 2 || fading) return;
+      btn.classList.remove('spin');
+      void btn.offsetWidth;
+      btn.classList.add('spin');
       var m = Math.floor(Math.random() * (quotes.length - 1));
       if (m >= qi) m += 1;
       fading = true;
