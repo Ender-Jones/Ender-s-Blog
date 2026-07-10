@@ -1,86 +1,101 @@
 ---
-// 字体决策的最后残页: 只剩"Lexend 做正文"的长文样张(印说想最后看一眼).
-// 站上正式字体已定 V2 三件套(Source Serif Pro / Noto Sans / Fira Code, 见 tokens.css).
-// 印看完说一声 → 整页删除 + 卸载 lexend 包.
+// Lexend 定夺页(noindex, 定了就删 + 卸 lexend 包): 真实文章「Who Am I」全文用 Lexend 排,
+// 顶部可实时切 300/350/400 三档字重 — 因为印觉得 Lexend 400 "有点在读/over". 对照组是真身:
+// /posts/who-am-i/(现役 Noto Sans 400). 结论只有两种: "换 Lexend + 定档" 或 "维持 Noto Sans".
 import '@fontsource-variable/lexend/index.css';
+import '../../styles/prose.css';
+import { getEntry, render } from 'astro:content';
 import BaseLayout from '../../components/layout/BaseLayout.astro';
-import { about } from '../../lib/data';
+
+const post = await getEntry('posts', 'who-am-i');
+if (!post) throw new Error('type-lab: post who-am-i not found');
+const { Content } = await render(post);
 ---
 
-<BaseLayout title="Type lab — Ender Jones" description="Lexend body sample, last look." noindex>
-  <main style="--ej-page-w: 760px;">
+<BaseLayout title="Type lab — Lexend 定夺" description="Lexend body, real article, live weight." noindex>
+  <main style="--ej-page-w: 720px;">
     <section class="reveal" style="--reveal-i: 0;">
-      <p class="ej-kicker">TYPE LAB — LAST LOOK · LEXEND AS BODY</p>
-      <h1 class="ej-h1 ej-h1--sm">Lexend 长文样张.<span class="ej-caret" aria-hidden="true"></span></h1>
+      <p class="ej-kicker">TYPE LAB — LEXEND AS BODY · REAL ARTICLE</p>
+      <h1 class="ej-h1 ej-h1--sm">「Who Am I」in Lexend.<span class="ej-caret" aria-hidden="true"></span></h1>
       <p class="ej-sub">
-        全站已换 V2 三件套; 这页只回答一个问题 — "正文 Lexend 是不是 over 了".
-        下面同一篇文字, 上半 Lexend, 下半 Noto Sans(现役), 都在文章字号(18.5px)排到阅读长度. 看完说一声, 这页就删.
+        全文用 Lexend 排. 上面三个钮实时切字重 —
+        400 是你嫌"在读"的那档, 试试 350/300 是否松一口气. 对照真身(现役 Noto Sans 400):
+        <a class="ej-link ej-link--blue" href="/posts/who-am-i/" data-route="→ /posts/who-am-i/ — Noto Sans 真身" style="margin-left:6px;">原文 →</a>
       </p>
+      <div class="wsw" id="wsw">
+        <span class="wsw-label">LEXEND WEIGHT</span>
+        <button type="button" data-w="300">300 light</button>
+        <button type="button" data-w="350" class="on">350</button>
+        <button type="button" data-w="400">400 现档</button>
+      </div>
     </section>
 
-    <section class="lab reveal" style="--reveal-i: 1;">
-      <article class="ej-card block" style="--ej-sans: 'Lexend Variable', system-ui, sans-serif;">
-        <p class="tag">LEXEND</p>
-        <div class="sample">
-          {about.paras.map((p) => (
-            <p>{p}</p>
-          ))}
-          <p>
-            The worklog exists because my working memory can't be trusted with a whole day. One line at capture,
-            a small ritual at close, git as the spine: done beats todo, dropping a task is a decision rather than
-            a failure, and blank days count against nothing. Lexend was drawn to reduce visual crowding — wide
-            apertures, generous spacing — which is exactly why long paragraphs of it can feel airy to the point
-            of loose: the words stop holding hands.
-          </p>
-        </div>
-      </article>
-
-      <article class="ej-card block">
-        <p class="tag">NOTO SANS(现役)</p>
-        <div class="sample">
-          {about.paras.map((p) => (
-            <p>{p}</p>
-          ))}
-          <p>
-            The worklog exists because my working memory can't be trusted with a whole day. One line at capture,
-            a small ritual at close, git as the spine: done beats todo, dropping a task is a decision rather than
-            a failure, and blank days count against nothing. Noto Sans keeps a quieter rhythm — narrower, denser,
-            closer to what decades of print taught your eyes to expect from a paragraph.
-          </p>
-        </div>
+    <section class="reveal" style="--reveal-i: 1;">
+      <article class="prose lex" id="lex">
+        <Content />
       </article>
     </section>
   </main>
 </BaseLayout>
 
 <style>
-  .lab {
-    display: grid;
-    gap: 14px;
-    padding: clamp(28px, 4vh, 40px) 0 clamp(56px, 8vh, 72px);
+  /* 只在这页把 sans 换 Lexend + 用变量托字重; 标题仍 Source Serif(只测正文体). */
+  .lex {
+    --ej-sans: 'Lexend Variable', system-ui, sans-serif;
+    --lex-weight: 350;
   }
-  .block {
-    padding: 22px 26px 24px;
+  .lex :global(p),
+  .lex :global(li) {
+    font-weight: var(--lex-weight);
+    letter-spacing: -0.006em; /* Lexend 偏宽, 收一丝减少"松散" */
   }
-  .tag {
-    margin: 0 0 14px;
-    color: var(--ej-pink-2);
+
+  .wsw {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 22px;
+  }
+  .wsw-label {
+    color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
     font-weight: 500;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.18em;
+    margin-right: 4px;
   }
-  .sample {
-    display: grid;
-    gap: 14px;
+  .wsw button {
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: transparent;
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-small);
+    cursor: pointer;
+    transition: all 130ms var(--ej-ease);
   }
-  .sample p {
-    margin: 0;
-    max-width: 62ch;
-    color: #b8b8c0;
-    font-family: var(--ej-sans);
-    font-size: var(--ej-fs-lede);
-    line-height: 1.75;
-    text-wrap: pretty;
+  .wsw button:hover {
+    border-color: rgba(255, 255, 255, 0.26);
+    color: #e8e8ea;
+  }
+  .wsw button.on {
+    border-color: rgba(255, 122, 192, 0.45);
+    background: rgba(255, 122, 192, 0.08);
+    color: var(--ej-pink-2);
   }
 </style>
+
+<script is:inline>
+  (() => {
+    const lex = document.getElementById('lex');
+    const sw = document.getElementById('wsw');
+    if (!lex || !sw) return;
+    sw.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-w]');
+      if (!b) return;
+      lex.style.setProperty('--lex-weight', b.dataset.w);
+      sw.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b));
+    });
+  })();
+</script>
