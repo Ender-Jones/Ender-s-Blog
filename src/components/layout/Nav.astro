@@ -89,7 +89,7 @@ const isZh = path === '/zh/' || path.startsWith('/zh/');
     --t-rgb: 255, 122, 192;
     color: var(--ej-text-3);
     font-family: var(--ej-mono);
-    font-size: 12px;
+    font-size: var(--ej-fs-small);
     font-weight: 500;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -126,7 +126,7 @@ const isZh = path === '/zh/' || path.startsWith('/zh/');
     border-radius: 999px;
     padding: 2px;
     font-family: var(--ej-mono);
-    font-size: 10px;
+    font-size: var(--ej-fs-meta);
     background: rgba(0, 0, 0, 0.25);
   }
   .lang-a {
@@ -161,7 +161,7 @@ const isZh = path === '/zh/' || path.startsWith('/zh/');
       gap: 12px;
     }
     .link {
-      font-size: 11px;
+      font-size: var(--ej-fs-label);
       letter-spacing: 0.05em;
     }
     .name {

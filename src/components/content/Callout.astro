@@ -55,7 +55,7 @@ const tone = type === 'tip' || type === 'warning' ? 'amber' : type === 'danger' 
   .label {
     color: var(--tone-2);
     font-family: var(--ej-mono);
-    font-size: 9px;
+    font-size: var(--ej-fs-micro);
     font-weight: 600;
     letter-spacing: 0.24em;
     text-transform: uppercase;
@@ -69,7 +69,7 @@ const tone = type === 'tip' || type === 'warning' ? 'amber' : type === 'danger' 
     display: grid;
     gap: 8px;
     color: #b4b4bc;
-    font-size: 14.5px;
+    font-size: var(--ej-fs-ui);
     line-height: 1.65;
   }
   .body :global(> *) {

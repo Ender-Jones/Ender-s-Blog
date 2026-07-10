@@ -76,7 +76,7 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
     margin: 18px 0 0;
     max-width: 40em;
     color: var(--ej-text-3);
-    font-size: 15.5px;
+    font-size: var(--ej-fs-body);
     line-height: 1.9;
     text-wrap: pretty;
   }
@@ -89,7 +89,7 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
     margin: 0;
     color: var(--ej-mut);
     font-family: var(--ej-mono);
-    font-size: 11.5px;
+    font-size: var(--ej-fs-label);
     line-height: 1.8;
   }
 
@@ -112,7 +112,7 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
   .sec-sub {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
-    font-size: 11px;
+    font-size: var(--ej-fs-label);
     font-weight: 500;
     margin-left: 10px;
   }
@@ -152,7 +152,7 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
   .date {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
-    font-size: 11.5px;
+    font-size: var(--ej-fs-label);
     font-weight: 500;
     font-variant-numeric: tabular-nums;
   }
@@ -177,7 +177,7 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
   .meta {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
-    font-size: 11.5px;
+    font-size: var(--ej-fs-label);
     text-align: right;
   }
 
