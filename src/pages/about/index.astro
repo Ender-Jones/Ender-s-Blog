@@ -338,11 +338,11 @@ const nowRows = [
   }
   @media (max-width: 560px) {
     /* 点线行在窄屏改为堆叠: key 上, value 下 */
-    .nb-row {
+    .nb-rows .ej-dotrow {
       flex-wrap: wrap;
       gap: 3px 10px;
     }
-    .nb-lead {
+    .nb-rows .ej-dotrow > .lead {
       display: none;
     }
     .nb-val {

@@ -1,5 +1,14 @@
 @import './tokens.css';
 
+/* ============================================================
+   全站样式家规(写新样式前先读这 4 条):
+   1. 字号只从 tokens.css 的 --ej-fs-* 8 档取; serif 展示标题可用字面 clamp/px.
+   2. 语义色挂 .tone-* 类(唯一声明处在本文件), 组件只消费 --tone/--tone-2/--tone-rgb.
+   3. 新样式先查本文件的 utility 词汇(.ej-kicker/h1/caret/sub/card/dotrow + 按钮三件套),
+      ≥3 处逐字重复才收编成新 utility, 组件特有样式留在组件内.
+   4. JS 运行时创建的 DOM 不带 Astro scoped 标记 → 其选择器必须 :global()(console 之训).
+   ============================================================ */
+
 * {
   box-sizing: border-box;
 }

@@ -65,7 +65,7 @@ function parseDaySegment(date: string, segment: string): WorklogDay {
     const bullets = [...body.matchAll(/^- +(.+?) *$/gm)]
       .map((m) => stripComments(m[1]))
       .filter(Boolean)
-      .filter((text) => !/^none[.。]? *$/i.test(text)) // legacy 空节占位词, 不是条目
+      .filter((text) => !/^[-–—\s]*none[.。]? *$/i.test(text)) // legacy 空节占位词(含 "- None" 变体), 不是条目
       .map((text) => text.replace(/^~~(.+)~~$/, '$1'));
 
     if (type === 'public') {
@@ -88,7 +88,7 @@ function parseDaySegment(date: string, segment: string): WorklogDay {
         .map((l) => l.trim())
         .filter((l) => l && l !== '---')
         .join(' ');
-      if (text && !/^none[.。]? *$/i.test(text)) day.items.push({ type, text });
+      if (text && !/^[-–—\s]*none[.。]? *$/i.test(text)) day.items.push({ type, text });
     }
   }
   return day;

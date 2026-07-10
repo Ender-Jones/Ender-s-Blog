@@ -11,6 +11,8 @@
 
 **部署坏了想回滚** — Cloudflare Pages → 项目 → Deployments → 选上一个成功的 → Rollback.
 
+**觉得字太小/太大** — 改 `src/styles/tokens.css` 里 `--ej-fs-*` 那 8 行(全站字号只从这里取), 一行管一档. 想换字体也是同一文件顶部的三个 `--ej-serif/mono/sans`.
+
 ## 录入台上线后才生效(现在不用做)
 
 **PAT 一年一换.**
