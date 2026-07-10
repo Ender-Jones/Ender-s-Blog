@@ -88,6 +88,7 @@ const signalRows = [
             <span class="tl-when">{t.when}</span>
             <span class="tl-node" aria-hidden="true"></span>
             <span class="tl-label">{t.label}</span>
+            {t.link && <a class="ej-link ej-link--blue tl-link" href={t.link} target="_blank" rel="noopener" data-route={`↗ ${new URL(t.link).hostname}`}>report ↗</a>}
           </div>
         ))}
       </div>

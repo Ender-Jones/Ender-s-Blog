@@ -79,6 +79,7 @@ timeline:
   - when: "2023"
     label: M.S. — graph mining for phishing detection, then the turn to affect
     tone: gray
+    link: https://ken.ieice.org/ken/paper/00000000qcCK/eng/
   - when: "2019"
     label: B.S., informatics — Tokyo/Chiba
     tone: gray

@@ -74,6 +74,7 @@ export type TimelineEntry = {
   when: string;
   label: string;
   tone: PaperTone | 'gray';
+  link?: string;
 };
 
 export type ResearchData = {

@@ -63,6 +63,15 @@ html.ej-splash-active .reveal {
   }
 }
 
+/* —— 语义 tone 类(全站唯一声明处) ——
+   元素挂 .tone-pink/blue/amber/rose/gray 即得 --tone/--tone-2/--tone-rgb 三个变量,
+   组件样式只消费变量, 不再各自重复声明. 注意: 依赖显式 class, 不要靠"基类默认色". */
+.tone-pink { --tone: var(--ej-pink); --tone-2: var(--ej-pink-2); --tone-rgb: 255, 122, 192; }
+.tone-blue { --tone: var(--ej-blue); --tone-2: var(--ej-blue-2); --tone-rgb: 76, 194, 255; }
+.tone-amber { --tone: var(--ej-amber); --tone-2: var(--ej-amber-2); --tone-rgb: 245, 158, 11; }
+.tone-rose { --tone: var(--ej-rose); --tone-2: var(--ej-rose); --tone-rgb: 255, 157, 157; }
+.tone-gray { --tone: var(--ej-mut); --tone-2: var(--ej-mut); --tone-rgb: 138, 138, 148; }
+
 /* —— 按钮词汇(全站统一, 最多这几种; tone 用 --btn-tone/--btn-tone-rgb 换色) ——
    .ej-link  文字箭头链接: 静默灰 → hover 染语义色 + 辉光 + 右移 2px
    .ej-pill  胶囊: 静默灰字 → hover 实心填色 + 深字 + neon 投影(footer 为原型)
