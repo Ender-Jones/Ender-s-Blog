@@ -1,13 +1,10 @@
 ---
-// Research: 一条推进中的研究线 — thesis → 三站论文卡 → 方法与信号 → 指标 → 时间线+CV → next.
-// 内容全部来自 src/data/research.yml 与 site.yml; CV 按钮仅当 public/cv.pdf 存在才渲染.
-import { existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+// Research: 一条推进中的研究线 — thesis → 三站论文卡 → 方法与信号 → 指标 → 时间线 → next.
+// 红线(2026-07-11): 站上不放公开 CV/简历、不放直达本名的外链 — 所以这页没有下载按钮.
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import RouteHint from '../../components/home/RouteHint.astro';
 import { research, site } from '../../lib/data';
 
-const hasCv = existsSync(fileURLToPath(new URL('../../../public/cv.pdf', import.meta.url)));
 
 const signalRows = [
   { key: 'signals', value: site.identity.signals.join(' · ') },
@@ -80,7 +77,6 @@ const signalRows = [
     <section class="tl reveal" style="--reveal-i: 3;">
       <div class="sec-head">
         <h2>Timeline</h2>
-        {hasCv && <a class="ej-link ej-link--amber" href="/cv.pdf" data-route="↓ cv.pdf">download CV ↓</a>}
       </div>
       <div class="tl-list">
         {research.timeline.map((t) => (
