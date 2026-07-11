@@ -1,6 +1,7 @@
 -- D1 = 当日工作区(working tree), 不是本源 — git markdown 才是.
 -- close-the-day 把行编成月文件的一节提交进 git, 然后这里只打归档标记(committed=1).
--- 上线时执行: npx wrangler d1 execute EJ_DB --remote --file=schema/d1.sql
+-- 上线时执行(CLI 用数据库名, 不是绑定名): npx wrangler d1 execute enders-blog-worklog --remote --file=schema/d1.sql
+-- 或者更简单: D1 控制台的 Console 标签直接粘贴本文件全文执行.
 
 CREATE TABLE IF NOT EXISTS lines (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
