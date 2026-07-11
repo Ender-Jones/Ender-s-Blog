@@ -19,6 +19,7 @@
 | 页面 | `src/pages/` — 路由即文件 |
 | 组件 | `src/components/` — `content/` 是文章内用的四件套 (Epigraph/Figure/Callout/Poem) |
 | worklog 解析 | `src/lib/worklogDays.ts`(日条目/周分组)+ `src/lib/parseWorklog.ts`(NOW 线兜底) |
+| console 什么时候会发生什么 | `docs/CONSOLE.md` — 行为契约; 改 console 前先改它 |
 | 刷新 commit 墙数据 | `npm run activity:cache`(需要 `GITHUB_TOKEN` 或已登录的 `gh`) |
 | 手动跑内容检查 | `npm run check:content`(commit 时也会自动跑, 见下) |
 
@@ -101,9 +102,11 @@ GitHub → 头像 → **Settings** → 左栏最底 **Developer settings** → *
 **印 要做的**
 1. 翻译 `src/content/posts/zh/` — 研究笔记(评估指标)已有全文初译, 等你过目改口吻; 剩 prompt 随笔 → who-am-i(诗可豁免); 顺便定 research 页要不要中文(倾向: 不要).
 2. 极端字号档已上线 — 有空说读感(回退/微调=改 tokens.css 8 行).
+3. console 行为契约 `docs/CONSOLE.md` 过目 — 尤其末节「待印拍板」三问(project 去留 / closed 标志+补关昨天 / 关日后干活的出口).
+4. 想一篇「搜索磁铁」post(中或英): ghostty-cheatsheet 那种一搜即中、停留时间长的工具文(cheatsheet/对照表/踩坑手册都算); ⚠ 站还 noindex, 这条的收益要等换正式域名之后才兑现, 先想选题不急着写.
 
 **共写**
-3. ADHD worklog 方法论 essay(About 页 "a longer essay is coming" 的兑现).
+5. ADHD worklog 方法论 essay(About 页 "a longer essay is coming" 的兑现).
 
 **红线备忘**: 站上不放公开简历/CV 下载, 不放照片, 不放直达本名的外链(IEICE 技报页因此不挂).
 
