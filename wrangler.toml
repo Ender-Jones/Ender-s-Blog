@@ -10,3 +10,9 @@ pages_build_output_dir = "dist"
 binding = "EJ_DB"
 database_name = "enders-blog-worklog"
 database_id = "3a32c124-b3f3-47c5-9302-22e254793377"
+
+# Access 验签参数(不是机密: AUD 只用于比对, 伪造 JWT 需要 CF 私钥; team 域名本就出现在登录跳转里).
+# 真机密只有 GITHUB_TOKEN — 那个永远只放 Pages 控制台的 Secret, 不进仓库.
+[vars]
+ACCESS_TEAM_DOMAIN = "restless-night-eaa5.cloudflareaccess.com"
+ACCESS_AUD = "01c9992e64ca21053cc34df70fdcebef273c05189b4e126baa5f8ad6690e3f53"
