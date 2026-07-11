@@ -1,7 +1,7 @@
 ---
-title: "Regression Model Evaluation Metrics: MAE, MSE, RMSE, and R² Explained"
+title: "回归模型评估指标: MAE、MSE、RMSE 与 R² 详解"
 date: 2025-05-08T18:23:00+09:00
-description: "A comprehensive guide to key regression model evaluation metrics. Understand the differences, advantages, and limitations of MAE, MSE, RMSE, and R² to choose the right metric for your machine learning projects."
+description: "回归模型关键评估指标的一份完整指南: 理解 MAE、MSE、RMSE 与 R² 各自的差异、优势与局限, 为你的机器学习项目选对指标."
 kind: research-note
 tags:
   - "AI"
@@ -28,240 +28,240 @@ import Epigraph from '../../../components/content/Epigraph.astro';
 <Epigraph
   lines={[
     '— Il n’ya a qu’une loi en sentiment. C’est de faire le bonheur de ce qu’on aime',
-    '— There is only one law in emotion: to bring happiness to those we love',
+    '— 感情里只有一条法则: 让所爱的人幸福',
   ]}
-  source="— Stendhal, diary entry dated June 19, 1805"
+  source="— 司汤达, 1805 年 6 月 19 日日记"
 />
 
-## Introduction: The Essence of Regression Models
+## 引言: 回归模型的本质
 
-When we talk about prediction models, we're typically referring to one of two main types:
+谈到预测模型, 我们通常指的是两大类中的一种:
 
-- **Regression models**: These produce continuous outputs (like predicting house prices, temperature, or stock values)
-- **Classification models**: These generate categorical or binary outputs (like predicting yes/no, spam/not spam, or classifying images)
+- **回归模型**: 输出连续值(比如预测房价、气温、股价)
+- **分类模型**: 输出类别或二元结果(比如预测是/否、垃圾邮件/正常邮件, 或给图像分类)
 
-Regression models attempt to find relationships between variables to predict continuous numeric values. But how do we know if our regression model is any good? This is where evaluation metrics come in.
+回归模型试图在变量之间找到关系, 用来预测连续的数值. 但怎么知道自己的回归模型到底好不好? 这就轮到评估指标登场了.
 
-## Theoretical Foundation of Evaluation Metrics
+## 评估指标的理论基础
 
-### Residuals: The Building Blocks
+### 残差: 一切的基石
 
-At the core of regression evaluation is the concept of **residuals** - the differences between predicted values and actual observed values:
+回归评估的核心是**残差**(residual)的概念 — 预测值与实际观测值之间的差:
 
 $$\text{Residual} = y_i - \hat{y}_i$$
 
-Where **$y_i$** is the actual value and **$\hat{y}_i$** is the predicted value.
+其中 **$y_i$** 是实际值, **$\hat{y}_i$** 是预测值.
 
-### Bias and Error
+### 偏差与误差
 
-**Bias** represents systematic errors in predictions. Ideally, the sum of residuals should be close to zero, indicating that your model isn't consistently over or under-predicting values.
+**偏差**(bias)代表预测中的系统性误差. 理想情况下, 残差之和应当接近零 — 说明模型没有一贯地高估或低估.
 
-### The Modeling Cycle
+### 建模的循环
 
-The process typically flows from model construction to evaluation to refinement:
+建模通常沿着“构建 → 评估 → 改进”的循环推进:
 
-1. Build the model
-2. Evaluate the model
-3. Improve the model
-4. Repeat until reaching satisfactory performance
+1. 构建模型
+2. 评估模型
+3. 改进模型
+4. 重复, 直到性能令人满意
 
-## Quick Reference: Metrics Comparison Table
+## 速查: 指标对比表
 
-| Metric | Range | Interpretation | Best For | Limitations |
+| 指标 | 取值范围 | 含义 | 适用 | 局限 |
 |--------|-------|----------------|----------|-------------|
-| MAE | [0, ∞) | Average error magnitude | General use, robust to outliers | Not differentiable |
-| MSE | [0, ∞) | Average squared error | Optimization | Sensitive to outliers |
-| RMSE | [0, ∞) | Error in original units | Easy interpretation | Sensitive to outliers |
-| R² | (-∞, 1] | Explained variance | Model comparison | Increases with features |
-| MAPE |  [0, ∞) | Percentage error | Business contexts | Biased, undefined at zero |
-| SMAPE | [0, 2] | Symmetric % error | Forecasting | Unintuitive range |
+| MAE | [0, ∞) | 平均误差幅度 | 通用, 对异常值稳健 | 零点不可导 |
+| MSE | [0, ∞) | 误差平方的平均 | 优化 | 对异常值敏感 |
+| RMSE | [0, ∞) | 原始单位下的误差 | 易于解读 | 对异常值敏感 |
+| R² | (-∞, 1] | 被解释的方差比例 | 模型对比 | 加特征就会涨 |
+| MAPE |  [0, ∞) | 百分比误差 | 业务场景 | 有偏, 零值处无定义 |
+| SMAPE | [0, 2] | 对称百分比误差 | 预测任务 | 取值范围不直观 |
 
-## Basic Evaluation Metrics
+## 基础评估指标
 
-### Mean Absolute Error (MAE)
+### 平均绝对误差(MAE)
 
-Mean Absolute Error measures the average magnitude of errors without considering their direction.
+平均绝对误差衡量误差的平均幅度, 不区分误差的方向.
 
-#### Formula:
+#### 公式:
 
 $$\text{MAE} = \frac{1}{n}\sum_{i=1}^{n}|y_i - \hat{y}_i|$$
 
-#### Advantages:
-- **Intuitive interpretation**: Directly represents the average error magnitude
-- **Robust to outliers**: Doesn't amplify the effect of outliers
-- **Unit preservation**: Maintains the original unit dimension
-- **Straightforward**: Directly reflects the average deviation
+#### 优点:
+- **解读直观**: 直接代表误差的平均大小
+- **对异常值稳健**: 不会放大异常值的影响
+- **保留单位**: 与原始数据同量纲
+- **简单直接**: 直接反映平均偏离程度
 
-#### Limitations:
-- **Equal error weighting**: Assumes all error magnitudes are equally important
-- **Optimization challenges**: Not easily differentiable at zero
-- **Scale dependence**: Difficult to compare across different datasets
+#### 局限:
+- **误差一视同仁**: 假设所有幅度的误差同等重要
+- **优化不便**: 在零点处不易求导
+- **依赖量纲**: 不同数据集之间难以比较
 
 <Callout type="info">
-MAE is like a ruler that measures the average distance between predictions and reality, without caring about the direction of the error.
+MAE 像一把尺子, 量的是预测与现实之间的平均距离 — 不管误差朝哪个方向.
 </Callout>
 
-### Mean Squared Error (MSE) and Root Mean Squared Error (RMSE)
+### 均方误差(MSE)与均方根误差(RMSE)
 
-MSE calculates the average of squared differences between predicted and actual values. RMSE brings the metric back to the original units.
+MSE 计算预测值与实际值之差的平方的平均; RMSE 再开一次根号, 把指标带回原始单位.
 
-#### MSE Formula:
+#### MSE 公式:
 
 $$\text{MSE} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2$$
 
-#### RMSE Formula:
+#### RMSE 公式:
 
 $$\text{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2}$$
 
-#### Advantages:
-- **Penalizes larger errors**: Due to the squared term
-- **Differentiable**: Easier to use in optimization algorithms
-- **Unbiased predictions**: Minimizing MSE leads to centered predictions
+#### 优点:
+- **重罚大误差**: 平方项所致
+- **可导**: 更容易用在优化算法里
+- **预测无偏**: 最小化 MSE 会让预测围绕中心分布
 
-#### Limitations:
-- **Outlier sensitivity**: Heavily influenced by outliers
-- **Interpretation difficulty**: MSE is not in original units (RMSE solves this)
-- **Unit variance**: Cannot directly compare across different datasets
+#### 局限:
+- **对异常值敏感**: 深受异常值左右
+- **不易解读**: MSE 不在原始单位上(RMSE 解决了这一点)
+- **量纲问题**: 不同数据集之间无法直接比较
 
 <Callout type="info">
-If MAE is a ruler, then MSE is a magnifying glass that emphasizes larger errors. RMSE converts that magnified view back to the original scale.
+如果说 MAE 是尺子, 那 MSE 就是一面放大镜, 专门放大更大的误差; RMSE 再把这个放大后的视图换算回原始尺度.
 </Callout>
 
-### Coefficient of Determination (R²)
+### 决定系数(R²)
 
-R² represents the proportion of variance in the dependent variable that can be explained by the independent variables.
+R² 表示因变量的方差中, 能被自变量解释的比例.
 
-#### Formula:
+#### 公式:
 
 $$R^2 = 1 - \frac{RSS}{TSS}$$
 
-Where:
-- RSS (Residual Sum of Squares): $\sum(y_i - \hat{y}_i)^2$
-- TSS (Total Sum of Squares): $\sum(y_i - \bar{y})^2$
+其中:
+- RSS(残差平方和): $\sum(y_i - \hat{y}_i)^2$
+- TSS(总平方和): $\sum(y_i - \bar{y})^2$
 
-#### Interpretation:
-- Ranges typically from 0 to 1 (can be negative for very poor models)
-- Higher values indicate better fit (more variance explained)
-- An R² of 0.75 means the model explains 75% of the variance
+#### 解读:
+- 通常落在 0 到 1 之间(模型很差时可以为负)
+- 数值越高, 拟合越好(解释的方差越多)
+- R² 为 0.75, 意味着模型解释了 75% 的方差
 
-#### Advantages:
-- **Scale-independent**: Can compare models across different target variables
-- **Intuitive percentage**: Easy to understand as "percent of variance explained"
-- **Widely recognized**: Standard reporting metric in statistics
+#### 优点:
+- **与量纲无关**: 可以跨不同的目标变量比较模型
+- **百分比直观**: “解释了百分之多少的方差”, 一听就懂
+- **广为接受**: 统计学里的标准汇报指标
 
-#### Limitations:
-- **Always increases** with additional features (even irrelevant ones)
-- **No penalty** for model complexity (unlike adjusted R²)
-- **Can be misleading** if model assumptions are violated
-- **Not ideal for time series** or non-linear relationships
+#### 局限:
+- 加特征就**只会涨**(哪怕特征毫不相关)
+- **不惩罚**模型复杂度(调整 R² 才会)
+- 模型假设被违反时**可能误导**
+- **不适合时间序列**或非线性关系
 
 <Callout type="info">
-R² is like a school grade for your model - it tells you what percentage of the test your model got right, but doesn't tell you where it made mistakes.
+R² 像模型的考试分数 — 告诉你这张卷子答对了百分之多少, 却不告诉你错在哪里.
 </Callout>
 
-## Advanced Evaluation Metrics
+## 进阶评估指标
 
-### Percentage-Based Errors
+### 百分比误差类
 
-#### Mean Absolute Percentage Error (MAPE)
+#### 平均绝对百分比误差(MAPE)
 
-MAPE measures the percentage difference between actual and predicted values.
+MAPE 衡量实际值与预测值之间的百分比差异.
 
 $$\text{MAPE} = \frac{1}{n}\sum_{i=1}^{n}\left|\frac{y_i - \hat{y}_i}{y_i}\right| \times 100\%$$
 
-#### Advantages and Limitations of MAPE:
-- **Business-friendly**: Easy to communicate as a percentage
-- **Scale-independent**: Useful for comparing across different datasets
-- **Issues with zeros**: Undefined when actual values are zero
-- **Asymmetric penalty**: Penalizes over-forecasting more than under-forecasting
+#### MAPE 的优点与局限:
+- **对业务友好**: 用百分比说话, 容易沟通
+- **与量纲无关**: 便于跨数据集比较
+- **零值问题**: 实际值为零时无定义
+- **惩罚不对称**: 对高估的惩罚重于低估
 
-#### Symmetric Mean Absolute Percentage Error (SMAPE)
+#### 对称平均绝对百分比误差(SMAPE)
 
-SMAPE attempts to address MAPE's asymmetry problem:
+SMAPE 试图解决 MAPE 的不对称问题:
 
 $$\text{SMAPE} = \frac{1}{n}\sum_{i=1}^{n}\left|\frac{y_i - \hat{y}_i}{(y_i + \hat{y}_i)/2}\right| \times 100\%$$
 
-#### Advantages of SMAPE:
-- **Bounded range**: Output is limited to [0%, 200%]
-- **More balanced**: Treats over and under-predictions more equally
-- **Handles zeros better**: Though still problematic when both values are zero
+#### SMAPE 的优点:
+- **范围有界**: 输出被限定在 [0%, 200%]
+- **更均衡**: 对高估与低估的处理更接近对等
+- **零值处理更好**: 不过两个值都为零时仍有问题
 
-### Logarithmic Error Metrics
+### 对数误差类
 
-#### Mean Squared Logarithmic Error (MSLE)
+#### 均方对数误差(MSLE)
 
-MSLE applies logarithmic transformation before calculating squared error:
+MSLE 先做对数变换, 再计算平方误差:
 
 $$\text{MSLE} = \frac{1}{n}\sum_{i=1}^{n}(\log(y_i + 1) - \log(\hat{y}_i + 1))^2$$
 
-#### Root Mean Squared Logarithmic Error (RMSLE):
+#### 均方根对数误差(RMSLE):
 
 $$\text{RMSLE} = \sqrt{\text{MSLE}}$$
 
-These metrics are particularly useful for:
-- Data with exponential growth patterns
-- Cases where errors at lower values should be penalized more than at higher values
-- Datasets with a wide range of values
+这类指标特别适合:
+- 呈指数增长模式的数据
+- 低值区间的误差应当比高值区间罚得更重的场合
+- 取值跨度很大的数据集
 
-### Information Criteria
+### 信息准则
 
-#### Akaike Information Criterion (AIC) and Bayesian Information Criterion (BIC)
+#### 赤池信息准则(AIC)与贝叶斯信息准则(BIC)
 
-These metrics help balance model fit with complexity:
+这两个指标帮助在拟合优度与模型复杂度之间取得平衡:
 
 $$\text{AIC} = 2k - 2\ln(L)$$
 $$\text{BIC} = \ln(n)k - 2\ln(L)$$
 
-Where:
-- k is the number of model parameters
-- L is the likelihood function
-- n is the number of observations
+其中:
+- k 是模型参数的个数
+- L 是似然函数
+- n 是观测数
 
-These metrics:
-- Penalize models with more parameters
-- Help prevent overfitting
-- Cannot be compared across different datasets
+这类指标:
+- 惩罚参数更多的模型
+- 有助于防止过拟合
+- 不能跨数据集比较
 
-## How to Choose the Right Evaluation Metric?
+## 如何选对评估指标?
 
-### Key Considerations
+### 关键考量
 
-1. **What is the impact of outliers?**
-   - If outliers should be heavily penalized: MSE/RMSE
-   - If outliers shouldn't dominate evaluation: MAE
+1. **异常值的影响有多大?**
+   - 想重罚异常值: MSE/RMSE
+   - 不想让异常值主导评估: MAE
 
-2. **Is over-prediction or under-prediction more costly?**
-   - If both are equally important: Symmetric measures like RMSE or MAE
-   - If one direction is more costly: Consider asymmetric measures or custom loss functions
+2. **高估和低估, 哪个代价更高?**
+   - 两者同等重要: RMSE、MAE 这类对称度量
+   - 某一方向代价更高: 考虑非对称度量或自定义损失函数
 
-3. **Do you need relative or absolute measures?**
-   - For comparing across datasets: R², MAPE
-   - For interpretation in original units: RMSE, MAE
+3. **要相对度量还是绝对度量?**
+   - 跨数据集比较: R²、MAPE
+   - 在原始单位上解读: RMSE、MAE
 
-### General Selection Guidelines
+### 一般选择原则
 
-- **Optimize one primary metric** during model training
-- **Evaluate with multiple metrics** to understand different aspects of performance
-- **Consider domain standards** - some fields have conventional metrics
-- **Understand limitations** of each metric in your specific context
+- 训练时**只优化一个主指标**
+- 评估时**看多个指标**, 理解性能的不同侧面
+- **尊重领域惯例** — 有些领域有约定俗成的指标
+- **了解每个指标**在你的具体场景里的局限
 
-## Conclusion: Best Practices
+## 结语: 最佳实践
 
-Understanding regression model evaluation metrics is crucial for building effective predictive models. Different metrics highlight different aspects of model performance:
+理解回归评估指标, 是构建有效预测模型的基本功. 不同指标照亮模型性能的不同侧面:
 
-- **MAE**: Best for understanding average error magnitude
-- **MSE/RMSE**: Best for optimization and when large errors are important
-- **R²**: Best for explaining variance and model comparison
-- **MAPE/SMAPE**: Best for business contexts requiring percentage interpretation
-- **MSLE/RMSLE**: Best for exponential data and when relative errors matter
+- **MAE**: 想知道平均误差有多大, 用它
+- **MSE/RMSE**: 做优化、或大误差要紧时, 用它
+- **R²**: 解释方差、对比模型, 用它
+- **MAPE/SMAPE**: 需要用百分比说话的业务场景, 用它
+- **MSLE/RMSLE**: 指数型数据、看重相对误差时, 用它
 
-Remember that the ultimate goal isn't just to optimize metrics but to create models that generalize well to new, unseen data and provide valuable insights for your specific problem.
+记住, 最终目标从来不是把指标刷高, 而是让模型在没见过的新数据上依然可靠, 并为你的问题带来真正的洞见.
 
 <Callout type="tip">
-In regression modeling, metrics are your compass, guiding you toward better predictions and deeper understanding of your data's story.
+在回归建模里, 指标是你的罗盘 — 指向更好的预测, 也指向对数据故事更深的理解.
 </Callout>
 
-## References
+## 参考文献
 1. A Comprehensive Overview of Regression Evaluation Metrics, [NVIDIA Developer](https://developer.nvidia.com/blog/a-comprehensive-overview-of-regression-evaluation-metrics/#entry-content-comments), By Eryk Lewinson
 2. James, G., Witten, D., Hastie, T., & Tibshirani, R. (2013). *An Introduction to Statistical Learning*.
 3. Chai, T., & Draxler, R. R. (2014). *Root mean square error (RMSE) or mean absolute error (MAE)?*
