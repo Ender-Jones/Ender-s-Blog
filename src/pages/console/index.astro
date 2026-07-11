@@ -1,7 +1,8 @@
 ---
-// 录入台(本地模式): 捕获 ≤10s · 三出口 carry-over · 日终仪式 · 生成当日 markdown 块.
-// 逻辑日以 04:00 JST 为界(凌晨的活算前一天). 真 push 在 go-live 时由 D1 + Pages Function 接管;
-// 本地模式的 "copy the day" 把整块 markdown 复制到剪贴板, 粘进月度文件再 git push 即可.
+// 录入台(LIVE): 捕获 ≤10s · 三出口 carry-over · 日终仪式 · /api 直写 D1 当日工作区.
+// 逻辑日以 04:00 JST 为界(凌晨的活算前一天). 每行 POST /api/log 即存; close-the-day 由
+// Pages Function 编 markdown 提交进 git(server 持 PAT). 失败不缓冲: 报错 + 重试(已定论).
+// 首次载入会把旧 local-mode 的 localStorage 草稿一次性迁移进 D1.
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import RouteHint from '../../components/home/RouteHint.astro';
@@ -36,7 +37,7 @@ const consoleData = {
         <span class="avatar" aria-hidden="true"></span>
         <span class="who-col">
           <span class="who-name">@Ender-Jones</span>
-          <span class="who-mode"><span class="mode-dot" aria-hidden="true"></span>LOCAL MODE · real push lands at go-live</span>
+          <span class="who-mode"><span class="mode-dot" aria-hidden="true"></span>LIVE · D1 working tree · git at day close</span>
         </span>
       </div>
     </header>
@@ -112,13 +113,13 @@ const consoleData = {
             <span class="goes-label">WHERE THIS GOES</span>
             <span class="goes-text">
               <span class="goes-line">every line appends to <span class="goes-path" id="c-path2">content/worklogs/….md</span></span>
-              <span class="goes-line"><span id="c-go-close">close the day</span> hands you the commit</span>
+              <span class="goes-line"><span id="c-go-close">close the day</span> pushes it to git</span>
               <span class="goes-line">your one public sentence becomes the homepage <span id="c-go-now">NOW</span></span>
             </span>
           </div>
           <div class="file-head">
             <span class="file-path" id="c-path">content/worklogs/….md</span>
-            <span class="file-meta"><span>local · draft</span><span class="diff" id="c-diff">+0 −0</span></span>
+            <span class="file-meta"><span>D1 · draft</span><span class="diff" id="c-diff">+0 −0</span></span>
           </div>
           <div class="md" id="c-md"></div>
           <div class="commit">
@@ -177,7 +178,7 @@ const consoleData = {
 
 <script>
   type EntryType = 'project' | 'done' | 'decision' | 'risk' | 'next' | 'dropped';
-  type Entry = { type: EntryType; text: string; time: string };
+  type Entry = { id: number; type: EntryType; text: string; time: string };
 
   const RAW = JSON.parse(document.getElementById('c-data')!.textContent || '{}') as {
     nextDays: { date: string; texts: string[] }[];
@@ -247,15 +248,41 @@ const consoleData = {
   let ritualOpen = false;
   let ritualNext = '';
 
-  try {
-    const saved = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
-    if (saved && Array.isArray(saved.entries)) Object.assign(state, saved);
-  } catch {}
+  // ---- /api 通道(D1 工作区): 每次操作即存, 失败不缓冲 — 报错 + 重试(已定论) ----
+  const toApi = (t: EntryType) => (t === 'dropped' ? 'drop' : t);
+  const fromApi = (t: string): EntryType => (t === 'drop' ? 'dropped' : (t as EntryType));
+  const hmOf = (iso: string) => new Date(new Date(iso).getTime() + 9 * 3600_000).toISOString().slice(11, 16);
+  let publicId = 0; // 今日 public 行在 D1 里的 id(0 = 还没入库)
 
-  const save = () => {
-    try {
-      localStorage.setItem(LS_KEY, JSON.stringify(state));
-    } catch {}
+  async function api(path: string, body?: unknown): Promise<any> {
+    const res = await fetch(
+      path,
+      body ? { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) } : undefined,
+    );
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+    return data;
+  }
+
+  // 提示行(成功灰 / 失败玫瑰红 + 重试钮), 一次只显示一条
+  const note = (text: string, err = false, retry?: () => void) => {
+    const box = $('c-commit-lines');
+    box.textContent = '';
+    const p = document.createElement('p');
+    p.className = 'commit-line' + (err ? ' err' : '');
+    p.textContent = text;
+    if (retry) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'cl-retry';
+      b.textContent = '↻ retry';
+      b.addEventListener('click', () => {
+        box.textContent = '';
+        retry();
+      });
+      p.append(' ', b);
+    }
+    box.append(p);
   };
 
   const parse = (t: string): { type: EntryType; text: string } => {
@@ -326,17 +353,24 @@ const consoleData = {
       const time = document.createElement('span');
       time.className = 'entry-time';
       time.textContent = entry.time;
-      const del = document.createElement('button');
-      del.className = 'entry-del';
-      del.type = 'button';
-      del.textContent = '×';
-      del.addEventListener('click', () => {
-        state.entries.splice(i, 1);
-        state.committed = false;
-        save();
-        renderAll();
-      });
-      row.append(badge, text, time, del);
+      if (!state.committed) {
+        const del = document.createElement('button');
+        del.className = 'entry-del';
+        del.type = 'button';
+        del.textContent = '×';
+        del.addEventListener('click', async () => {
+          try {
+            await api('/api/amend', { id: entry.id, delete: true });
+            state.entries.splice(i, 1);
+            renderAll();
+          } catch (e) {
+            note(`delete failed (${(e as Error).message})`, true);
+          }
+        });
+        row.append(badge, text, time, del);
+      } else {
+        row.append(badge, text, time);
+      }
       box.append(row);
     });
   };
@@ -387,10 +421,11 @@ const consoleData = {
     });
   };
 
-  const useCarry = (i: number, type: EntryType) => {
-    if (type === 'dropped') state.droppedCarry.push(i);
-    else state.usedCarry.push(i);
-    addEntry(type, DATA.carry[i]);
+  const useCarry = async (i: number, type: EntryType) => {
+    if (!(await addEntry(type, DATA.carry[i]))) return; // 没存上就不算分诊过
+    (type === 'dropped' ? state.droppedCarry : state.usedCarry).push(i);
+    renderCarry();
+    renderCommit();
   };
 
   // 昨天的 next 不给出口(done / still next / drop)就不准关今天 — 迁移即对抗
@@ -425,23 +460,23 @@ const consoleData = {
     const msg = $('c-msg');
     const n = state.entries.length;
     const pending = pendingCarry();
-    msg.textContent = n ? `worklog: ${today} (${n} ${n === 1 ? 'entry' : 'entries'})` : 'nothing to commit';
+    msg.textContent = n ? `worklog: close ${today} (${n} ${n === 1 ? 'entry' : 'entries'})` : 'nothing to commit';
     const canClose = n > 0 && !state.committed && pending === 0;
     btn.disabled = !canClose;
     btn.className = state.committed ? 'done' : ritualOpen ? 'push' : '';
     btn.textContent = state.committed
-      ? '✓ copied — paste & push'
+      ? '✓ pushed — day closed'
       : ritualOpen
-        ? 'copy the day →'
+        ? 'push the day →'
         : n && pending
           ? `triage carry-over first (${pending})`
           : n
             ? 'close the day'
             : 'nothing to commit';
     btn.dataset.route = state.committed
-      ? `pasted into ${filePath}? then: git push`
+      ? `committed to ${filePath} — nothing left to do`
       : ritualOpen
-        ? 'local mode — copies the markdown block'
+        ? 'server commits for you — no paste, no terminal'
         : n && pending
           ? "yesterday's next needs an exit — done / still next / drop"
           : n
@@ -490,7 +525,7 @@ const consoleData = {
       box.append(cell);
     }
     $('c-trailnote').textContent = state.committed
-      ? 'copied — once pushed, today deepens a shade inside its amber frame.\ngaps stay neutral: no streaks, no guilt.'
+      ? 'pushed — today deepens a shade inside its amber frame.\ngaps stay neutral: no streaks, no guilt.'
       : 'any push turns the day pink · amber — today\ngaps are neutral, nothing counts against you.';
   };
 
@@ -503,14 +538,24 @@ const consoleData = {
     renderRitual();
     renderTrail();
     renderPreviewChip();
+    input.disabled = state.committed;
+    input.placeholder = state.committed
+      ? 'day closed ✓ — capture reopens at 04:00 JST'
+      : 'type what happened… Enter to log';
   };
 
-  const addEntry = (type: EntryType, text: string) => {
-    if (!text.trim()) return;
-    state.entries.push({ type, text: text.trim(), time: jstHM() });
-    state.committed = false;
-    save();
-    renderAll();
+  const addEntry = async (type: EntryType, text: string): Promise<boolean> => {
+    const clean = text.trim();
+    if (!clean) return false;
+    try {
+      const r = await api('/api/log', { type: toApi(type), text: clean });
+      state.entries.push({ id: r.id as number, type, text: clean, time: jstHM() });
+      renderAll();
+      return true;
+    } catch (e) {
+      note(`line not saved (${(e as Error).message})`, true, () => void addEntry(type, clean));
+      return false;
+    }
   };
 
   // ---- 事件 ----
@@ -542,28 +587,38 @@ const consoleData = {
       $<HTMLInputElement>('c-summary').value = state.summary;
       return;
     }
-    // copy the day (本地模式的 push)
-    const nextVal = ritualNext.trim();
-    if (nextVal && !state.entries.some((e) => e.type === 'next')) {
-      state.entries.push({ type: 'next', text: nextVal, time: jstHM() });
-      ritualNext = '';
-    }
-    const block = mdLines().join('\n') + '\n';
-    let copied = false;
+    // push the day: save point 入库 → public 行入库 → /api/close(server 编 md + git 提交)
+    const btn = $<HTMLButtonElement>('c-commit');
+    btn.disabled = true;
+    btn.textContent = 'pushing…';
     try {
-      await navigator.clipboard.writeText(block);
-      copied = true;
-    } catch {}
-    state.committed = true;
-    ritualOpen = false;
-    save();
-    renderAll();
-    const lines = $('c-commit-lines');
-    lines.textContent = '';
-    const note = document.createElement('p');
-    note.className = 'commit-line';
-    note.innerHTML = `<span>✓</span> ${copied ? 'copied to clipboard' : 'select the preview above to copy'} — paste into <b>${filePath}</b>, then <b>git push</b>`;
-    lines.append(note);
+      const nextVal = ritualNext.trim();
+      if (nextVal && !state.entries.some((e) => e.type === 'next')) {
+        if (!(await addEntry('next', nextVal))) throw new Error('save point not saved');
+        ritualNext = '';
+      }
+      const summary = state.summary.trim();
+      if (summary) {
+        if (publicId) await api('/api/amend', { id: publicId, text: summary });
+        else publicId = (await api('/api/log', { type: 'public', text: summary })).id as number;
+      }
+      const r = await api('/api/close', { day: today, energy: state.energy || undefined });
+      if (r.mode === 'dry-run') {
+        // server 没配 GITHUB_TOKEN 才会走到这: 明示配置问题, 不假装成功
+        note('dry-run only — GITHUB_TOKEN is not configured on the server, nothing was pushed', true);
+        renderCommit();
+        renderRitual();
+        return;
+      }
+      state.committed = true;
+      ritualOpen = false;
+      renderAll();
+      note(`✓ pushed ${String(r.commit ?? '').slice(0, 7)} — ${r.path} · site rebuilds itself`);
+    } catch (e) {
+      note(`push failed (${(e as Error).message})`, true);
+      renderCommit();
+      renderRitual();
+    }
   });
 
   $('c-rit-x').addEventListener('click', () => {
@@ -576,8 +631,6 @@ const consoleData = {
   });
   $<HTMLInputElement>('c-summary').addEventListener('input', (e) => {
     state.summary = (e.target as HTMLInputElement).value.slice(0, 140);
-    state.committed = false;
-    save();
     $('c-count').textContent = `${state.summary.length}/140`;
     renderMd();
     renderCommit();
@@ -588,7 +641,6 @@ const consoleData = {
       b.addEventListener('click', () => {
         const n = Number(b.dataset.n);
         state.energy = state.energy === n ? 0 : n;
-        save();
         renderRitual();
         renderMd();
       });
@@ -615,7 +667,49 @@ const consoleData = {
   tick();
   setInterval(tick, 1000);
 
-  renderAll();
+  // ---- 启动: 从 D1 恢复现场; 旧 local-mode 草稿(localStorage)一次性迁移 ----
+  async function boot() {
+    try {
+      const data = await api('/api/log');
+      let rows = data.lines as { id: number; type: string; text: string; created_at: string }[];
+
+      let legacy: { entries?: { type: EntryType; text: string }[]; summary?: string } | null = null;
+      try {
+        legacy = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
+      } catch {}
+      if (!rows.length && legacy?.entries?.length) {
+        for (const e of legacy.entries) await api('/api/log', { type: toApi(e.type), text: e.text });
+        if (legacy.summary) state.summary = legacy.summary;
+        localStorage.removeItem(LS_KEY);
+        rows = (await api('/api/log')).lines;
+        note(`migrated ${legacy.entries.length} local draft line${legacy.entries.length === 1 ? '' : 's'} into D1`);
+      }
+
+      for (const row of rows) {
+        if (row.type === 'public') {
+          state.summary = row.text;
+          publicId = row.id;
+          continue;
+        }
+        state.entries.push({ id: row.id, type: fromApi(row.type), text: row.text, time: hmOf(row.created_at) });
+      }
+      // carry 分诊状态按文本回推(D1 是现场本源, 刷新不丢)
+      DATA.carry.forEach((text, i) => {
+        const hit = state.entries.find((e) => e.text === text);
+        if (!hit) return;
+        (hit.type === 'dropped' ? state.droppedCarry : state.usedCarry).push(i);
+      });
+      renderAll();
+    } catch (e) {
+      renderAll();
+      input.disabled = true;
+      input.placeholder = 'console API unreachable — hand-write the month file';
+      note(`console API unreachable (${(e as Error).message}) — hand-write src/${filePath}, or`, true, () =>
+        location.reload(),
+      );
+    }
+  }
+  boot();
 </script>
 
 <style>
@@ -1412,6 +1506,24 @@ const consoleData = {
   .commit :global(.commit-line b) {
     color: var(--ej-text-2);
     font-weight: var(--ej-fw-medium);
+  }
+  .commit :global(.commit-line.err) {
+    color: var(--ej-rose);
+  }
+  .commit :global(.cl-retry) {
+    margin-left: 6px;
+    padding: 1px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 120, 120, 0.35);
+    background: transparent;
+    color: var(--ej-rose);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-micro);
+    transition: background 120ms var(--ej-ease);
+  }
+  .commit :global(.cl-retry:hover) {
+    background: rgba(255, 120, 120, 0.12);
   }
 
   .trail-card {

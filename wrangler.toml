@@ -5,11 +5,8 @@ name = "ender-s-blog"
 compatibility_date = "2026-07-01"
 pages_build_output_dir = "dist"
 
-# —— 第二阶段(console 真联网)才解注释 ——
-# 现在留着会让第一阶段静态部署失败(database_id 还不存在). 上线后端时:
-# 1) CF 控制台建 D1 库 → 把真实 database_id 填进下面 → 解注释这 4 行.
-# 2) functions/api/* 里的 EJ_DB 绑定就通了.
-# [[d1_databases]]
-# binding = "EJ_DB"
-# database_name = "enders-blog-worklog"
-# database_id = "REPLACE-AT-GO-LIVE"
+# 第二阶段 D1 绑定(2026-07-11 建库回填): functions/api/* 经 EJ_DB 读写当日工作区.
+[[d1_databases]]
+binding = "EJ_DB"
+database_name = "enders-blog-worklog"
+database_id = "3a32c124-b3f3-47c5-9302-22e254793377"
