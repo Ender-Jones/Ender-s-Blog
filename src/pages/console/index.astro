@@ -1345,6 +1345,11 @@ const consoleData = {
     gap: 5px;
     margin-bottom: 11px;
   }
+  /* display:grid 会顶掉 hidden 属性的 UA display:none — 已有 next 时输入框必须真的消失,
+     否则打进去的字会被关日流程静默丢弃(2026-07-11 踩过) */
+  .rit-next[hidden] {
+    display: none;
+  }
   .rit-next input,
   .rit-public input {
     width: 100%;
