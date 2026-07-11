@@ -1,5 +1,6 @@
 ---
 // 文章开篇引文: 原文(衬线斜体) → 译文(无衬线, 直接可见) → 出典行(短横线 + mono + 语言 chip).
+// 原文与译文行数一致时逐行交错(原文在上, 译文压暗紧贴其下); 行数不一致则译文整块跟在后面.
 type Props = {
   lines: string[];
   source?: string;
@@ -9,14 +10,30 @@ type Props = {
 };
 
 const { lines, source, translationLines = [], lang } = Astro.props;
+const interleaved = translationLines.length > 0 && translationLines.length === lines.length;
 ---
 
 <blockquote class="epigraph">
   <span class="bar" aria-hidden="true"></span>
-  <div class="original">
-    {lines.map((line) => <span>{line}</span>)}
-  </div>
-  {translationLines.length > 0 && (
+  {interleaved ? (
+    <div class="original">
+      {lines.map((line, i) =>
+        line ? (
+          <span class="pair">
+            <span>{line}</span>
+            {translationLines[i] && <span class="pair-trans">{translationLines[i]}</span>}
+          </span>
+        ) : (
+          <span class="stanza-gap" aria-hidden="true"></span>
+        ),
+      )}
+    </div>
+  ) : (
+    <div class="original">
+      {lines.map((line) => <span>{line}</span>)}
+    </div>
+  )}
+  {!interleaved && translationLines.length > 0 && (
     <div class="translation">
       {translationLines.map((line) => <span>{line}</span>)}
     </div>
@@ -57,6 +74,24 @@ const { lines, source, translationLines = [], lang } = Astro.props;
   }
   .original span {
     display: block;
+  }
+  .pair {
+    margin: 0 0 11px;
+  }
+  .pair:last-child {
+    margin-bottom: 0;
+  }
+  .pair-trans {
+    margin-top: 1px;
+    color: var(--ej-mut);
+    font-family: var(--ej-sans);
+    font-size: var(--ej-fs-note);
+    font-style: normal;
+    font-weight: var(--ej-fw-body);
+    line-height: 1.5;
+  }
+  .stanza-gap {
+    height: 10px;
   }
   .translation {
     display: grid;

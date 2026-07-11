@@ -45,6 +45,9 @@ const tocItems = toc.map((h) => {
 });
 const showToc = tocItems.length >= 3;
 const giscus = site.comments?.giscus;
+// 题图五档(frontmatter cover_mode): hero-large 大条(默认) / hero-small 矮条 / strip 细带 /
+// showcase 原比例不裁切(构图整体就是重点时用) / none 不渲染题图(只留 og).
+const cover = post.data.cover_mode ?? 'hero-large';
 ---
 
 <BaseLayout title={`${post.data.title} — Ender Jones`} description={post.data.description} ogImage={post.data.image} noindex>
@@ -70,9 +73,13 @@ const giscus = site.comments?.giscus;
       {post.data.description && <p class="dek">{post.data.description}</p>}
     </header>
 
-    {post.data.image && (
-      <figure class="hero reveal" style="--reveal-i: 1;">
-        <div class="hero-img" style={`background-image: url('${post.data.image}'); background-position: ${post.data.image_focus};`}></div>
+    {post.data.image && cover !== 'none' && (
+      <figure class:list={['hero', 'reveal', `cover-${cover}`]} style="--reveal-i: 1;">
+        {cover === 'showcase' ? (
+          <img class="hero-img hero-natural" src={post.data.image} alt="" loading="eager" decoding="async" />
+        ) : (
+          <div class="hero-img" style={`background-image: url('${post.data.image}'); background-position: ${post.data.image_focus};`}></div>
+        )}
         <figcaption>
           <span>{post.data.image_alt}</span>
           <span>image · {post.data.image_role}</span>
@@ -392,6 +399,16 @@ const giscus = site.comments?.giscus;
       0 1px 2px rgba(0, 0, 0, 0.7),
       0 24px 60px -28px rgba(0, 0, 0, 1),
       inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+  .cover-hero-small .hero-img {
+    height: clamp(150px, 22vh, 220px);
+  }
+  .cover-strip .hero-img {
+    height: clamp(90px, 14vh, 130px);
+  }
+  .hero-natural {
+    height: auto;
+    width: 100%;
   }
   .hero figcaption {
     display: flex;
