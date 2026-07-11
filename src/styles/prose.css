@@ -6,7 +6,9 @@
   color: #b8b8c0;
   font-family: var(--ej-sans);
   font-size: var(--ej-fs-lede);
-  line-height: 1.75;
+  font-weight: var(--ej-fw-body);
+  line-height: var(--ej-lh-read);
+  letter-spacing: var(--ej-track-body);
 }
 
 .prose > * {
@@ -23,10 +25,10 @@
   scroll-margin-top: 84px;
   color: var(--ej-text);
   font-family: var(--ej-serif);
-  font-size: 28px;
-  font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1.2;
+  font-size: var(--ej-fs-h2);
+  font-weight: var(--ej-fw-head);
+  letter-spacing: var(--ej-track-tight);
+  line-height: var(--ej-lh-head);
 }
 
 .prose > h2::before {
@@ -36,22 +38,25 @@
   color: var(--ej-mut-2);
   font-family: var(--ej-mono);
   font-size: var(--ej-fs-label);
-  font-weight: 500;
-  letter-spacing: 0.2em;
+  font-weight: var(--ej-fw-medium);
+  letter-spacing: var(--ej-track-label);
 }
 
 .prose h3 {
+  /* Source Serif 无 500(Adobe 从 400 直跳 600)→ h3 用 600, 靠字号 23<29 与 h2 分层 */
   margin: 26px 0 12px;
   scroll-margin-top: 84px;
   color: #f0f0f2;
   font-family: var(--ej-serif);
-  font-size: 21px;
-  font-weight: 500;
+  font-size: var(--ej-fs-h3);
+  font-weight: var(--ej-fw-head);
+  letter-spacing: var(--ej-track-snug);
+  line-height: var(--ej-lh-snug);
 }
 
 .prose strong {
   color: #f0f0f2;
-  font-weight: 600;
+  font-weight: var(--ej-fw-head);
 }
 
 .prose em {
@@ -87,7 +92,7 @@
   position: relative;
   padding-left: 22px;
   font-size: var(--ej-fs-body);
-  line-height: 1.7;
+  line-height: var(--ej-lh-loose);
 }
 
 .prose ul > li::before {
@@ -103,7 +108,7 @@
 
 .prose ol > li {
   font-size: var(--ej-fs-body);
-  line-height: 1.7;
+  line-height: var(--ej-lh-loose);
 }
 
 .prose ol > li::marker {
@@ -125,8 +130,8 @@
   font-family: var(--ej-serif);
   font-size: var(--ej-fs-lede);
   font-style: italic;
-  font-weight: 300;
-  line-height: 1.7;
+  font-weight: var(--ej-fw-light);
+  line-height: var(--ej-lh-loose);
 }
 
 .prose blockquote::before {
@@ -165,7 +170,7 @@
   background: transparent;
   padding: 0;
   font-size: var(--ej-fs-small);
-  line-height: 1.7;
+  line-height: var(--ej-lh-loose);
 }
 
 .prose table {
@@ -184,8 +189,8 @@
   color: var(--ej-mut);
   font-family: var(--ej-mono);
   font-size: var(--ej-fs-meta);
-  font-weight: 500;
-  letter-spacing: 0.16em;
+  font-weight: var(--ej-fw-medium);
+  letter-spacing: var(--ej-track-caps);
   text-transform: uppercase;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -203,7 +208,7 @@
 .prose td:first-child {
   color: #f0f0f2;
   font-family: var(--ej-mono);
-  font-weight: 600;
+  font-weight: var(--ej-fw-head);
 }
 
 .prose hr {

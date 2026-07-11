@@ -125,7 +125,7 @@ const nowRows = [
     font-family: var(--ej-serif);
     font-size: clamp(21px, 2.4vw, 28px);
     font-style: italic;
-    font-weight: 300;
+    font-weight: var(--ej-fw-light);
     line-height: 1.45;
     text-wrap: balance;
   }
@@ -154,7 +154,7 @@ const nowRows = [
     margin: 0;
     color: var(--ej-text-3);
     font-size: var(--ej-fs-body);
-    line-height: 1.7;
+    line-height: var(--ej-lh-loose);
     text-wrap: pretty;
   }
   .essay {
@@ -173,8 +173,8 @@ const nowRows = [
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.2em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-label);
     text-transform: uppercase;
   }
   .nb-rows {
@@ -189,7 +189,7 @@ const nowRows = [
     color: #e8e8ea;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-small);
-    line-height: 1.6;
+    line-height: var(--ej-lh-body);
     transition: color 120ms ease;
   }
   .ej-dotrow:hover .nb-val { color: #fff; }
@@ -203,13 +203,13 @@ const nowRows = [
     color: var(--ej-text);
     font-family: var(--ej-serif);
     font-size: 26px;
-    font-weight: 400;
+    font-weight: var(--ej-fw-body);
   }
   .sys-body {
     margin: 14px 0 0;
     color: var(--ej-text-3);
     font-size: var(--ej-fs-body);
-    line-height: 1.75;
+    line-height: var(--ej-lh-read);
     text-wrap: pretty;
   }
   .sys-link {
@@ -225,7 +225,7 @@ const nowRows = [
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     font-variant-numeric: tabular-nums;
   }
   .pulse {
@@ -264,8 +264,8 @@ const nowRows = [
     color: var(--ej-pink-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
-    font-weight: 500;
-    letter-spacing: 0.16em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-caps);
   }
   .now-text {
     flex: 1;
@@ -320,8 +320,8 @@ const nowRows = [
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.2em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-label);
   }
   .col-line {
     /* colophon 是成句内容不是 chrome: note 档 + 亮一级的灰(家规: 成句 ≥ note) */
@@ -329,7 +329,7 @@ const nowRows = [
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-note);
-    line-height: 1.75;
+    line-height: var(--ej-lh-read);
   }
 
   @media (max-width: 720px) {

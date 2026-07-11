@@ -2,7 +2,10 @@
 
 /* ============================================================
    全站样式家规(写新样式前先读这 4 条):
-   1. 字号只从 tokens.css 的 --ej-fs-* 8 档取; serif 展示标题可用字面 clamp/px.
+   1. 排版四要素只取 token(照搬 Linear 尺度, 每档 +1px): 字号 --ej-fs-* · 字重 --ej-fw-*
+      (400 正文/500 中/600 标题, 暗底封顶 600) · 行高 --ej-lh-* · 字距 --ej-track-*.
+      标题=正文字重永远差 200(headline 600 vs body 400). serif 展示标题可用字面 clamp px.
+      ⚠ Source Serif 无 500(400 直跳 600)→ serif 元素别用 --ej-fw-medium, 用 body 或 head.
    2. 语义色挂 .tone-* 类(唯一声明处在本文件), 组件只消费 --tone/--tone-2/--tone-rgb.
    3. 新样式先查本文件的 utility 词汇(.ej-kicker/h1/caret/sub/card/dotrow + 按钮三件套),
       ≥3 处逐字重复才收编成新 utility, 组件特有样式留在组件内.
@@ -90,8 +93,8 @@ html.ej-splash-active .reveal {
   color: #82828c;
   font-family: var(--ej-mono);
   font-size: var(--ej-fs-label);
-  font-weight: 500;
-  letter-spacing: 0.24em;
+  font-weight: var(--ej-fw-medium);
+  letter-spacing: var(--ej-track-wide);
 }
 
 .ej-h1 {
@@ -99,9 +102,9 @@ html.ej-splash-active .reveal {
   color: var(--ej-text);
   font-family: var(--ej-serif);
   font-size: clamp(38px, 4.6vw, 58px);
-  font-weight: 400;
-  letter-spacing: -0.015em;
-  line-height: 1.05;
+  font-weight: var(--ej-fw-head);
+  letter-spacing: var(--ej-track-tight);
+  line-height: var(--ej-lh-flush);
 }
 
 .ej-h1--sm {
@@ -150,8 +153,8 @@ html.ej-splash-active .reveal {
   color: var(--ej-mut-2);
   font-family: var(--ej-mono);
   font-size: var(--ej-fs-meta);
-  font-weight: 500;
-  letter-spacing: 0.14em;
+  font-weight: var(--ej-fw-medium);
+  letter-spacing: var(--ej-track-key);
   text-transform: uppercase;
   transition: color 120ms ease;
 }
@@ -183,7 +186,7 @@ html.ej-splash-active .reveal {
   color: #9a9aa2;
   font-family: var(--ej-mono);
   font-size: var(--ej-fs-label);
-  font-weight: 500;
+  font-weight: var(--ej-fw-medium);
   text-decoration: none;
   transition: all 120ms var(--ej-ease);
 }
@@ -212,7 +215,7 @@ html.ej-splash-active .reveal {
   text-decoration: none;
   font-family: var(--ej-mono);
   font-size: var(--ej-fs-label);
-  font-weight: 500;
+  font-weight: var(--ej-fw-medium);
   color: #9a9aa2;
   transition: all 120ms var(--ej-ease);
 }

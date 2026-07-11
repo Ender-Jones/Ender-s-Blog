@@ -101,7 +101,7 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     font-variant-numeric: tabular-nums;
     transition: color 180ms ease;
   }
@@ -117,8 +117,8 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
     color: var(--ej-text-2);
     font-family: var(--ej-serif);
     font-size: 19px;
-    font-weight: 500;
-    line-height: 1.3;
+    font-weight: var(--ej-fw-medium);
+    line-height: var(--ej-lh-snug);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -142,7 +142,7 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     text-align: right;
   }
   @media (max-width: 720px) {

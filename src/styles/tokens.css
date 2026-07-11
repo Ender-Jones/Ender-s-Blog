@@ -10,18 +10,45 @@
   --ej-sans: 'Noto Sans', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
   --ej-mono: 'Fira Code Variable', 'Fira Code', 'Noto Sans SC', monospace;
 
-  /* type scale — 全站功能性字号只从这 8 档取(serif 展示标题/clamp 除外).
-     调可读性 = 改这里一行, 全站跟走; 不再往组件里写裸 px.
-     当前 = 极端 ADHD 档(2026-07 试穿): 全站无一处小于 13px — 暗底低对比的补偿.
-     家规: 成句的内容不得低于 note 档(chrome 标签才允许 micro/meta). */
-  --ej-fs-micro: 13px; /* 地板: 大写微徽章/图例 */
-  --ej-fs-meta: 13.5px; /* mono 说明/图注/hint */
-  --ej-fs-label: 14px; /* kicker/日期/键名/按钮 */
-  --ej-fs-small: 14.5px; /* chip/mono 正文/代码 */
-  --ej-fs-note: 15px; /* 次要 sans 文本/desc; 成句内容的下限 */
-  --ej-fs-ui: 16px; /* UI 段落 */
-  --ej-fs-body: 17px; /* 页面正文段落 */
-  --ej-fs-lede: 18.5px; /* 文章正文(prose) */
+  /* type scale — 照搬 Linear 的尺度, 每档 +1px(ADHD 地板 13, 暗底低对比补偿).
+     8 个功能档跨 13–19(正文/UI/chrome); 标题走下面的 display 档, 不在这 8 档里.
+     调可读性 = 改这里一行, 全站跟走. 家规: 成句内容不得低于 note 档. */
+  --ej-fs-micro: 13px; /* Linear caption 12 +1 · 地板: 大写微徽章/图例 */
+  --ej-fs-meta: 14px; /* Linear mono 13 +1 · mono 说明/图注/hint */
+  --ej-fs-label: 14px; /* Linear eyebrow 13 +1 · kicker/日期/键名 */
+  --ej-fs-small: 15px; /* Linear body-sm 14 +1 · chip/mono 正文/代码 */
+  --ej-fs-note: 15px; /* Linear body-sm 14 +1 · 次要 sans 文本/desc */
+  --ej-fs-ui: 16px; /* Linear body 16 · UI 段落 */
+  --ej-fs-body: 17px; /* Linear body 16 +1 · 页面正文段落 */
+  --ej-fs-lede: 19px; /* Linear body-lg 18 +1 · 文章正文(prose) */
+  /* display 档(标题, serif; Linear headline/card-title/display +1px) */
+  --ej-fs-h3: 23px; /* Linear card-title 22 +1 */
+  --ej-fs-h2: 29px; /* Linear headline 28 +1 */
+
+  /* 字重 — Linear 三档(400 正文 · 500 中 · 600 标题); +300 用于大字斜体引文.
+     暗底封顶 600: 亮字会光晕膨胀, 700+ 会糊(Linear 同理不上重字). */
+  --ej-fw-light: 300;
+  --ej-fw-body: 400;
+  --ej-fw-medium: 500;
+  --ej-fw-head: 600;
+
+  /* 行高 — Linear 梯(大字紧, 正文松); 文章 prose 保留 1.75 护阅读/文学感. */
+  --ej-lh-flush: 1.1; /* display 大标题 */
+  --ej-lh-head: 1.2; /* h2 headline */
+  --ej-lh-snug: 1.3; /* h3 card-title / 大写标签 */
+  --ej-lh-body: 1.6; /* 常规正文/卡片 */
+  --ej-lh-loose: 1.7; /* 宽松段落 */
+  --ej-lh-read: 1.75; /* 文章 prose */
+
+  /* 字距 — Linear: 大字收紧(负), 大写 mono 标签张开(正); em 制随字号缩放. */
+  --ej-track-tight: -0.02em; /* h1/h2 大标题 */
+  --ej-track-snug: -0.015em; /* h3 / 小标题 */
+  --ej-track-body: -0.005em; /* 正文微收(Linear body) */
+  --ej-track-chip: 0.1em; /* 小写 chip */
+  --ej-track-key: 0.14em; /* dotrow 键/日期 */
+  --ej-track-caps: 0.16em; /* 表头/大写徽章 */
+  --ej-track-label: 0.2em; /* 通用大写标签 */
+  --ej-track-wide: 0.24em; /* 页头 kicker */
 
   /* ink — grays, brightest to dimmest */
   --ej-text: #f5f5f6;

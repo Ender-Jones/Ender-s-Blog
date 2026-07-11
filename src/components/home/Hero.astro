@@ -102,8 +102,8 @@ const synced = syncedAt
     color: #82828c;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-small);
-    font-weight: 500;
-    letter-spacing: 0.24em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-wide);
     text-transform: uppercase;
   }
   .claim {
@@ -111,8 +111,8 @@ const synced = syncedAt
     color: var(--ej-text);
     font-family: var(--ej-serif);
     font-size: clamp(44px, 5.6vw, 84px);
-    font-weight: 400;
-    letter-spacing: -0.02em;
+    font-weight: var(--ej-fw-body);
+    letter-spacing: var(--ej-track-tight);
     line-height: 1.03;
     text-wrap: balance;
   }
@@ -153,7 +153,7 @@ const synced = syncedAt
     border-radius: 8px;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-small);
-    font-weight: 600;
+    font-weight: var(--ej-fw-head);
     letter-spacing: 0.05em;
     text-decoration: none;
     background: #17171a;
@@ -245,15 +245,15 @@ const synced = syncedAt
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.2em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-label);
     text-transform: uppercase;
   }
   .clock {
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     font-variant-numeric: tabular-nums;
   }
 
@@ -318,15 +318,15 @@ const synced = syncedAt
     font-family: var(--ej-serif);
     font-size: 20px;
     font-style: italic;
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     letter-spacing: 0.005em;
-    line-height: 1.1;
+    line-height: var(--ej-lh-flush);
   }
   .who-role {
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     letter-spacing: 0.06em;
   }
 
@@ -348,8 +348,8 @@ const synced = syncedAt
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.14em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-key);
     text-transform: uppercase;
     transition: color 120ms ease;
   }
@@ -399,14 +399,14 @@ const synced = syncedAt
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     letter-spacing: 0.06em;
   }
   .foot-link {
     color: #9a9aa2;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     transition: all 120ms var(--ej-ease);
   }
   .card-foot:hover .foot-link {

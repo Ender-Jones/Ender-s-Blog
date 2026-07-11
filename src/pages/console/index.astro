@@ -631,7 +631,7 @@ const consoleData = {
     color: #82828c;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     letter-spacing: 0.22em;
   }
   h1 {
@@ -639,8 +639,8 @@ const consoleData = {
     color: var(--ej-text);
     font-family: var(--ej-serif);
     font-size: clamp(30px, 3.2vw, 40px);
-    font-weight: 400;
-    letter-spacing: -0.015em;
+    font-weight: var(--ej-fw-body);
+    letter-spacing: var(--ej-track-snug);
     line-height: 1.05;
   }
   .caret {
@@ -657,7 +657,7 @@ const consoleData = {
     margin: 12px 0 0;
     color: var(--ej-text-3);
     font-size: var(--ej-fs-ui);
-    line-height: 1.6;
+    line-height: var(--ej-lh-body);
   }
   .who {
     display: flex;
@@ -681,7 +681,7 @@ const consoleData = {
     color: #e8e8ea;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 600;
+    font-weight: var(--ej-fw-head);
   }
   .who-mode {
     display: flex;
@@ -690,7 +690,7 @@ const consoleData = {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     letter-spacing: 0.08em;
   }
   .mode-dot {
@@ -742,7 +742,7 @@ const consoleData = {
     color: var(--ej-text);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-body);
-    font-weight: 600;
+    font-weight: var(--ej-fw-head);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
@@ -750,8 +750,8 @@ const consoleData = {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.16em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-caps);
   }
   .ds-night {
     color: var(--ej-amber-2);
@@ -768,13 +768,13 @@ const consoleData = {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
   }
   .ds-clock {
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     font-variant-numeric: tabular-nums;
   }
   .blink {
@@ -818,7 +818,7 @@ const consoleData = {
     border: 1px solid transparent;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 600;
+    font-weight: var(--ej-fw-head);
     letter-spacing: 0.12em;
     opacity: 0;
     transition: opacity 120ms var(--ej-ease);
@@ -852,7 +852,7 @@ const consoleData = {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     letter-spacing: 0.06em;
     transition: all 120ms var(--ej-ease);
   }
@@ -870,7 +870,7 @@ const consoleData = {
   }
   .chips button .tok {
     color: var(--tone);
-    font-weight: 600;
+    font-weight: var(--ej-fw-head);
   }
   .chips button:hover {
     border-color: rgba(var(--tone-rgb), 0.4);
@@ -913,8 +913,8 @@ const consoleData = {
     border: 1px solid transparent;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
-    font-weight: 600;
-    letter-spacing: 0.14em;
+    font-weight: var(--ej-fw-head);
+    letter-spacing: var(--ej-track-key);
   }
   .entries :global(.entry-text) {
     flex: 1;
@@ -964,14 +964,14 @@ const consoleData = {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.2em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-label);
   }
   .carry-hint {
     color: var(--ej-dim);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
   }
   .carry :global(.carry-row) {
     display: flex;
@@ -1004,8 +1004,8 @@ const consoleData = {
     color: var(--ej-dim);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
-    font-weight: 500;
-    letter-spacing: 0.1em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-chip);
   }
   .carry :global(.carry-actions) {
     display: flex;
@@ -1022,7 +1022,7 @@ const consoleData = {
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     transition: all 120ms var(--ej-ease);
   }
   .carry :global(.ca-done) {
@@ -1092,8 +1092,8 @@ const consoleData = {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
-    font-weight: 500;
-    letter-spacing: 0.2em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-label);
   }
   .goes-text {
     display: grid;
@@ -1101,7 +1101,7 @@ const consoleData = {
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    line-height: 1.7;
+    line-height: var(--ej-lh-loose);
   }
   .goes-line {
     display: block;
@@ -1135,7 +1135,7 @@ const consoleData = {
     color: var(--ej-text-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
   }
   .file-meta {
     display: flex;
@@ -1144,7 +1144,7 @@ const consoleData = {
     color: var(--ej-dim);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
   }
   .diff {
     color: var(--ej-mut);
@@ -1155,15 +1155,15 @@ const consoleData = {
     padding: 14px 18px;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-small);
-    line-height: 1.75;
+    line-height: var(--ej-lh-read);
   }
   .md :global(.md-h2) {
     color: var(--ej-text-2);
-    font-weight: 600;
+    font-weight: var(--ej-fw-head);
   }
   .md :global(.md-h3) {
     color: var(--ej-text-2);
-    font-weight: 600;
+    font-weight: var(--ej-fw-head);
   }
   .md :global(.md-dim) {
     color: var(--ej-dim);
@@ -1200,8 +1200,8 @@ const consoleData = {
     color: var(--ej-amber-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
-    font-weight: 600;
-    letter-spacing: 0.2em;
+    font-weight: var(--ej-fw-head);
+    letter-spacing: var(--ej-track-label);
   }
   #c-rit-x {
     padding: 2px 8px;
@@ -1213,7 +1213,7 @@ const consoleData = {
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     transition: all 120ms var(--ej-ease);
   }
   #c-rit-x:hover {
@@ -1225,14 +1225,14 @@ const consoleData = {
     color: #e8e8ea;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    line-height: 1.6;
+    line-height: var(--ej-lh-body);
   }
   .rit-sub {
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
-    font-weight: 500;
-    letter-spacing: 0.1em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-chip);
   }
   .rit-sub-pink {
     display: flex;
@@ -1282,7 +1282,7 @@ const consoleData = {
   }
   .rit-havenext span:first-child {
     color: var(--ej-amber-2);
-    font-weight: 600;
+    font-weight: var(--ej-fw-head);
   }
   .rit-public {
     display: grid;
@@ -1321,7 +1321,7 @@ const consoleData = {
     color: var(--ej-dim);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 600;
+    font-weight: var(--ej-fw-head);
     transition: all 120ms var(--ej-ease);
   }
   .e-dots button:hover {
@@ -1361,7 +1361,7 @@ const consoleData = {
     white-space: nowrap;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 600;
+    font-weight: var(--ej-fw-head);
     letter-spacing: 0.05em;
     background: #17171a;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1411,7 +1411,7 @@ const consoleData = {
   }
   .commit :global(.commit-line b) {
     color: var(--ej-text-2);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
   }
 
   .trail-card {
@@ -1427,14 +1427,14 @@ const consoleData = {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.2em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-label);
   }
   .trail-head a {
     color: #9a9aa2;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     text-decoration: none;
     transition: all 120ms var(--ej-ease);
   }
@@ -1473,7 +1473,7 @@ const consoleData = {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    line-height: 1.7;
+    line-height: var(--ej-lh-loose);
     white-space: pre-line;
   }
 

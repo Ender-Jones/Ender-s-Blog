@@ -68,9 +68,9 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
     color: var(--ej-text);
     font-family: var(--ej-serif);
     font-size: clamp(34px, 4.4vw, 54px);
-    font-weight: 400;
+    font-weight: var(--ej-fw-body);
     letter-spacing: 0.01em;
-    line-height: 1.2;
+    line-height: var(--ej-lh-head);
   }
   .sub {
     margin: 18px 0 0;
@@ -107,13 +107,13 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
     color: var(--ej-text);
     font-family: var(--ej-serif);
     font-size: 26px;
-    font-weight: 400;
+    font-weight: var(--ej-fw-body);
   }
   .sec-sub {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     margin-left: 10px;
   }
   .row {
@@ -153,7 +153,7 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     font-variant-numeric: tabular-nums;
   }
   .mid {
@@ -163,7 +163,7 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
     color: var(--ej-text-2);
     font-family: var(--ej-serif);
     font-size: 19px;
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     line-height: 1.4;
     transition:
       color 180ms ease,

@@ -108,7 +108,7 @@ const signalRows = [
     font-family: var(--ej-serif);
     font-size: clamp(20px, 2.2vw, 26px);
     font-style: italic;
-    font-weight: 300;
+    font-weight: var(--ej-fw-light);
     line-height: 1.45;
     text-wrap: balance;
   }
@@ -130,20 +130,20 @@ const signalRows = [
     color: var(--ej-text);
     font-family: var(--ej-serif);
     font-size: 28px;
-    font-weight: 400;
+    font-weight: var(--ej-fw-body);
   }
   .sec-sub {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     margin-left: 10px;
   }
   .sec-meta {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
   }
 
   .papers {
@@ -189,8 +189,8 @@ const signalRows = [
     color: #9a9aa2;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.16em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-caps);
     text-transform: uppercase;
   }
   .p-venue {
@@ -198,16 +198,16 @@ const signalRows = [
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
   }
   h3 {
     margin: 12px 0 0;
     color: var(--ej-text);
     font-family: var(--ej-serif);
     font-size: 22px;
-    font-weight: 500;
-    letter-spacing: -0.005em;
-    line-height: 1.3;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-body);
+    line-height: var(--ej-lh-snug);
   }
   .p-dek {
     margin: 8px 0 0;
@@ -215,7 +215,7 @@ const signalRows = [
     font-family: var(--ej-serif);
     font-size: var(--ej-fs-body);
     font-style: italic;
-    font-weight: 300;
+    font-weight: var(--ej-fw-light);
     line-height: 1.5;
   }
   .p-abstract {
@@ -223,7 +223,7 @@ const signalRows = [
     max-width: 68ch;
     color: #b8b8c0;
     font-size: var(--ej-fs-ui);
-    line-height: 1.7;
+    line-height: var(--ej-lh-loose);
     text-wrap: pretty;
   }
   .p-foot {
@@ -239,7 +239,7 @@ const signalRows = [
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    line-height: 1.6;
+    line-height: var(--ej-lh-body);
   }
   .p-links {
     display: flex;
@@ -250,7 +250,7 @@ const signalRows = [
     color: #9a9aa2;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     text-decoration: none;
     transition: all 120ms var(--ej-ease);
   }
@@ -277,8 +277,8 @@ const signalRows = [
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.2em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-label);
     text-transform: uppercase;
   }
   .m-dot {
@@ -300,7 +300,7 @@ const signalRows = [
     color: #e8e8ea;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-small);
-    line-height: 1.6;
+    line-height: var(--ej-lh-body);
     transition: color 120ms ease;
   }
   .ej-dotrow:hover .m-val { color: #fff; }
@@ -313,14 +313,14 @@ const signalRows = [
     color: var(--ej-text);
     font-family: var(--ej-mono);
     font-size: 27px;
-    font-weight: 600;
+    font-weight: var(--ej-fw-head);
     font-variant-numeric: tabular-nums;
   }
   .m-note {
     color: #9a9aa2;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    line-height: 1.6;
+    line-height: var(--ej-lh-body);
   }
   .m-honesty {
     margin: 6px 0 0;
@@ -350,7 +350,7 @@ const signalRows = [
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     font-variant-numeric: tabular-nums;
   }
   .tl-node {
@@ -368,7 +368,7 @@ const signalRows = [
   .tl-label {
     color: var(--ej-text-2);
     font-size: var(--ej-fs-ui);
-    line-height: 1.6;
+    line-height: var(--ej-lh-body);
   }
 
   .next {
@@ -383,15 +383,15 @@ const signalRows = [
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.2em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-label);
   }
   .next-text {
     margin: 0;
     max-width: 62ch;
     color: var(--ej-text-2);
     font-size: var(--ej-fs-ui);
-    line-height: 1.7;
+    line-height: var(--ej-lh-loose);
     text-wrap: pretty;
   }
   .next-link {

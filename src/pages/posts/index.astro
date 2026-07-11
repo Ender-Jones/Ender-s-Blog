@@ -135,8 +135,8 @@ const groups = years.map((year) => ({
     color: #9a9aa2;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.1em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-chip);
     transition: all 130ms var(--ej-ease);
   }
   .chip:hover {
@@ -173,8 +173,8 @@ const groups = years.map((year) => ({
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 600;
-    letter-spacing: 0.2em;
+    font-weight: var(--ej-fw-head);
+    letter-spacing: var(--ej-track-label);
   }
   .rule {
     flex: 1;
@@ -226,7 +226,7 @@ const groups = years.map((year) => ({
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     font-variant-numeric: tabular-nums;
     transition: color 180ms ease;
   }
@@ -248,9 +248,9 @@ const groups = years.map((year) => ({
     color: var(--ej-text-2);
     font-family: var(--ej-serif);
     font-size: 19px;
-    font-weight: 500;
-    letter-spacing: -0.005em;
-    line-height: 1.3;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-body);
+    line-height: var(--ej-lh-snug);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -269,8 +269,8 @@ const groups = years.map((year) => ({
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.14em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-key);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 4px;
     padding: 1px 7px;
@@ -296,7 +296,7 @@ const groups = years.map((year) => ({
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     text-align: right;
     transition: opacity 200ms ease;
   }

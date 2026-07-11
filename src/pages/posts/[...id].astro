@@ -317,7 +317,7 @@ const giscus = site.comments?.giscus;
     color: #9a9aa2;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     text-decoration: none;
     transition: color 120ms var(--ej-ease);
   }
@@ -339,8 +339,8 @@ const giscus = site.comments?.giscus;
     color: var(--tone-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.14em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-key);
     text-transform: uppercase;
     white-space: nowrap;
   }
@@ -355,15 +355,15 @@ const giscus = site.comments?.giscus;
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
   }
   h1 {
     margin: 22px 0 0;
     color: var(--ej-text);
     font-family: var(--ej-serif);
     font-size: clamp(32px, 3.6vw, 44px);
-    font-weight: 400;
-    letter-spacing: -0.015em;
+    font-weight: var(--ej-fw-body);
+    letter-spacing: var(--ej-track-snug);
     line-height: 1.14;
     text-wrap: balance;
   }
@@ -374,7 +374,7 @@ const giscus = site.comments?.giscus;
     font-family: var(--ej-serif);
     font-size: 17.5px;
     font-style: italic;
-    font-weight: 300;
+    font-weight: var(--ej-fw-light);
     line-height: 1.55;
     text-wrap: pretty;
   }
@@ -401,7 +401,7 @@ const giscus = site.comments?.giscus;
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
   }
 
   .body-grid {
@@ -436,8 +436,8 @@ const giscus = site.comments?.giscus;
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.2em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-label);
   }
   .filed-tags {
     display: flex;
@@ -452,7 +452,7 @@ const giscus = site.comments?.giscus;
     text-decoration: none;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     white-space: nowrap;
     transition: all 120ms var(--ej-ease);
   }
@@ -494,8 +494,8 @@ const giscus = site.comments?.giscus;
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.16em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-caps);
     transition: all 120ms var(--ej-ease);
   }
   .pv:hover .pv-arrow {
@@ -508,7 +508,7 @@ const giscus = site.comments?.giscus;
     color: #e8e8ea;
     font-family: var(--ej-serif);
     font-size: 19px;
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     line-height: 1.25;
   }
   .pv-meta {
@@ -517,7 +517,7 @@ const giscus = site.comments?.giscus;
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
   }
 
   .comments {
@@ -534,8 +534,8 @@ const giscus = site.comments?.giscus;
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.2em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-label);
   }
   .cm-note {
     letter-spacing: 0.02em;
@@ -558,7 +558,7 @@ const giscus = site.comments?.giscus;
     font-family: var(--ej-serif);
     font-size: clamp(20px, 2.2vw, 26px);
     font-style: italic;
-    font-weight: 300;
+    font-weight: var(--ej-fw-light);
     line-height: 1.45;
     text-wrap: balance;
     min-height: 4.4em;
@@ -580,7 +580,7 @@ const giscus = site.comments?.giscus;
     color: var(--ej-mut);
     font-family: var(--ej-sans);
     font-size: var(--ej-fs-note);
-    font-weight: 400;
+    font-weight: var(--ej-fw-body);
     line-height: 1.65;
     opacity: 1;
     transition:
@@ -592,7 +592,7 @@ const giscus = site.comments?.giscus;
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
   }
   #coda-reroll {
     margin-top: 18px;
@@ -605,8 +605,8 @@ const giscus = site.comments?.giscus;
     color: var(--ej-dim);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
-    font-weight: 600;
-    letter-spacing: 0.14em;
+    font-weight: var(--ej-fw-head);
+    letter-spacing: var(--ej-track-key);
   }
 
   .toc-rail {
@@ -626,8 +626,8 @@ const giscus = site.comments?.giscus;
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.2em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-label);
   }
   .toc-head span:last-child {
     color: var(--ej-mut);
@@ -657,7 +657,7 @@ const giscus = site.comments?.giscus;
     color: #9a9aa2;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     letter-spacing: 0.03em;
     text-decoration: none;
     line-height: 1.45;
@@ -711,7 +711,7 @@ const giscus = site.comments?.giscus;
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     text-decoration: none;
     transition: color 120ms var(--ej-ease);
   }

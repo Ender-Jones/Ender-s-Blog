@@ -85,13 +85,13 @@ const fMin = minutes(featured.body);
     color: var(--ej-text);
     font-family: var(--ej-serif);
     font-size: 30px;
-    font-weight: 400;
+    font-weight: var(--ej-fw-body);
   }
   .sub {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     margin-left: 10px;
   }
 
@@ -151,7 +151,7 @@ const fMin = minutes(featured.body);
     color: var(--ej-text-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     backdrop-filter: blur(6px);
@@ -166,7 +166,7 @@ const fMin = minutes(featured.body);
     gap: 14px;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     color: var(--ej-mut-2);
   }
   .f-title {
@@ -174,7 +174,7 @@ const fMin = minutes(featured.body);
     color: var(--ej-text);
     font-family: var(--ej-serif);
     font-size: 27px;
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     letter-spacing: -0.01em;
     line-height: 1.15;
     transition: color 120ms ease;
@@ -188,7 +188,7 @@ const fMin = minutes(featured.body);
     font-family: var(--ej-serif);
     font-size: var(--ej-fs-lede);
     font-style: italic;
-    font-weight: 300;
+    font-weight: var(--ej-fw-light);
     line-height: 1.5;
   }
   .f-foot {
@@ -210,7 +210,7 @@ const fMin = minutes(featured.body);
     color: #9a9aa2;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     transition: all 120ms var(--ej-ease);
   }
   .featured:hover .tag {
@@ -221,7 +221,7 @@ const fMin = minutes(featured.body);
     color: #9a9aa2;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-small);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     transition: all 120ms var(--ej-ease);
   }
   .featured:hover .f-arrow {
@@ -271,7 +271,7 @@ const fMin = minutes(featured.body);
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     font-variant-numeric: tabular-nums;
     transition: color 180ms ease;
   }
@@ -288,9 +288,9 @@ const fMin = minutes(featured.body);
     color: var(--ej-text-2);
     font-family: var(--ej-serif);
     font-size: 19px;
-    font-weight: 500;
-    letter-spacing: -0.005em;
-    line-height: 1.3;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-body);
+    line-height: var(--ej-lh-snug);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -309,8 +309,8 @@ const fMin = minutes(featured.body);
     color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    font-weight: 500;
-    letter-spacing: 0.14em;
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-key);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 4px;
     padding: 1px 7px;
@@ -319,7 +319,7 @@ const fMin = minutes(featured.body);
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: 500;
+    font-weight: var(--ej-fw-medium);
     text-align: right;
     transition: opacity 200ms ease;
   }
