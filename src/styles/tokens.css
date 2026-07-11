@@ -10,20 +10,20 @@
   --ej-sans: 'Noto Sans', 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif;
   --ej-mono: 'Fira Code Variable', 'Fira Code', 'Noto Sans SC', monospace;
 
-  /* type scale — 照搬 Linear 的尺度, 每档 +1px(ADHD 地板 13, 暗底低对比补偿).
-     8 个功能档跨 13–19(正文/UI/chrome); 标题走下面的 display 档, 不在这 8 档里.
-     调可读性 = 改这里一行, 全站跟走. 家规: 成句内容不得低于 note 档. */
-  --ej-fs-micro: 13px; /* Linear caption 12 +1 · 地板: 大写微徽章/图例 */
-  --ej-fs-meta: 14px; /* Linear mono 13 +1 · mono 说明/图注/hint */
-  --ej-fs-label: 14px; /* Linear eyebrow 13 +1 · kicker/日期/键名 */
-  --ej-fs-small: 15px; /* Linear body-sm 14 +1 · chip/mono 正文/代码 */
-  --ej-fs-note: 15px; /* Linear body-sm 14 +1 · 次要 sans 文本/desc */
-  --ej-fs-ui: 16px; /* Linear body 16 · UI 段落 */
-  --ej-fs-body: 17px; /* Linear body 16 +1 · 页面正文段落 */
-  --ej-fs-lede: 19px; /* Linear body-lg 18 +1 · 文章正文(prose) */
-  /* display 档(标题, serif; Linear headline/card-title/display +1px) */
-  --ej-fs-h3: 23px; /* Linear card-title 22 +1 */
-  --ej-fs-h2: 29px; /* Linear headline 28 +1 */
+  /* type scale — 照搬 Linear 尺度(原值, 不 +1px). 8 个功能档跨 12–18;
+     标题走下面 display 档. 调可读性 = 改这里一行, 全站跟走.
+     家规: 成句内容不得低于 note 档(micro/meta 仅限大写 chrome 标签). */
+  --ej-fs-micro: 12px; /* Linear caption · 地板: 大写微徽章/图例 */
+  --ej-fs-meta: 13px; /* Linear mono · mono 说明/图注/hint */
+  --ej-fs-label: 13px; /* Linear eyebrow · kicker/日期/键名 */
+  --ej-fs-small: 14px; /* Linear body-sm · chip/mono 正文/代码 */
+  --ej-fs-note: 14px; /* Linear body-sm · 次要 sans 文本/desc */
+  --ej-fs-ui: 16px; /* Linear body · UI 段落 */
+  --ej-fs-body: 16px; /* Linear body · 页面正文段落 */
+  --ej-fs-lede: 18px; /* Linear body-lg · 文章正文(prose) */
+  /* display 档(标题, serif; Linear headline/card-title 原值) */
+  --ej-fs-h3: 22px; /* Linear card-title */
+  --ej-fs-h2: 28px; /* Linear headline */
 
   /* 字重 — Linear 三档(400 正文 · 500 中 · 600 标题); +300 用于大字斜体引文.
      暗底封顶 600: 亮字会光晕膨胀, 700+ 会糊(Linear 同理不上重字). */

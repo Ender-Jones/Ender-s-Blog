@@ -43,13 +43,13 @@
 }
 
 .prose h3 {
-  /* Source Serif 无 500(Adobe 从 400 直跳 600)→ h3 用 600, 靠字号 23<29 与 h2 分层 */
+  /* h3 = 400 regular serif(试): 靠字号+serif 与正文分, 靠字重与 h2(600) 分层 */
   margin: 26px 0 12px;
   scroll-margin-top: 84px;
   color: #f0f0f2;
   font-family: var(--ej-serif);
   font-size: var(--ej-fs-h3);
-  font-weight: var(--ej-fw-head);
+  font-weight: var(--ej-fw-body);
   letter-spacing: var(--ej-track-snug);
   line-height: var(--ej-lh-snug);
 }
