@@ -42,6 +42,12 @@ const consoleData = {
       </div>
     </header>
 
+    <!-- 漏关横幅: 昨天(或更早)有未归档的行 → 一键进完整仪式补关; 多天漏关从最旧的开始 -->
+    <div class="stale" id="c-stale" hidden>
+      <span class="stale-text" id="c-stale-text"></span>
+      <button type="button" id="c-stale-btn" data-route="close the missed day — full ritual"></button>
+    </div>
+
     <section class="grid reveal" style="--reveal-i: 1;">
       <div class="col-l">
         <div class="ej-card card capture">
@@ -50,6 +56,7 @@ const consoleData = {
               <span class="ds-date" id="c-date">----------</span>
               <span class="ds-wd" id="c-wd"></span>
               <span class="ds-night" id="c-night" hidden>night session — counts until 04:00</span>
+              <span class="ds-flag" id="c-flag" hidden></span>
             </span>
             <span class="ds-right">
               <span class="ds-last" id="c-last"></span>
@@ -64,7 +71,7 @@ const consoleData = {
           </div>
 
           <div class="chips" id="c-chips">
-            <button type="button" class="chip-project" data-tok="@" data-route="insert prefix — project"><span class="tok">@</span> project</button>
+            <button type="button" class="chip-wip" data-tok="@" data-route="insert prefix — wip"><span class="tok">@</span> wip</button>
             <button type="button" class="chip-decision" data-tok="=" data-route="insert prefix — decision"><span class="tok">=</span> decision</button>
             <button type="button" class="chip-risk" data-tok="!" data-route="insert prefix — risk"><span class="tok">!</span> risk</button>
             <button type="button" class="chip-next" data-tok=">" data-route="insert prefix — next"><span class="tok">&gt;</span> next</button>
@@ -84,13 +91,17 @@ const consoleData = {
         </div>
 
         <div class="syntax">
+          <!-- 字段语义显在录入台("每次都要想每个词是干什么的就完蛋了"): 只有 > next 有行为, 其余纯归档 -->
           <div class="syn-row">
             <span class="syn-label">PREFIXES</span>
-            <span><span class="s-project">@</span> project</span>
-            <span><span class="s-decision">=</span> decision</span>
-            <span><span class="s-risk">!</span> risk</span>
-            <span><span class="s-next">&gt;</span> next</span>
-            <span class="syn-dim">no prefix = done</span>
+            <div class="syn-defs">
+              <span class="syn-def"><span class="syn-key"><span class="s-done">done</span></span><span class="syn-dim">no prefix — result: it got finished</span></span>
+              <span class="syn-def"><span class="syn-key"><span class="s-wip">@</span> wip</span><span class="syn-dim">effort — log it the moment you start; wip now + done later is a feature, not a duplicate</span></span>
+              <span class="syn-def"><span class="syn-key"><span class="s-decision">=</span> decision</span><span class="syn-dim">archive only</span></span>
+              <span class="syn-def"><span class="syn-key"><span class="s-risk">!</span> risk</span><span class="syn-dim">archive only</span></span>
+              <span class="syn-def"><span class="syn-key"><span class="s-next">&gt;</span> next</span><span class="syn-dim">the only live word — tomorrow it returns as carry-over and demands an exit</span></span>
+              <span class="syn-def"><span class="syn-key"><span class="s-dropped">~</span> dropped</span><span class="syn-dim">a dignified exit — usually happens in triage, not at the keyboard</span></span>
+            </div>
           </div>
           <div class="syn-row">
             <span class="syn-label">CARRY-OVER EXITS</span>
@@ -100,7 +111,7 @@ const consoleData = {
           </div>
           <div class="syn-row">
             <span class="syn-label">AT DAY CLOSE</span>
-            <span><span class="s-project">✦</span> public line <span class="syn-dim">→ homepage NOW</span></span>
+            <span><span class="s-wip">✦</span> public line <span class="syn-dim">→ homepage NOW</span></span>
             <span><span class="s-next">◦</span> energy <span class="syn-dim">(optional)</span></span>
             <span class="syn-dim">asked once, when you close — not a prefix</span>
           </div>
@@ -125,7 +136,7 @@ const consoleData = {
           <div class="commit">
             <div class="ritual" id="c-ritual" hidden>
               <div class="rit-head">
-                <span class="rit-label">DAY CLOSE — UNDER A MINUTE</span>
+                <span class="rit-label" id="c-rit-label">DAY CLOSE — UNDER A MINUTE</span>
                 <button type="button" id="c-rit-x" data-route="not yet — keep logging">× not yet</button>
               </div>
               <p class="rit-recap" id="c-recap"></p>
@@ -177,7 +188,7 @@ const consoleData = {
 <script is:inline type="application/json" id="c-data" set:html={JSON.stringify(consoleData)} />
 
 <script>
-  type EntryType = 'project' | 'done' | 'decision' | 'risk' | 'next' | 'dropped';
+  type EntryType = 'wip' | 'done' | 'decision' | 'risk' | 'next' | 'dropped';
   type Entry = { id: number; type: EntryType; text: string; time: string };
 
   const RAW = JSON.parse(document.getElementById('c-data')!.textContent || '{}') as {
@@ -190,7 +201,7 @@ const consoleData = {
     document.getElementById(id) as T;
 
   const TYPE_META: Record<EntryType, { label: string; cls: string; color: string; border: string; bg: string }> = {
-    project: { label: 'PROJECT', cls: 't-project', color: '#c8c8cd', border: 'rgba(255,255,255,0.22)', bg: 'transparent' },
+    wip: { label: 'WIP', cls: 't-wip', color: '#c8c8cd', border: 'rgba(255,255,255,0.22)', bg: 'transparent' },
     done: { label: 'DONE', cls: 't-done', color: '#e8e8ea', border: 'transparent', bg: 'rgba(255,255,255,0.08)' },
     decision: { label: 'DECISION', cls: 't-decision', color: '#9ed9ff', border: 'rgba(76,194,255,0.38)', bg: 'transparent' },
     risk: { label: 'RISK', cls: 't-risk', color: '#ff9d9d', border: 'rgba(255,120,120,0.4)', bg: 'transparent' },
@@ -198,7 +209,7 @@ const consoleData = {
     dropped: { label: 'DROPPED', cls: 't-dropped', color: '#8a8a94', border: 'rgba(255,255,255,0.16)', bg: 'transparent' },
   };
   const SECTION: Record<EntryType, string> = {
-    project: 'Project',
+    wip: 'WIP',
     done: 'Done',
     decision: 'Decision',
     risk: 'Risk',
@@ -215,9 +226,17 @@ const consoleData = {
   const jstHM = () => jstNow().toISOString().slice(11, 16);
 
   const today = logicalDate();
-  const month = today.slice(0, 7);
-  const filePath = `content/worklogs/${month}.md`;
   const LS_KEY = `ej-console-${today}`;
+  const filePathOf = (d: string) => `content/worklogs/${d.slice(0, 7)}.md`;
+  const wdOf = (d: string) =>
+    new Date(`${d}T12:00:00Z`).toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' }).toUpperCase();
+
+  // ---- 关日即翻页的视图状态: server 是真相(GET /api/log 的 closed / effectiveDay / staleDays) ----
+  let todayClosed = false; // 今日已关 → EARLY START(录入台照常, 行落明天; close 钮锁到 04:00)
+  let effectiveDay = today; // 落笔日: 今日已关时 = 下一逻辑日
+  let staleDays: string[] = []; // 漏关的过去日(旧→新), 顶部横幅从最旧的开始补
+  let closingStale: string | null = null; // 补关模式: 正在补关的那一天
+  const viewDay = () => closingStale ?? effectiveDay;
 
   // carry-over = 逻辑日"今天之前"最近一天的 next
   const carrySource = RAW.nextDays.find((d) => d.date < today);
@@ -247,10 +266,12 @@ const consoleData = {
   };
   let ritualOpen = false;
   let ritualNext = '';
+  let pushCount = 0; // 本 session 成功 push 的次数(补关也算) — trail 今日格 +N
 
   // ---- /api 通道(D1 工作区): 每次操作即存, 失败不缓冲 — 报错 + 重试(已定论) ----
   const toApi = (t: EntryType) => (t === 'dropped' ? 'drop' : t);
-  const fromApi = (t: string): EntryType => (t === 'drop' ? 'dropped' : (t as EntryType));
+  // 旧词兼容: 改词前入库的 D1 行还是 project(server 只在编 md 时归一, GET 原样返回)
+  const fromApi = (t: string): EntryType => (t === 'drop' ? 'dropped' : t === 'project' ? 'wip' : (t as EntryType));
   const hmOf = (iso: string) => new Date(new Date(iso).getTime() + 9 * 3600_000).toISOString().slice(11, 16);
   let publicId = 0; // 今日 public 行在 D1 里的 id(0 = 还没入库)
 
@@ -287,7 +308,7 @@ const consoleData = {
 
   const parse = (t: string): { type: EntryType; text: string } => {
     const map: Record<string, EntryType> = {
-      '@': 'project',
+      '@': 'wip',
       '=': 'decision',
       '!': 'risk',
       '>': 'next',
@@ -300,9 +321,9 @@ const consoleData = {
 
   // ---- markdown 生成(和站点解析器同一格式) ----
   const mdLines = (): string[] => {
-    const lines = [`## ${today}`];
+    const lines = [`## ${viewDay()}`];
     if (state.energy) lines.push(`<!-- energy: ${state.energy} -->`);
-    for (const type of ['project', 'done', 'decision', 'risk', 'next', 'dropped'] as EntryType[]) {
+    for (const type of ['wip', 'done', 'decision', 'risk', 'next', 'dropped'] as EntryType[]) {
       const items = state.entries.filter((e) => e.type === type);
       if (!items.length) continue;
       lines.push('', `### ${SECTION[type]}`);
@@ -353,31 +374,30 @@ const consoleData = {
       const time = document.createElement('span');
       time.className = 'entry-time';
       time.textContent = entry.time;
-      if (!state.committed) {
-        const del = document.createElement('button');
-        del.className = 'entry-del';
-        del.type = 'button';
-        del.textContent = '×';
-        del.addEventListener('click', async () => {
-          try {
-            await api('/api/amend', { id: entry.id, delete: true });
-            state.entries.splice(i, 1);
-            renderAll();
-          } catch (e) {
-            note(`delete failed (${(e as Error).message})`, true);
-          }
-        });
-        row.append(badge, text, time, del);
-      } else {
-        row.append(badge, text, time);
-      }
+      // 列表里的行永远是未归档的工作区行(归档行根本不会被 GET 回来), 所以永远可删
+      const del = document.createElement('button');
+      del.className = 'entry-del';
+      del.type = 'button';
+      del.textContent = '×';
+      del.addEventListener('click', async () => {
+        try {
+          await api('/api/amend', { id: entry.id, delete: true });
+          state.entries.splice(i, 1);
+          renderAll();
+        } catch (e) {
+          note(`delete failed (${(e as Error).message})`, true);
+        }
+      });
+      row.append(badge, text, time, del);
       box.append(row);
     });
   };
 
   const renderCarry = () => {
     const card = $('c-carry-card');
-    if (!DATA.carry.length) {
+    // 关日即翻页: 今日已关就藏 carry 卡(旧"关日当晚卡复活"边界就此消失); 补关模式也不分诊 —
+    // 那一天的分诊时刻已经过去了, 直接进仪式.
+    if (!DATA.carry.length || todayClosed || closingStale) {
       card.hidden = true;
       return;
     }
@@ -459,38 +479,55 @@ const consoleData = {
     const btn = $<HTMLButtonElement>('c-commit');
     const msg = $('c-msg');
     const n = state.entries.length;
-    const pending = pendingCarry();
-    msg.textContent = n ? `worklog: close ${today} (${n} ${n === 1 ? 'entry' : 'entries'})` : 'nothing to commit';
-    const canClose = n > 0 && !state.committed && pending === 0;
-    btn.disabled = !canClose;
-    btn.className = state.committed ? 'done' : ritualOpen ? 'push' : '';
-    btn.textContent = state.committed
-      ? '✓ pushed — day closed'
-      : ritualOpen
-        ? 'push the day →'
-        : n && pending
-          ? `triage carry-over first (${pending})`
-          : n
-            ? 'close the day'
-            : 'nothing to commit';
-    btn.dataset.route = state.committed
-      ? `committed to ${filePath} — nothing left to do`
-      : ritualOpen
-        ? 'server commits for you — no paste, no terminal'
-        : n && pending
-          ? "yesterday's next needs an exit — done / still next / drop"
-          : n
-            ? 'day close — recap · save point · public line · energy'
-            : 'log something first';
+    const d = viewDay();
+
+    // EARLY START: 一个逻辑日最多关一次 — close 钮锁到 04:00 真正翻日
+    if (todayClosed && !closingStale) {
+      msg.textContent = n
+        ? `${n} line${n === 1 ? '' : 's'} pre-logged for ${d}`
+        : `${today} closed ✓ — see you tomorrow`;
+      btn.disabled = true;
+      btn.className = 'done';
+      btn.textContent = 'day closed — next close unlocks at 04:00';
+      btn.dataset.route = 'one close per logical day — capture stays open, lines land on tomorrow';
+      return;
+    }
+
+    const pending = closingStale ? 0 : pendingCarry(); // 补关日的分诊时刻已过, 不设闸
+    msg.textContent = n ? `worklog: close ${d} (${n} ${n === 1 ? 'entry' : 'entries'})` : 'nothing to commit';
+    btn.disabled = !(n > 0 && pending === 0);
+    btn.className = ritualOpen ? 'push' : '';
+    btn.textContent = ritualOpen
+      ? closingStale
+        ? `push ${d} →`
+        : 'push the day →'
+      : n && pending
+        ? `triage carry-over first (${pending})`
+        : n
+          ? closingStale
+            ? `close ${d}`
+            : 'close the day'
+          : 'nothing to commit';
+    btn.dataset.route = ritualOpen
+      ? 'server commits for you — no paste, no terminal'
+      : n && pending
+        ? "yesterday's next needs an exit — done / still next / drop"
+        : n
+          ? 'day close — recap · save point · public line · energy'
+          : 'log something first';
   };
 
   const renderRitual = () => {
-    $('c-ritual').hidden = !ritualOpen || state.committed;
+    $('c-ritual').hidden = !ritualOpen;
     if (!ritualOpen) return;
+    $('c-rit-label').textContent = closingStale
+      ? `CLOSING ${closingStale} — THE DAY YOU MISSED`
+      : 'DAY CLOSE — UNDER A MINUTE';
     const counts: Partial<Record<EntryType, number>> = {};
     for (const e of state.entries) counts[e.type] = (counts[e.type] ?? 0) + 1;
     const parts: string[] = [];
     if (counts.done) parts.push(`${counts.done} done`);
+    if (counts.wip) parts.push(`${counts.wip} wip`); // 投入也是证据, 上 recap
     if (counts.decision) parts.push(`${counts.decision} decision${counts.decision === 1 ? '' : 's'}`);
     if (counts.risk) parts.push(`${counts.risk} risk${counts.risk === 1 ? '' : 's'}`);
     if (counts.dropped) parts.push(`${counts.dropped} dropped`);
@@ -498,6 +535,12 @@ const consoleData = {
     $('c-recap').textContent =
       (parts.length ? parts.join(' · ') : `${state.entries.length} notes`) + ' — proof, not memory.';
     const nexts = state.entries.filter((e) => e.type === 'next');
+    // 视图切换后(补关/翻页)输入框跟状态走 — 否则恢复出的 public/save point 会"看着是空的".
+    // 只在值不同时写回, 免得打字中途触发 render 时光标跳到末尾.
+    const nextInput = $<HTMLInputElement>('c-rit-next');
+    if (nextInput.value !== ritualNext) nextInput.value = ritualNext;
+    const sumInput = $<HTMLInputElement>('c-summary');
+    if (sumInput.value !== state.summary) sumInput.value = state.summary;
     $('c-rit-next-wrap').hidden = nexts.length > 0;
     $('c-rit-havenext').hidden = nexts.length === 0;
     if (nexts.length) $('c-rit-nextprev').textContent = `“${nexts[nexts.length - 1].text}”`;
@@ -515,21 +558,59 @@ const consoleData = {
     for (let i = 181; i >= 0; i--) {
       const d = iso(new Date(base.getTime() - i * 86400_000));
       let count = DATA.counts.get(d) ?? 0;
-      if (i === 0 && state.committed) count += 1;
+      if (i === 0) count += pushCount; // 本 session 的 push(含补关 — commit 都落在真实的今天)
       const cell = document.createElement('span');
       cell.className = `cell l${level(count)}` + (i === 0 ? ' today' : '');
       cell.title =
         i === 0
-          ? `today · ${count} commit${count === 1 ? '' : 's'}${state.committed ? ' (incl. this one)' : ' — nothing counts against you'}`
+          ? `today · ${count} commit${count === 1 ? '' : 's'}${pushCount ? ' (incl. this session)' : ' — nothing counts against you'}`
           : `${d}: ${count} commit${count === 1 ? '' : 's'}`;
       box.append(cell);
     }
-    $('c-trailnote').textContent = state.committed
+    $('c-trailnote').textContent = pushCount
       ? 'pushed — today deepens a shade inside its amber frame.\ngaps stay neutral: no streaks, no guilt.'
       : 'any push turns the day pink · amber — today\ngaps are neutral, nothing counts against you.';
   };
 
+  // 日期条与文件路径随视图切换(今天 / EARLY START 的明天 / 补关的那一天)
+  const renderDate = () => {
+    const d = viewDay();
+    $('c-date').textContent = d;
+    $('c-wd').textContent = wdOf(d);
+    $('c-night').hidden = !isNightSession() || todayClosed || !!closingStale;
+    const flag = $('c-flag');
+    if (closingStale) {
+      flag.hidden = false;
+      flag.textContent = `closing a missed day — capture logs into ${closingStale}`;
+    } else if (todayClosed) {
+      flag.hidden = false;
+      flag.textContent = `EARLY START — ${today} closed · logging for ${effectiveDay}`;
+    } else {
+      flag.hidden = true;
+    }
+    $('c-path').textContent = filePathOf(d);
+    $('c-path2').textContent = filePathOf(d);
+  };
+
+  // 漏关横幅: 从最旧的一天开始补, 一次一天
+  const renderStale = () => {
+    const box = $('c-stale');
+    const target = staleDays[0];
+    if (!target || closingStale) {
+      box.hidden = true;
+      return;
+    }
+    box.hidden = false;
+    $('c-stale-text').textContent =
+      staleDays.length === 1
+        ? `${target} was never closed — its lines are still in the working tree.`
+        : `${staleDays.length} days were never closed — starting with ${target}, one at a time.`;
+    $('c-stale-btn').textContent = `close ${target} →`;
+  };
+
   const renderAll = () => {
+    renderDate();
+    renderStale();
     renderEntries();
     renderCarry();
     renderMd();
@@ -538,17 +619,27 @@ const consoleData = {
     renderRitual();
     renderTrail();
     renderPreviewChip();
-    input.disabled = state.committed;
-    input.placeholder = state.committed
-      ? 'day closed ✓ — capture reopens at 04:00 JST'
-      : 'type what happened… Enter to log';
+    // 录入台永不禁用(第一戒律) — 唯一例外是 API 不可达(boot 的 catch 里单独设)
+    input.disabled = false;
+    input.placeholder = closingStale
+      ? `logging into ${closingStale} — anything you forgot? Enter to log`
+      : todayClosed
+        ? `early start — this line lands on ${effectiveDay}`
+        : 'type what happened… Enter to log';
   };
 
   const addEntry = async (type: EntryType, text: string): Promise<boolean> => {
     const clean = text.trim();
     if (!clean) return false;
     try {
-      const r = await api('/api/log', { type: toApi(type), text: clean });
+      const body: Record<string, unknown> = { type: toApi(type), text: clean };
+      if (closingStale) body.day = closingStale; // 补关模式: 行回填到那一天
+      const r = await api('/api/log', body);
+      // server 说这行落在别的日子(04:00 翻日 / 别的标签页刚关了今天)→ 以 server 为准重同步
+      if (!closingStale && r.day !== effectiveDay) {
+        await loadDay();
+        return true;
+      }
       state.entries.push({ id: r.id as number, type, text: clean, time: jstHM() });
       renderAll();
       return true;
@@ -579,7 +670,8 @@ const consoleData = {
     });
 
   $('c-commit').addEventListener('click', async () => {
-    if (state.committed || !state.entries.length || pendingCarry() > 0) return;
+    if (todayClosed && !closingStale) return; // 一逻辑日一关, 锁到 04:00
+    if (!state.entries.length || (!closingStale && pendingCarry() > 0)) return;
     if (!ritualOpen) {
       ritualOpen = true;
       renderCommit();
@@ -591,6 +683,7 @@ const consoleData = {
     const btn = $<HTMLButtonElement>('c-commit');
     btn.disabled = true;
     btn.textContent = 'pushing…';
+    const closeDay = viewDay();
     try {
       const nextVal = ritualNext.trim();
       if (nextVal && !state.entries.some((e) => e.type === 'next')) {
@@ -600,9 +693,13 @@ const consoleData = {
       const summary = state.summary.trim();
       if (summary) {
         if (publicId) await api('/api/amend', { id: publicId, text: summary });
-        else publicId = (await api('/api/log', { type: 'public', text: summary })).id as number;
+        else {
+          const body: Record<string, unknown> = { type: 'public', text: summary };
+          if (closingStale) body.day = closingStale;
+          publicId = (await api('/api/log', body)).id as number;
+        }
       }
-      const r = await api('/api/close', { day: today, energy: state.energy || undefined });
+      const r = await api('/api/close', { day: closeDay, energy: state.energy || undefined });
       if (r.mode === 'dry-run') {
         // server 没配 GITHUB_TOKEN 才会走到这: 明示配置问题, 不假装成功
         note('dry-run only — GITHUB_TOKEN is not configured on the server, nothing was pushed', true);
@@ -610,10 +707,12 @@ const consoleData = {
         renderRitual();
         return;
       }
-      state.committed = true;
+      pushCount += 1;
+      if (!closingStale) state.committed = true;
       ritualOpen = false;
-      renderAll();
+      closingStale = null;
       note(`✓ pushed ${String(r.commit ?? '').slice(0, 7)} — ${r.path} · site rebuilds itself`);
+      await loadDay(); // 关日即翻页: 立即切 EARLY START(补关则回到今天)
     } catch (e) {
       note(`push failed (${(e as Error).message})`, true);
       renderCommit();
@@ -623,9 +722,45 @@ const consoleData = {
 
   $('c-rit-x').addEventListener('click', () => {
     ritualOpen = false;
+    if (closingStale) {
+      // 退出补关模式, 回到今天(横幅还在, 想关随时再来)
+      closingStale = null;
+      void loadDay();
+      return;
+    }
     renderCommit();
     renderRitual();
   });
+
+  // 漏关横幅 → 一键进那一天的完整仪式
+  $('c-stale-btn').addEventListener('click', () => {
+    const target = staleDays[0];
+    if (target) void enterStale(target);
+  });
+
+  async function enterStale(day: string) {
+    try {
+      const data = await api(`/api/log?day=${day}`);
+      closingStale = day;
+      state.entries = [];
+      state.summary = '';
+      state.energy = 0;
+      publicId = 0;
+      ritualNext = '';
+      for (const row of data.lines as { id: number; type: string; text: string; created_at: string }[]) {
+        if (row.type === 'public') {
+          state.summary = row.text;
+          publicId = row.id;
+          continue;
+        }
+        state.entries.push({ id: row.id, type: fromApi(row.type), text: row.text, time: hmOf(row.created_at) });
+      }
+      ritualOpen = true; // 一键即仪式
+      renderAll();
+    } catch (e) {
+      note(`couldn't load ${day} (${(e as Error).message})`, true);
+    }
+  }
   $<HTMLInputElement>('c-rit-next').addEventListener('input', (e) => {
     ritualNext = (e.target as HTMLInputElement).value;
   });
@@ -646,12 +781,7 @@ const consoleData = {
       });
     });
 
-  // ---- 时钟与日期条 ----
-  $('c-date').textContent = today;
-  $('c-wd').textContent = new Date(`${today}T12:00:00Z`)
-    .toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' })
-    .toUpperCase();
-  $('c-night').hidden = !isNightSession();
+  // ---- 时钟与日期条(日期/星期/文件路径归 renderDate 管, 随视图切换) ----
   if (DATA.lastNote) {
     const ago = Math.max(
       0,
@@ -659,20 +789,33 @@ const consoleData = {
     );
     $('c-last').textContent = `last note ${DATA.lastNote} · ${ago}d ago`;
   }
-  $('c-path').textContent = filePath;
-  $('c-path2').textContent = filePath;
   const tick = () => {
     $('c-clock').textContent = jstClock();
+    // 04:00 真正翻日: 空闲时(没在打字/仪式没开)整页刷新 — EARLY START 解锁, 日期条翻页
+    if (logicalDate() !== today && !input.value && !ritualOpen && !closingStale) location.reload();
   };
   tick();
   setInterval(tick, 1000);
 
-  // ---- 启动: 从 D1 恢复现场; 旧 local-mode 草稿(localStorage)一次性迁移 ----
-  async function boot() {
-    try {
-      const data = await api('/api/log');
-      let rows = data.lines as { id: number; type: string; text: string; created_at: string }[];
+  // ---- 启动/重同步: 从 D1 恢复现场(closed / effectiveDay / staleDays 都以 server 为准);
+  //      旧 local-mode 草稿(localStorage)一次性迁移只在首次载入做 ----
+  let booted = false;
+  async function loadDay() {
+    const data = await api('/api/log');
+    todayClosed = !!data.closed;
+    effectiveDay = (data.effectiveDay as string) ?? (data.day as string);
+    staleDays = (data.staleDays as string[]) ?? [];
+    let rows = data.lines as { id: number; type: string; text: string; created_at: string }[];
 
+    state.entries = [];
+    state.usedCarry = [];
+    state.droppedCarry = [];
+    state.summary = '';
+    state.energy = 0;
+    publicId = 0;
+    ritualNext = '';
+
+    if (!booted && !todayClosed) {
       let legacy: { entries?: { type: EntryType; text: string }[]; summary?: string } | null = null;
       try {
         legacy = JSON.parse(localStorage.getItem(LS_KEY) || 'null');
@@ -684,27 +827,34 @@ const consoleData = {
         rows = (await api('/api/log')).lines;
         note(`migrated ${legacy.entries.length} local draft line${legacy.entries.length === 1 ? '' : 's'} into D1`);
       }
+    }
+    booted = true;
 
-      for (const row of rows) {
-        if (row.type === 'public') {
-          state.summary = row.text;
-          publicId = row.id;
-          continue;
-        }
-        state.entries.push({ id: row.id, type: fromApi(row.type), text: row.text, time: hmOf(row.created_at) });
+    for (const row of rows) {
+      if (row.type === 'public') {
+        state.summary = row.text;
+        publicId = row.id;
+        continue;
       }
-      // carry 分诊状态按文本回推(D1 是现场本源, 刷新不丢)
-      DATA.carry.forEach((text, i) => {
-        const hit = state.entries.find((e) => e.text === text);
-        if (!hit) return;
-        (hit.type === 'dropped' ? state.droppedCarry : state.usedCarry).push(i);
-      });
-      renderAll();
+      state.entries.push({ id: row.id, type: fromApi(row.type), text: row.text, time: hmOf(row.created_at) });
+    }
+    // carry 分诊状态按文本回推(D1 是现场本源, 刷新不丢)
+    DATA.carry.forEach((text, i) => {
+      const hit = state.entries.find((e) => e.text === text);
+      if (!hit) return;
+      (hit.type === 'dropped' ? state.droppedCarry : state.usedCarry).push(i);
+    });
+    renderAll();
+  }
+
+  async function boot() {
+    try {
+      await loadDay();
     } catch (e) {
       renderAll();
       input.disabled = true;
       input.placeholder = 'console API unreachable — hand-write the month file';
-      note(`console API unreachable (${(e as Error).message}) — hand-write src/${filePath}, or`, true, () =>
+      note(`console API unreachable (${(e as Error).message}) — hand-write src/${filePathOf(today)}, or`, true, () =>
         location.reload(),
       );
     }
@@ -795,6 +945,51 @@ const consoleData = {
     box-shadow: 0 0 6px rgba(76, 194, 255, 0.8);
   }
 
+  /* 漏关横幅(amber = 仪式家族) */
+  .stale {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 22px;
+    padding: 11px 16px;
+    border: 1px solid rgba(245, 158, 11, 0.32);
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(245, 158, 11, 0.055), rgba(245, 158, 11, 0.015));
+  }
+  /* display:flex 会顶掉 hidden 属性的 UA display:none(save point 之坑, 不再踩) */
+  .stale[hidden] {
+    display: none;
+  }
+  .stale-text {
+    color: var(--ej-amber-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-label);
+    line-height: var(--ej-lh-body);
+  }
+  #c-stale-btn {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    white-space: nowrap;
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    background: transparent;
+    color: var(--ej-amber-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-label);
+    font-weight: var(--ej-fw-head);
+    letter-spacing: 0.05em;
+    transition: all 120ms var(--ej-ease);
+  }
+  #c-stale-btn:hover {
+    background: var(--ej-amber);
+    border-color: var(--ej-amber);
+    color: #0a0a0b;
+    box-shadow: 0 10px 28px -8px rgba(245, 158, 11, 0.45);
+  }
+
   .grid {
     display: grid;
     grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
@@ -851,6 +1046,14 @@ const consoleData = {
     color: var(--ej-amber-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
+    letter-spacing: 0.06em;
+  }
+  /* EARLY START / 补关模式的状态旗 */
+  .ds-flag {
+    color: var(--ej-amber-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-micro);
+    font-weight: var(--ej-fw-medium);
     letter-spacing: 0.06em;
   }
   .ds-right {
@@ -920,7 +1123,7 @@ const consoleData = {
   .type-preview.on {
     opacity: 1;
   }
-  :global(.t-project) { color: var(--ej-text-2); border-color: rgba(255, 255, 255, 0.22); }
+  :global(.t-wip) { color: var(--ej-text-2); border-color: rgba(255, 255, 255, 0.22); }
   :global(.t-done) { color: #e8e8ea; background: rgba(255, 255, 255, 0.08); }
   :global(.t-decision) { color: var(--ej-blue-2); border-color: rgba(76, 194, 255, 0.38); }
   :global(.t-risk) { color: var(--ej-rose); border-color: rgba(255, 120, 120, 0.4); }
@@ -1169,8 +1372,23 @@ const consoleData = {
   .syn-dim {
     color: #5f5f66;
   }
+  .syn-defs {
+    display: grid;
+    gap: 5px;
+    flex: 1;
+    min-width: 240px;
+  }
+  .syn-def {
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    gap: 12px;
+    align-items: baseline;
+  }
+  .syn-key {
+    white-space: nowrap;
+  }
   .s-done { color: #e8e8ea; }
-  .s-project { color: var(--ej-text-2); }
+  .s-wip { color: var(--ej-text-2); }
   .s-decision { color: var(--ej-blue-2); }
   .s-risk { color: var(--ej-rose); }
   .s-next { color: var(--ej-amber-2); }

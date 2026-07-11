@@ -14,7 +14,7 @@ const GLYPH: Record<WorklogItemType, { g: string; cls: string }> = {
   risk: { g: '!', cls: 'g-risk' },
   next: { g: '>', cls: 'g-next' },
   dropped: { g: '~', cls: 'g-dropped' },
-  project: { g: '@', cls: 'g-project' },
+  wip: { g: '@', cls: 'g-wip' },
   note: { g: '·', cls: 'g-note' },
 };
 
@@ -66,7 +66,7 @@ const wdOf = (iso: string) => {
             {d.items.map((item) => (
               <span class="entry">
                 <span class:list={['glyph', GLYPH[item.type].cls]}>{GLYPH[item.type].g}</span>
-                <span class:list={['text', { dropped: item.type === 'dropped', dim: item.type === 'project' || item.type === 'note' }]}>{item.text}</span>
+                <span class:list={['text', { dropped: item.type === 'dropped', dim: item.type === 'wip' || item.type === 'note' }]}>{item.text}</span>
               </span>
             ))}
             {d.publicLine && (
@@ -192,7 +192,7 @@ const wdOf = (iso: string) => {
     text-shadow: 0 0 8px rgba(245, 158, 11, 0.35);
   }
   .g-dropped { color: var(--ej-mut-2); }
-  .g-project { color: var(--ej-mut-2); }
+  .g-wip { color: var(--ej-mut-2); }
   .g-note { color: var(--ej-mut-2); }
   .text {
     color: #c2c2c9;

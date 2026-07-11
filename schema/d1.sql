@@ -6,12 +6,12 @@
 CREATE TABLE IF NOT EXISTS lines (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   day TEXT NOT NULL,              -- 逻辑日 YYYY-MM-DD(04:00 JST 为界)
-  type TEXT NOT NULL,             -- project | done | decision | risk | next | drop | public
+  type TEXT NOT NULL,             -- wip(旧名 project, 读取时归一) | done | decision | risk | next | drop | public
   text TEXT NOT NULL,
   created_at TEXT NOT NULL,       -- ISO UTC
   amended_at TEXT,
   deleted INTEGER NOT NULL DEFAULT 0,
-  committed INTEGER NOT NULL DEFAULT 0
+  committed INTEGER NOT NULL DEFAULT 0  -- 1 = 已随关日归档; "该日已关"由此推断(_lib/day.js isClosed), 没有独立关日表
 );
 
 CREATE INDEX IF NOT EXISTS idx_lines_day ON lines (day, committed, deleted);

@@ -1,6 +1,7 @@
 // V3 worklog 日条目解析器 — 从月度 markdown 里抽出逐日条目流.
 // 宽容两代格式: legacy(2026-04/05, 无 Public/energy, 夹杂非日期 H2 块)与新格式
-// (## YYYY-MM-DD + <!-- energy: N --> + ### Done/Decision/Risk/Next/Dropped/Public).
+// (## YYYY-MM-DD + <!-- energy: N --> + ### WIP/Done/Decision/Risk/Next/Dropped/Public).
+// 词段 Project 于 2026-07-12 全库改名 WIP(语义: 投入/在摸什么); 旧词保留为别名防跑单.
 import { byDateDesc, type WorklogEntry } from './content';
 import { getPublicThread } from './parseWorklog';
 
@@ -10,7 +11,7 @@ export type WorklogItemType =
   | 'risk'
   | 'next'
   | 'dropped'
-  | 'project'
+  | 'wip'
   | 'note';
 
 export type WorklogItem = { type: WorklogItemType; text: string };
@@ -23,7 +24,8 @@ export type WorklogDay = {
 };
 
 const SECTION_TYPE: Record<string, WorklogItemType | 'public'> = {
-  project: 'project',
+  wip: 'wip',
+  project: 'wip', // 旧词段(改名前的 commit 历史里还可能出现)
   done: 'done',
   decision: 'decision',
   decisions: 'decision',
@@ -82,7 +84,7 @@ function parseDaySegment(date: string, segment: string): WorklogDay {
     if (bullets.length) {
       for (const text of bullets) day.items.push({ type, text });
     } else {
-      // 无 bullet 的节(legacy 的 Project 常是一行纯文本)整体算一条.
+      // 无 bullet 的节(legacy 的 WIP/Project 常是一行纯文本)整体算一条.
       const text = stripComments(body)
         .split('\n')
         .map((l) => l.trim())

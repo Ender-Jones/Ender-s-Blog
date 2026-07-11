@@ -1,9 +1,10 @@
 // POST /api/close {day?, energy?, dry_run?} — close-the-day:
 // 把该逻辑日的行编成月文件的一节, 经 GitHub contents API 追加提交(server 持有 PAT),
 // 成功后行打 committed=1. 没配 GITHUB_TOKEN 或 dry_run=true 时只返回将要提交的 markdown.
+// 一个逻辑日最多关一次(committed 行的存在 = 已关), 未来日不可关 — 关日即翻页的两道后端防线.
 // 注意: carry-over 分诊是 console 前端的闸(pendingCarry), 后端不重复裁决.
 import { requireAccess } from '../_lib/auth.js';
-import { json, logicalDay } from '../_lib/day.js';
+import { json, logicalDay, isClosed } from '../_lib/day.js';
 import { composeDay } from '../_lib/md.js';
 
 const GH_API = 'https://api.github.com';
@@ -13,8 +14,13 @@ export async function onRequestPost(context) {
   if (denied) return denied;
 
   const body = (await context.request.json().catch(() => null)) ?? {};
-  const day = body.day ?? logicalDay();
+  const today = logicalDay();
+  const day = body.day ?? today;
   const energy = Number(body.energy) || undefined;
+
+  // 一个逻辑日最多关一次, 且只能关今天或补关过去 — 堵死"连按 close 穿越到几天后"
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || day > today) return json({ error: 'cannot close a future day' }, 400);
+  if (await isClosed(context.env.EJ_DB, day)) return json({ error: `${day} already closed` }, 409);
 
   const { results: rows } = await context.env.EJ_DB.prepare(
     'SELECT id, type, text FROM lines WHERE day = ? AND deleted = 0 AND committed = 0 ORDER BY id'
