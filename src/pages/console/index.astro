@@ -1404,6 +1404,35 @@ const consoleData = {
     font-size: var(--ej-fs-small);
     line-height: var(--ej-lh-read);
   }
+  /* 滚动条 = 无色 chrome 游标: 细窄浮条, 静息隐约可见(它是"上面还有历史"的唯一暗示), 悬停变亮 */
+  .md::-webkit-scrollbar,
+  .trail::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .md::-webkit-scrollbar-track,
+  .trail::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .md::-webkit-scrollbar-thumb,
+  .trail::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    background-clip: padding-box;
+    border: 2px solid transparent; /* 配 padding-box: 实际视觉 4px 浮条, 与卡边留缝 */
+    border-radius: 999px;
+  }
+  .md::-webkit-scrollbar-thumb:hover,
+  .trail::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.24);
+  }
+  @supports not selector(::-webkit-scrollbar) {
+    .md,
+    .trail {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+    }
+  }
+
   /* 回看区: git 里的当月已提交日子, 整体压暗 — 亮区(live)才是今天的草稿 */
   .md-past:not(:empty) {
     margin-bottom: 1.6em;
