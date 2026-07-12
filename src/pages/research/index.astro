@@ -419,5 +419,14 @@ const signalRows = [
       display: block;
       margin-left: 0;
     }
+    /* 长 venue(audit → journal, §motivation)被右推后挤成两行 → 落到独立整宽行左对齐 */
+    .p-status {
+      flex-wrap: wrap;
+      align-items: baseline;
+    }
+    .p-venue {
+      margin-left: 0;
+      flex-basis: 100%;
+    }
   }
 </style>

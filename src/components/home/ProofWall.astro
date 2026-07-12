@@ -196,4 +196,19 @@ const now = nowLine
     font-size: var(--ej-fs-meta);
     font-weight: var(--ej-fw-medium);
   }
+  @media (max-width: 560px) {
+    /* NOW 行是活体信号, 手机上别用省略号切公开句: chip+upd 收在第一行,
+       公开句落到整宽第二行完整显示 */
+    .now {
+      flex-wrap: wrap;
+      row-gap: 6px;
+    }
+    .now-text {
+      order: 3;
+      flex-basis: 100%;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
+  }
 </style>
