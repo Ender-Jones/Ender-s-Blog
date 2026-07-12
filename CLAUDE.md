@@ -140,7 +140,8 @@ it just deploys automatically once created.
 **Phase 2 — live (2026-07-11)**: console writes straight to the D1 working tree; close-the-day
 is a Pages Function that composes markdown and commits it via the GitHub contents API (first
 real commit `891b91f`). `/console/` and `/api/*` are gated by Cloudflare Access (email OTP,
-24h session); AUD/team domain live in `wrangler.toml`'s `[vars]`, the only real secret is the
+7-day session since 2026-07-12, Allow policy session = "Same as application session timeout");
+AUD/team domain live in `wrangler.toml`'s `[vars]`, the only real secret is the
 Pages Secret `GITHUB_TOKEN` (rotates yearly, see `docs/MAINTENANCE.md`). Behavior contract:
 `docs/CONSOLE.md`.
 

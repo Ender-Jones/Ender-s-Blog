@@ -14,6 +14,13 @@ const days = getWorklogDays(worklogs);
 
 // carry-over 候选: 最近几个带 > next 的日子(逻辑日在客户端才知道, 由客户端挑"今天之前"的最新一天)
 const latestDay = days[0];
+// md 预览卡的灰色回看区: 最近两个月文件的原文(构建期快照, 补关上月日子时也有得看)
+const monthBodies = Object.fromEntries(
+  [...worklogs]
+    .map((w) => [w.id.slice(0, 7), w.body ?? ''] as const)
+    .sort((a, b) => (a[0] < b[0] ? 1 : -1))
+    .slice(0, 2),
+);
 const consoleData = {
   nextDays: days
     .filter((d) => d.items.some((i) => i.type === 'next'))
@@ -21,6 +28,7 @@ const consoleData = {
     .map((d) => ({ date: d.date, texts: d.items.filter((i) => i.type === 'next').map((i) => i.text) })),
   lastNote: latestDay?.date ?? '',
   activityDays: activity.days ?? [],
+  monthBodies,
 };
 ---
 
@@ -103,10 +111,14 @@ const consoleData = {
       <div class="col-r">
         <div class="ej-card card file">
           <div class="file-head">
-            <span class="file-path" id="c-path">content/worklogs/….md</span>
+            <a class="file-path" id="c-path" href="/worklog/archive/" data-route="→ /worklog/archive/ — every week ever logged">content/worklogs/….md</a>
             <span class="file-meta"><span>D1 · draft</span><span class="diff" id="c-diff">+0 −0</span></span>
           </div>
-          <div class="md" id="c-md"></div>
+          <!-- 回看区(压暗) = 当月文件已提交的日子; live 区(亮) = D1 草稿. 默认钉在底部. -->
+          <div class="md" id="c-md">
+            <div class="md-past" id="c-md-past"></div>
+            <div id="c-md-live"></div>
+          </div>
           <div class="commit">
             <div class="ritual" id="c-ritual" hidden>
               <div class="rit-head">
@@ -169,6 +181,7 @@ const consoleData = {
     nextDays: { date: string; texts: string[] }[];
     lastNote: string;
     activityDays: { date: string; count: number }[];
+    monthBodies: Record<string, string>;
   };
 
   const $ = <T extends HTMLElement = HTMLElement>(id: string) =>
@@ -425,21 +438,45 @@ const consoleData = {
     DATA.carry.filter((_, i) => !state.usedCarry.includes(i) && !state.droppedCarry.includes(i))
       .length;
 
+  const mdLineEl = (line: string) => {
+    const div = document.createElement('div');
+    div.textContent = line || ' ';
+    if (line.startsWith('## ')) div.className = 'md-h2';
+    else if (line.startsWith('### ')) div.className = 'md-h3';
+    else if (line.startsWith('<!--')) div.className = 'md-dim';
+    else if (line.startsWith('- ~~')) div.className = 'md-dropped';
+    else div.className = 'md-line';
+    return div;
+  };
+
+  // 钉底: 默认贴着底部(live 块); 手动上滚读过去后, render 不回拽
+  const mdBox = $('c-md');
+  let mdPinned = true;
+  mdBox.addEventListener('scroll', () => {
+    mdPinned = mdBox.scrollHeight - mdBox.scrollTop - mdBox.clientHeight < 40;
+  });
+
+  // 灰色回看区 = 视图日所在月文件的构建期快照; 只在月份切换时重建(每次按键的 render 不碰它)
+  let pastMonth: string | null = null;
+  const renderPast = () => {
+    const m = viewDay().slice(0, 7);
+    if (m === pastMonth) return;
+    pastMonth = m;
+    const box = $('c-md-past');
+    box.textContent = '';
+    const body = (RAW.monthBodies ?? {})[m];
+    if (!body) return;
+    for (const line of body.trim().split('\n')) box.append(mdLineEl(line));
+  };
+
   const renderMd = () => {
-    const box = $('c-md');
+    renderPast();
+    const box = $('c-md-live');
     box.textContent = '';
     const lines = mdLines();
-    for (const line of lines) {
-      const div = document.createElement('div');
-      div.textContent = line || ' ';
-      if (line.startsWith('## ')) div.className = 'md-h2';
-      else if (line.startsWith('### ')) div.className = 'md-h3';
-      else if (line.startsWith('<!--')) div.className = 'md-dim';
-      else if (line.startsWith('- ~~')) div.className = 'md-dropped';
-      else div.className = 'md-line';
-      box.append(div);
-    }
+    for (const line of lines) box.append(mdLineEl(line));
     $('c-diff').textContent = `+${lines.length} −0`;
+    if (mdPinned) mdBox.scrollTop = mdBox.scrollHeight;
   };
 
   const renderCommit = () => {
@@ -1340,6 +1377,12 @@ const consoleData = {
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
     font-weight: var(--ej-fw-medium);
+    text-decoration: none;
+    transition: all 120ms var(--ej-ease);
+  }
+  .file-path:hover {
+    color: var(--ej-pink-2);
+    text-shadow: 0 0 12px rgba(255, 122, 192, 0.5);
   }
   .file-meta {
     display: flex;
@@ -1354,12 +1397,25 @@ const consoleData = {
     color: var(--ej-mut);
   }
   .md {
-    max-height: 320px;
+    max-height: 460px; /* ≈1.5 个日块("1-2 天"的高度授权, 2026-07-12) */
     overflow-y: auto;
     padding: 14px 18px;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-small);
     line-height: var(--ej-lh-read);
+  }
+  /* 回看区: git 里的当月已提交日子, 整体压暗 — 亮区(live)才是今天的草稿 */
+  .md-past:not(:empty) {
+    margin-bottom: 1.6em;
+  }
+  .md-past :global(.md-h2),
+  .md-past :global(.md-h3) {
+    color: var(--ej-mut-2);
+  }
+  .md-past :global(.md-line),
+  .md-past :global(.md-dim),
+  .md-past :global(.md-dropped) {
+    color: var(--ej-dim);
   }
   .md :global(.md-h2) {
     color: var(--ej-text-2);
