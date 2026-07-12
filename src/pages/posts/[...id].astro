@@ -50,7 +50,7 @@ const giscus = site.comments?.giscus;
 const cover = post.data.cover_mode ?? 'hero-large';
 ---
 
-<BaseLayout title={`${post.data.title} — Ender Jones`} description={post.data.description} ogImage={post.data.image} noindex>
+<BaseLayout title={`${post.data.title} — Ender Jones`} description={post.data.description} ogImage={post.data.image} lang={post.data.language} langAlt={post.data.i18n_alt} noindex>
   <RouteHint />
   <div class="read-progress" id="read-progress" aria-hidden="true"></div>
   <div class="orb orb-a" data-parallax="0.05" aria-hidden="true"></div>
@@ -753,6 +753,13 @@ const cover = post.data.cover_mode ?? 'hero-large';
     }
     .pv-next {
       text-align: left;
+    }
+  }
+  @media (max-width: 560px) {
+    /* 图注: 窄屏下长描述会把右侧角色标签("image · mood")挤成逐字竖排 → 改上下堆叠 */
+    .hero figcaption {
+      flex-direction: column;
+      gap: 4px;
     }
   }
 </style>
