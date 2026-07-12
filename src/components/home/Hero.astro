@@ -423,4 +423,12 @@ const synced = syncedAt
       max-width: 380px;
     }
   }
+  @media (max-width: 430px) {
+    /* 卡片比 380 设计宽度更窄时, 长值(langs 等)允许收缩换行, 不再被卡边裁掉 */
+    .row-val {
+      flex-shrink: 1;
+      min-width: 0;
+      white-space: normal;
+    }
+  }
 </style>

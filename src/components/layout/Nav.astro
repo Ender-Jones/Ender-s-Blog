@@ -75,6 +75,7 @@ const isZh = path === '/zh/' || path.startsWith('/zh/');
     font-style: italic;
     font-weight: var(--ej-fw-medium);
     letter-spacing: 0.005em;
+    white-space: nowrap; /* 窄屏下 wordmark 折行会把 caret 挤去撞导航链接 */
   }
   .caret {
     display: inline-block;
@@ -174,6 +175,22 @@ const isZh = path === '/zh/' || path.startsWith('/zh/');
     }
     .name {
       font-size: 16px;
+    }
+  }
+  @media (max-width: 430px) {
+    /* 375px 一行装下 wordmark + 四链接: 全员再收一档 */
+    .inner {
+      padding: 0 16px;
+    }
+    .right {
+      gap: 9px;
+    }
+    .link {
+      font-size: var(--ej-fs-micro);
+      letter-spacing: 0.03em;
+    }
+    .name {
+      font-size: 15px;
     }
   }
 </style>

@@ -372,5 +372,14 @@ const fMin = minutes(featured.body);
     .sub {
       display: none;
     }
+    /* 手机上不截断标题: 日期升为眉行, 标题整行可换行 */
+    .row {
+      grid-template-columns: 1fr;
+      gap: 5px;
+      padding: 14px 12px 14px 14px;
+    }
+    .title {
+      white-space: normal;
+    }
   }
 </style>

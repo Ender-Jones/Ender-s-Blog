@@ -567,6 +567,7 @@ const consoleData = {
           : `${d}: ${count} commit${count === 1 ? '' : 's'}`;
       box.append(cell);
     }
+    box.scrollLeft = box.scrollWidth; // 窄屏可横滚: 钉在"今天"一端, 历史向左翻
     $('c-trailnote').textContent = pushCount
       ? 'pushed ✓ — today deepens a shade.'
       : 'gaps are neutral — no streaks, no guilt.';
@@ -1797,6 +1798,22 @@ const consoleData = {
       flex-direction: column;
       align-items: flex-start;
       gap: 10px;
+    }
+  }
+  @media (max-width: 560px) {
+    /* carry 行: 手机上按钮组占不下一行 → next 文本独占整行, 三出口钮换行靠右 */
+    .carry :global(.carry-row) {
+      flex-wrap: wrap;
+      row-gap: 5px;
+    }
+    .carry :global(.carry-text) {
+      flex-basis: 100%;
+    }
+    .carry :global(.carry-actions) {
+      margin-left: auto;
+    }
+    .carry-hint {
+      display: none;
     }
   }
 </style>

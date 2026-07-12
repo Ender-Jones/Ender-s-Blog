@@ -57,12 +57,20 @@ const monthLabels = Array.from({ length: Math.ceil(DAYS / 7) }, (_, col) => {
   )}
 </span>
 
+<script>
+  // 窄屏下墙可横滚: 默认钉在"今天"一端(琥珀框永远在画面里), 历史向左翻
+  document.querySelectorAll('.wall-wrap').forEach((w) => {
+    w.scrollLeft = w.scrollWidth;
+  });
+</script>
+
 <style>
   .wall-wrap {
     display: grid;
     gap: 7px;
     max-width: 100%;
     overflow-x: auto;
+    overscroll-behavior-x: contain;
   }
   .grid {
     display: grid;
