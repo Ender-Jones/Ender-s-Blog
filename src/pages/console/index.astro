@@ -29,15 +29,14 @@ const consoleData = {
   <main>
     <header class="head reveal" style="--reveal-i: 0;">
       <div>
-        <p class="kicker">WORKLOG — ENTRY CONSOLE · APPEND-ONLY</p>
+        <p class="kicker">WORKLOG — ENTRY CONSOLE</p>
         <h1>Log today<span class="caret" aria-hidden="true"></span></h1>
-        <p class="sub">One line is enough. Your future self is the reader.</p>
       </div>
       <div class="who">
         <span class="avatar" aria-hidden="true"></span>
         <span class="who-col">
           <span class="who-name">@Ender-Jones</span>
-          <span class="who-mode"><span class="mode-dot" aria-hidden="true"></span>LIVE · D1 working tree · git at day close</span>
+          <span class="who-mode"><span class="mode-dot" aria-hidden="true"></span>LIVE · D1 → git at close</span>
         </span>
       </div>
     </header>
@@ -71,10 +70,10 @@ const consoleData = {
           </div>
 
           <div class="chips" id="c-chips">
-            <button type="button" class="chip-wip" data-tok="@" data-route="insert prefix — wip"><span class="tok">@</span> wip</button>
-            <button type="button" class="chip-decision" data-tok="=" data-route="insert prefix — decision"><span class="tok">=</span> decision</button>
-            <button type="button" class="chip-risk" data-tok="!" data-route="insert prefix — risk"><span class="tok">!</span> risk</button>
-            <button type="button" class="chip-next" data-tok=">" data-route="insert prefix — next"><span class="tok">&gt;</span> next</button>
+            <button type="button" class="chip-wip" data-tok="@" data-route="wip: effort — log it the moment you start; wip now + done later is a feature"><span class="tok">@</span> wip</button>
+            <button type="button" class="chip-decision" data-tok="=" data-route="decision: archive only"><span class="tok">=</span> decision</button>
+            <button type="button" class="chip-risk" data-tok="!" data-route="risk: archive only"><span class="tok">!</span> risk</button>
+            <button type="button" class="chip-next" data-tok=">" data-route="next: the only live word — returns tomorrow as carry-over"><span class="tok">&gt;</span> next</button>
           </div>
 
           <div class="entries" id="c-entries">
@@ -90,44 +89,19 @@ const consoleData = {
           <div id="c-carry"></div>
         </div>
 
+        <!-- 字段语义常驻但只占一行(2026-07-12 文字减负): 词 + ≤2 词提示, 完整注解走悬停 RouteHint -->
         <div class="syntax">
-          <!-- 字段语义显在录入台("每次都要想每个词是干什么的就完蛋了"): 只有 > next 有行为, 其余纯归档 -->
-          <div class="syn-row">
-            <span class="syn-label">PREFIXES</span>
-            <div class="syn-defs">
-              <span class="syn-def"><span class="syn-key"><span class="s-done">done</span></span><span class="syn-dim">no prefix — result: it got finished</span></span>
-              <span class="syn-def"><span class="syn-key"><span class="s-wip">@</span> wip</span><span class="syn-dim">effort — log it the moment you start; wip now + done later is a feature, not a duplicate</span></span>
-              <span class="syn-def"><span class="syn-key"><span class="s-decision">=</span> decision</span><span class="syn-dim">archive only</span></span>
-              <span class="syn-def"><span class="syn-key"><span class="s-risk">!</span> risk</span><span class="syn-dim">archive only</span></span>
-              <span class="syn-def"><span class="syn-key"><span class="s-next">&gt;</span> next</span><span class="syn-dim">the only live word — tomorrow it returns as carry-over and demands an exit</span></span>
-              <span class="syn-def"><span class="syn-key"><span class="s-dropped">~</span> dropped</span><span class="syn-dim">a dignified exit — usually happens in triage, not at the keyboard</span></span>
-            </div>
-          </div>
-          <div class="syn-row">
-            <span class="syn-label">CARRY-OVER EXITS</span>
-            <span><span class="s-done">✓</span> done</span>
-            <span><span class="s-next">→</span> still next</span>
-            <span><span class="s-dropped">×</span> drop <span class="syn-dim">(a decision, not a failure)</span></span>
-          </div>
-          <div class="syn-row">
-            <span class="syn-label">AT DAY CLOSE</span>
-            <span><span class="s-wip">✦</span> public line <span class="syn-dim">→ homepage NOW</span></span>
-            <span><span class="s-next">◦</span> energy <span class="syn-dim">(optional)</span></span>
-            <span class="syn-dim">asked once, when you close — not a prefix</span>
-          </div>
+          <span class="syn-word" data-route="done: no prefix — result, it got finished"><span class="s-done">done</span> <span class="syn-dim">result</span></span>
+          <span class="syn-word" data-route="@ wip: effort — log it the moment you start; wip now + done later is a feature"><span class="s-wip">@</span> wip <span class="syn-dim">effort</span></span>
+          <span class="syn-word" data-route="= decision: archive only"><span class="s-decision">=</span> decision</span>
+          <span class="syn-word" data-route="! risk: archive only"><span class="s-risk">!</span> risk</span>
+          <span class="syn-word" data-route="> next: the only live word — tomorrow it returns as carry-over and demands an exit"><span class="s-next">&gt;</span> next <span class="syn-dim">returns tomorrow</span></span>
+          <span class="syn-word" data-route="~ dropped: a dignified exit — usually happens in triage, not at the keyboard"><span class="s-dropped">~</span> drop</span>
         </div>
       </div>
 
       <div class="col-r">
         <div class="ej-card card file">
-          <div class="goes">
-            <span class="goes-label">WHERE THIS GOES</span>
-            <span class="goes-text">
-              <span class="goes-line">every line appends to <span class="goes-path" id="c-path2">content/worklogs/….md</span></span>
-              <span class="goes-line"><span id="c-go-close">close the day</span> pushes it to git</span>
-              <span class="goes-line">your one public sentence becomes the homepage <span id="c-go-now">NOW</span></span>
-            </span>
-          </div>
           <div class="file-head">
             <span class="file-path" id="c-path">content/worklogs/….md</span>
             <span class="file-meta"><span>D1 · draft</span><span class="diff" id="c-diff">+0 −0</span></span>
@@ -178,7 +152,7 @@ const consoleData = {
             <a href="/worklog/" data-route="→ /worklog/ — the full log">worklog →</a>
           </div>
           <div class="trail" id="c-trail"></div>
-          <p class="trail-note" id="c-trailnote">pink — a day with a note · amber — today · gaps are neutral, nothing counts against you.</p>
+          <p class="trail-note" id="c-trailnote">gaps are neutral — no streaks, no guilt.</p>
         </div>
       </div>
     </section>
@@ -252,7 +226,6 @@ const consoleData = {
     entries: Entry[];
     usedCarry: number[];
     droppedCarry: number[];
-    committed: boolean;
     summary: string;
     energy: number;
   };
@@ -260,7 +233,6 @@ const consoleData = {
     entries: [],
     usedCarry: [],
     droppedCarry: [],
-    committed: false,
     summary: '',
     energy: 0,
   };
@@ -470,11 +442,6 @@ const consoleData = {
     $('c-diff').textContent = `+${lines.length} −0`;
   };
 
-  const renderGoes = () => {
-    $('c-go-close').className = state.entries.length ? 'go-on-amber' : 'go-off';
-    $('c-go-now').className = state.committed ? 'go-on-pink' : 'go-off';
-  };
-
   const renderCommit = () => {
     const btn = $<HTMLButtonElement>('c-commit');
     const msg = $('c-msg');
@@ -483,18 +450,16 @@ const consoleData = {
 
     // EARLY START: 一个逻辑日最多关一次 — close 钮锁到 04:00 真正翻日
     if (todayClosed && !closingStale) {
-      msg.textContent = n
-        ? `${n} line${n === 1 ? '' : 's'} pre-logged for ${d}`
-        : `${today} closed ✓ — see you tomorrow`;
+      msg.textContent = n ? `${n} line${n === 1 ? '' : 's'} pre-logged for ${d}` : 'see you tomorrow';
       btn.disabled = true;
       btn.className = 'done';
-      btn.textContent = 'day closed — next close unlocks at 04:00';
+      btn.textContent = 'closed ✓ — unlocks 04:00';
       btn.dataset.route = 'one close per logical day — capture stays open, lines land on tomorrow';
       return;
     }
 
     const pending = closingStale ? 0 : pendingCarry(); // 补关日的分诊时刻已过, 不设闸
-    msg.textContent = n ? `worklog: close ${d} (${n} ${n === 1 ? 'entry' : 'entries'})` : 'nothing to commit';
+    msg.textContent = ''; // 单声道: 按钮自己会说话, 消息行只在已关/EARLY START 时补充
     btn.disabled = !(n > 0 && pending === 0);
     btn.className = ritualOpen ? 'push' : '';
     btn.textContent = ritualOpen
@@ -503,11 +468,9 @@ const consoleData = {
         : 'push the day →'
       : n && pending
         ? `triage carry-over first (${pending})`
-        : n
-          ? closingStale
-            ? `close ${d}`
-            : 'close the day'
-          : 'nothing to commit';
+        : closingStale
+          ? `close ${d}`
+          : 'close the day';
     btn.dataset.route = ritualOpen
       ? 'server commits for you — no paste, no terminal'
       : n && pending
@@ -568,8 +531,8 @@ const consoleData = {
       box.append(cell);
     }
     $('c-trailnote').textContent = pushCount
-      ? 'pushed — today deepens a shade inside its amber frame.\ngaps stay neutral: no streaks, no guilt.'
-      : 'any push turns the day pink · amber — today\ngaps are neutral, nothing counts against you.';
+      ? 'pushed ✓ — today deepens a shade.'
+      : 'gaps are neutral — no streaks, no guilt.';
   };
 
   // 日期条与文件路径随视图切换(今天 / EARLY START 的明天 / 补关的那一天)
@@ -589,7 +552,6 @@ const consoleData = {
       flag.hidden = true;
     }
     $('c-path').textContent = filePathOf(d);
-    $('c-path2').textContent = filePathOf(d);
   };
 
   // 漏关横幅: 从最旧的一天开始补, 一次一天
@@ -614,7 +576,6 @@ const consoleData = {
     renderEntries();
     renderCarry();
     renderMd();
-    renderGoes();
     renderCommit();
     renderRitual();
     renderTrail();
@@ -708,7 +669,6 @@ const consoleData = {
         return;
       }
       pushCount += 1;
-      if (!closingStale) state.committed = true;
       ritualOpen = false;
       closingStale = null;
       note(`✓ pushed ${String(r.commit ?? '').slice(0, 7)} — ${r.path} · site rebuilds itself`);
@@ -896,12 +856,6 @@ const consoleData = {
     background: var(--ej-pink);
     box-shadow: 0 0 16px rgba(255, 122, 192, 0.6);
     animation: ej-caret 1.15s linear infinite;
-  }
-  .sub {
-    margin: 12px 0 0;
-    color: var(--ej-text-3);
-    font-size: var(--ej-fs-ui);
-    line-height: var(--ej-lh-body);
   }
   .who {
     display: flex;
@@ -1349,8 +1303,10 @@ const consoleData = {
   }
 
   .syntax {
-    display: grid;
-    gap: 8px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px 18px;
+    flex-wrap: wrap;
     margin-top: 4px;
     padding: 12px 2px 0;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -1358,34 +1314,11 @@ const consoleData = {
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
   }
-  .syn-row {
-    display: flex;
-    align-items: baseline;
-    gap: 15px;
-    flex-wrap: wrap;
-  }
-  .syn-label {
-    min-width: 128px;
-    letter-spacing: 0.18em;
-    color: var(--ej-mut-2);
+  .syn-word {
+    white-space: nowrap;
   }
   .syn-dim {
     color: #5f5f66;
-  }
-  .syn-defs {
-    display: grid;
-    gap: 5px;
-    flex: 1;
-    min-width: 240px;
-  }
-  .syn-def {
-    display: grid;
-    grid-template-columns: 88px 1fr;
-    gap: 12px;
-    align-items: baseline;
-  }
-  .syn-key {
-    white-space: nowrap;
   }
   .s-done { color: #e8e8ea; }
   .s-wip { color: var(--ej-text-2); }
@@ -1394,47 +1327,6 @@ const consoleData = {
   .s-next { color: var(--ej-amber-2); }
   .s-dropped { color: var(--ej-mut-2); }
 
-  .goes {
-    display: grid;
-    gap: 5px;
-    padding: 12px 18px 11px;
-    border-bottom: 1px dashed rgba(255, 255, 255, 0.09);
-  }
-  .goes-label {
-    color: var(--ej-mut-2);
-    font-family: var(--ej-mono);
-    font-size: var(--ej-fs-micro);
-    font-weight: var(--ej-fw-medium);
-    letter-spacing: var(--ej-track-label);
-  }
-  .goes-text {
-    display: grid;
-    gap: 3px;
-    color: var(--ej-mut);
-    font-family: var(--ej-mono);
-    font-size: var(--ej-fs-label);
-    line-height: var(--ej-lh-loose);
-  }
-  .goes-line {
-    display: block;
-  }
-  .goes-path {
-    color: var(--ej-text-2);
-  }
-  .go-off {
-    color: #5f5f66;
-    transition: all 300ms ease;
-  }
-  .go-on-amber {
-    color: var(--ej-amber-2);
-    text-shadow: 0 0 10px rgba(245, 158, 11, 0.45);
-    transition: all 300ms ease;
-  }
-  .go-on-pink {
-    color: var(--ej-pink-2);
-    text-shadow: 0 0 10px rgba(255, 122, 192, 0.4);
-    transition: all 300ms ease;
-  }
   .file-head {
     display: flex;
     align-items: center;
