@@ -161,36 +161,53 @@ const isZh = path === '/zh/' || path.startsWith('/zh/');
     }
   }
   @media (max-width: 560px) {
-    /* EN/中 还是视觉占位, 移动端先让位给导航本体 */
-    .divider,
-    .lang {
+    /* 手机上语言开关不再隐藏(zh 机制已是真的): 压成单字开关, 只显示"另一种语言" */
+    .divider {
       display: none;
     }
     .right {
-      gap: 12px;
+      gap: 10px;
     }
     .link {
-      font-size: var(--ej-fs-label);
-      letter-spacing: 0.05em;
+      font-size: var(--ej-fs-micro);
+      letter-spacing: 0.04em;
     }
     .name {
       font-size: 16px;
     }
+    .lang {
+      padding: 0;
+      border: none;
+      background: none;
+    }
+    .lang-a {
+      display: none;
+    }
+    .lang-a:not(.on) {
+      display: inline-block;
+      padding: 4px 9px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.25);
+      color: var(--ej-mut-2);
+    }
   }
   @media (max-width: 430px) {
-    /* 375px 一行装下 wordmark + 四链接: 全员再收一档 */
+    /* 375px 一行装下 wordmark + 四链接 + 语言开关: 全员再收一档 */
     .inner {
-      padding: 0 16px;
+      padding: 0 14px;
     }
     .right {
-      gap: 9px;
+      gap: 8px;
     }
     .link {
-      font-size: var(--ej-fs-micro);
-      letter-spacing: 0.03em;
+      letter-spacing: 0.01em;
     }
     .name {
-      font-size: 15px;
+      font-size: 14px;
+    }
+    .lang-a:not(.on) {
+      padding: 4px 7px;
     }
   }
 </style>
