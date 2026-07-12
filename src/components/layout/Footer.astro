@@ -42,4 +42,12 @@ const year = new Date().getFullYear();
       padding: 26px 20px;
     }
   }
+  @media (max-width: 560px) {
+    /* 版权行被右侧胶囊挤成三行 → 上下堆叠: 版权整宽一行, 链接落下面 */
+    .inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+    }
+  }
 </style>

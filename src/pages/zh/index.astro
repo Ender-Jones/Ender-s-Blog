@@ -189,8 +189,13 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
   }
 
   @media (max-width: 720px) {
+    /* 单列堆叠(日期作眉行): 绕开 Safari 的 grid + align-items:baseline + 多行标题
+       会把跨行基线算错、导致标题挤成一堆的老 bug(Chromium 不复现) */
     .row {
-      grid-template-columns: 96px minmax(0, 1fr);
+      grid-template-columns: 1fr;
+      gap: 5px;
+      align-items: start;
+      padding: 15px 12px 15px 14px;
     }
     .meta {
       display: none;

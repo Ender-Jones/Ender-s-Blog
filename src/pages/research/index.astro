@@ -407,4 +407,17 @@ const signalRows = [
       gap: 8px;
     }
   }
+  @media (max-width: 560px) {
+    /* 大 serif 标题 + 内联 mono 副标题在窄屏一起换行会交错 → 竖排, 副标题降为独立块行 */
+    .sec-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+      margin-bottom: 14px;
+    }
+    .sec-sub {
+      display: block;
+      margin-left: 0;
+    }
+  }
 </style>

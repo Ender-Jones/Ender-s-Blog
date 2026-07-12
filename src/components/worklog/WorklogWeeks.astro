@@ -249,4 +249,23 @@ const wdOf = (iso: string) => {
       gap: 10px;
     }
   }
+  @media (max-width: 560px) {
+    /* 周摘要头: 让它整体换行, digest 落到独立一行, 各段内部不折(不再有 "WEEK/23");
+       撑开右侧的横线在窄屏无处可撑 → 藏掉 */
+    .week-head {
+      flex-wrap: wrap;
+      gap: 5px 10px;
+    }
+    .wk,
+    .range,
+    .digest {
+      white-space: nowrap;
+    }
+    .rule {
+      display: none;
+    }
+    .digest {
+      flex-basis: 100%;
+    }
+  }
 </style>
