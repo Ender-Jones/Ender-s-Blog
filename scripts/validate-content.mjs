@@ -47,6 +47,14 @@ function checkPost(file) {
   if (coda && !quoteIds.has(coda)) {
     fail(file, `coda "${coda}" has no matching id in src/data/quotes.yml`);
   }
+
+  // 标题层级契约: 正文从 ## 开始, 最深到 ####(h1 = frontmatter title 的领地;
+  // h5/h6 在 prose.css 里没有着装). 先剥 frontmatter 与代码块, 免得 # 注释误伤.
+  const body = source
+    .replace(/^---\n[\s\S]*?\n---/, '')
+    .replace(/^(```|~~~)[^\n]*\n[\s\S]*?^\1/gm, '');
+  if (/^# /m.test(body)) fail(file, 'h1 in post body — title lives in frontmatter, start sections at "##"');
+  if (/^#{5,6} /m.test(body)) fail(file, 'h5/h6 in post body — heading ladder stops at "####"');
 }
 
 function checkWorklog(file) {

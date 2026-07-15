@@ -54,9 +54,28 @@
   line-height: var(--ej-lh-snug);
 }
 
+.prose h4 {
+  /* h4 = mono 大写小标签(站内 kicker 词汇): 层级最深的标题降为"标注",
+     与 h3(serif 400)和 strong(600)彻底分频. 正文契约: 最深写到 ####. */
+  margin: 28px 0 10px;
+  scroll-margin-top: 84px;
+  color: var(--ej-text-3);
+  font-family: var(--ej-mono);
+  font-size: var(--ej-fs-label);
+  font-weight: var(--ej-fw-medium);
+  letter-spacing: var(--ej-track-label);
+  line-height: var(--ej-lh-snug);
+  text-transform: uppercase;
+}
+
 .prose strong {
   color: #f0f0f2;
   font-weight: var(--ej-fw-head);
+}
+
+.prose del {
+  color: var(--ej-dim);
+  text-decoration-color: rgba(255, 255, 255, 0.4);
 }
 
 .prose em {
@@ -89,9 +108,9 @@
 }
 
 .prose ul > li {
+  /* 字号继承 .prose(lede): 文章内列表=正文尺寸, 不再比段落小一档 */
   position: relative;
   padding-left: 22px;
-  font-size: var(--ej-fs-body);
   line-height: var(--ej-lh-loose);
 }
 
@@ -107,7 +126,6 @@
 }
 
 .prose ol > li {
-  font-size: var(--ej-fs-body);
   line-height: var(--ej-lh-loose);
 }
 
@@ -151,7 +169,7 @@
 
 .prose code {
   font-family: var(--ej-mono);
-  font-size: var(--ej-fs-note);
+  font-size: 0.85em; /* 相对值: 跟随所在上下文(段落/列表/标题), 不再固定 px */
   background: rgba(255, 255, 255, 0.06);
   border-radius: 4px;
   padding: 2px 6px;
@@ -235,6 +253,75 @@
 .prose .katex {
   font-size: 1.06em;
   color: #e8e8ea;
+}
+
+/* GFM 脚注([^1]): 角标 = mono 粉色带方括号; 文末脚注区 = 发丝线 + note 档暗灰 */
+.prose sup {
+  line-height: 0; /* 角标不得撑开行距 */
+}
+
+.prose [data-footnote-ref] {
+  font-family: var(--ej-mono);
+  font-size: var(--ej-fs-meta);
+  color: var(--ej-pink);
+  text-decoration: none;
+}
+
+.prose [data-footnote-ref]::before {
+  content: '[';
+}
+
+.prose [data-footnote-ref]::after {
+  content: ']';
+}
+
+.prose section.footnotes {
+  margin-top: 48px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--ej-mut);
+  font-size: var(--ej-fs-note);
+}
+
+.prose section.footnotes li {
+  font-size: var(--ej-fs-note);
+}
+
+.prose section.footnotes p {
+  display: inline; /* GFM 把每条脚注包进 p, 别让它折行成块 */
+  margin: 0;
+}
+
+.prose section.footnotes .data-footnote-backref {
+  font-family: var(--ej-mono);
+  text-decoration: none;
+}
+
+/* GFM 的 sr-only 标题(Footnotes)按标准隐藏, 否则会以裸 h2 现身 */
+.prose .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* GFM 任务清单(- [ ]): checkbox 顶替破折号 */
+.prose li.task-list-item {
+  padding-left: 0;
+}
+
+.prose li.task-list-item::before {
+  content: none;
+}
+
+.prose li.task-list-item input[type='checkbox'] {
+  margin-right: 8px;
+  accent-color: var(--ej-pink);
+  vertical-align: -1px;
 }
 
 @media (max-width: 720px) {

@@ -91,7 +91,8 @@ Ops runbook: [docs/MAINTENANCE.md](docs/MAINTENANCE.md).
 
 | Want to | Edit |
 |---|---|
-| Write a new post | `src/content/posts/<slug>.mdx` — copy frontmatter from any neighbor; images in `public/img/posts/` |
+| Write a new post | `src/content/posts/<slug>.mdx` — copy frontmatter from any neighbor; images in `public/img/posts/` — body contract: sections start at `##`, ladder stops at `####` (validator-enforced); everything GFM can emit is dressed |
+| Check/adjust article typography | `src/styles/prose.css` (all token-fed); eyeball every element at once on `/dev/prose-lab` |
 | Hand-write a worklog entry | `src/content/worklogs/YYYY-MM.md` — one file per month, append `## YYYY-MM-DD` sections |
 | Add/change a coda quote | `src/data/quotes.yml` — pin one to a post via frontmatter `coda: <id>`, else random |
 | Register a new tag | `src/data/tags.yml` — an unregistered tag fails the build on purpose |

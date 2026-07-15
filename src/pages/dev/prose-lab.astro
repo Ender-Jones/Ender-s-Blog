@@ -1,0 +1,33 @@
+---
+// 着装样本页: .prose 全元素各一个, 审样式 10 秒扫完(type-lab 的先例).
+// 不进导航不进 sitemap; 样本内容在 components/dev/ProseSpecimen.mdx.
+import 'katex/dist/katex.min.css';
+import '../../styles/prose.css';
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import Specimen from '../../components/dev/ProseSpecimen.mdx';
+---
+
+<BaseLayout title="Prose lab — Ender Jones" description="Prose dress-code specimen." noindex>
+  <main>
+    <p class="lab-note">/dev/prose-lab — prose 着装样本</p>
+    <article class="prose">
+      <Specimen />
+    </article>
+  </main>
+</BaseLayout>
+
+<style>
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 140px 24px 120px;
+  }
+  .lab-note {
+    margin: 0 0 48px;
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-meta);
+    letter-spacing: var(--ej-track-label);
+    text-transform: uppercase;
+  }
+</style>

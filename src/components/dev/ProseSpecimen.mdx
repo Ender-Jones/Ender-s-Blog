@@ -1,0 +1,55 @@
+{/* 着装样本内容: .prose 可能渲染的每种元素各来一个, 配合 /dev/prose-lab 页使用.
+    契约同正文: 从 ## 开始, 最深 ####. */}
+
+## First section
+
+Lead paragraph at the reading measure, with **strong emphasis**, *serif italics*, ~~a struck-through claim~~, `inline code`, a [textual link](/posts/), inline math $R^2 = 1 - \frac{SS_\text{res}}{SS_\text{tot}}$, and a footnote reference.[^1]
+
+Second paragraph to check spacing rhythm between blocks. It also carries the second footnote.[^2]
+
+### Subsection in regular serif
+
+#### Formula:
+
+$$
+\mathrm{MAE} = \frac{1}{n}\sum_{i=1}^{n}\left|y_i - \hat{y}_i\right|
+$$
+
+#### A deliberately long h4 label to check how uppercase mono wraps across lines:
+
+- Unordered item at full body size, long enough to wrap onto a second line so the hanging dash indent is visible in the specimen.
+- Item with a **bold lead**: followed by its explanation.
+- Item carrying `inline code` in flow.
+  - Nested item one level down.
+
+1. Ordered item one.
+2. Ordered item two with a longer tail to show the mono marker against wrapped text.
+
+- [ ] An open task
+- [x] A completed task
+
+> A blockquote in serif italic light, hanging off the pink hairline — long enough to wrap so the line-height shows.
+
+```python
+# comment inside a fence — block code stays at its own fixed size
+def mae(y, y_hat):
+    return abs(y - y_hat).mean()
+```
+
+| Metric | Behaviour  | Note                  |
+| ------ | ---------- | --------------------- |
+| MAE    | robust     | linear penalty        |
+| RMSE   | sensitive  | squares large errors  |
+
+---
+
+## Second section
+
+Numbering check: this heading should read §02. An image follows.
+
+![Abstract architectural curves used as a specimen image.](/img/posts/regression-title.png)
+
+Closing paragraph before the footnote area renders below.
+
+[^1]: Footnote body with a [link](/about/) and `code`, plus the back-reference arrow.
+[^2]: Second footnote to check list rhythm in the footnote area.
