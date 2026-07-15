@@ -84,7 +84,7 @@ const zhHref = isZh ? '/zh/' : (langAlt ?? '/zh/');
     font-family: var(--ej-serif);
     font-size: 18px;
     font-style: italic;
-    font-weight: var(--ej-fw-medium);
+    font-weight: var(--ej-fw-body); /* serif 无 500, medium 实渲染就是 400 — 写诚实值 */
     letter-spacing: 0.005em;
     white-space: nowrap; /* 窄屏下 wordmark 折行会把 caret 挤去撞导航链接 */
   }

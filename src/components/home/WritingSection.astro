@@ -173,8 +173,8 @@ const fMin = minutes(featured.body);
     margin-top: 12px;
     color: var(--ej-text);
     font-family: var(--ej-serif);
-    font-size: 27px;
-    font-weight: var(--ej-fw-medium);
+    font-size: var(--ej-fs-feature);
+    font-weight: var(--ej-fw-body); /* serif 无 500, medium 实渲染就是 400 — 写诚实值 */
     letter-spacing: -0.01em;
     line-height: 1.15;
     transition: color 120ms ease;
@@ -287,8 +287,8 @@ const fMin = minutes(featured.body);
   .title {
     color: var(--ej-text-2);
     font-family: var(--ej-serif);
-    font-size: 19px;
-    font-weight: var(--ej-fw-medium);
+    font-size: var(--ej-fs-title);
+    font-weight: var(--ej-fw-body);
     letter-spacing: var(--ej-track-body);
     line-height: var(--ej-lh-snug);
     white-space: nowrap;

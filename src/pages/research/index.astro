@@ -204,8 +204,8 @@ const signalRows = [
     margin: 12px 0 0;
     color: var(--ej-text);
     font-family: var(--ej-serif);
-    font-size: 22px;
-    font-weight: var(--ej-fw-medium);
+    font-size: var(--ej-fs-h3);
+    font-weight: var(--ej-fw-body); /* serif 无 500, medium 实渲染就是 400 — 写诚实值 */
     letter-spacing: var(--ej-track-body);
     line-height: var(--ej-lh-snug);
   }
@@ -312,7 +312,7 @@ const signalRows = [
   .m-value {
     color: var(--ej-text);
     font-family: var(--ej-mono);
-    font-size: 27px;
+    font-size: var(--ej-fs-metric);
     font-weight: var(--ej-fw-head);
     font-variant-numeric: tabular-nums;
   }

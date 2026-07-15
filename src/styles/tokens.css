@@ -24,6 +24,13 @@
   /* display 档(标题, serif; Linear headline/card-title 原值) */
   --ej-fs-h3: 22px; /* Linear card-title */
   --ej-fs-h2: 28px; /* Linear headline */
+  /* 站内角色档(梯外值, ≥2 处同角色复用才收编; 2026-07-15) */
+  --ej-fs-title: 19px; /* 列表行标题: writing 行/tag 行/文章前后篇 */
+  --ej-fs-feature: 27px; /* 主页特稿卡标题(serif) */
+  --ej-fs-metric: 27px; /* readout 指标值(mono): 主页 hero + research 页 */
+  /* 备案的 bespoke 特例(一次性 display 值, 不收编): splash 问候/hero claim/
+     zh 页头/console 页头(各自 clamp) · research thesis 与文章 coda(clamp 20-26) ·
+     主页区块 h2 30px · about 与 zh 区块 h2 26px · hero 署名 20px */
 
   /* 字重 — Linear 三档(400 正文 · 500 中 · 600 标题); +300 用于大字斜体引文.
      暗底封顶 600: 亮字会光晕膨胀, 700+ 会糊(Linear 同理不上重字). */
