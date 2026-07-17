@@ -40,7 +40,7 @@ const ogImageAbs = Astro.site ? new URL(ogImage, Astro.site).href : ogImage;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang === 'zh' ? 'zh' : 'en'}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

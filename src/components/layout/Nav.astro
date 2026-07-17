@@ -75,6 +75,8 @@ const zhHref = isZh ? '/zh/' : (langAlt ?? '/zh/');
   }
   .logo {
     display: flex;
+    padding-block: 3px; /* 命中高度 ≥24px(窄屏 wordmark 缩小后也够), 负 margin 抵消 */
+    margin-block: -3px;
     align-items: baseline;
     gap: 7px;
     text-decoration: none;
@@ -107,6 +109,8 @@ const zhHref = isZh ? '/zh/' : (langAlt ?? '/zh/');
   .link {
     --t: var(--ej-pink-2);
     --t-rgb: 255, 122, 192;
+    padding-block: 3px; /* 命中区 ≥24px(窄屏字号缩小后也够), 负 margin 抵消 */
+    margin-block: -3px;
     color: var(--ej-text-3);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-small);

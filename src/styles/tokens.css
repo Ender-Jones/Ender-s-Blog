@@ -4,6 +4,8 @@
    Edit a value here and all pages follow.
    ============================================================ */
 :root {
+  color-scheme: dark; /* UA 部件(表单/滚动条/autofill)跟暗色走 — 暗站惯例 */
+
   /* type — V2 血统三件套(2026-07 拍板), @fontsource 自托管(国内可达);
      中文走 Noto Sans SC(黑体), 切片自托管, 苹方/雅黑做系统兜底. */
   --ej-serif: 'Source Serif Pro', Georgia, 'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB', serif;

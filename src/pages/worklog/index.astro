@@ -209,7 +209,7 @@ const hasArchive = weeks.length > RECENT;
     display: flex;
     align-items: center;
     gap: 7px;
-    color: #63636b;
+    color: var(--ej-mut-2); /* 曾是野灰 #63636b(3.3:1), 收编 token 并过 4.5 线 */
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
   }
@@ -251,7 +251,7 @@ const hasArchive = weeks.length > RECENT;
     flex-wrap: wrap;
     padding: 14px 0 0;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
-    color: var(--ej-dim);
+    color: var(--ej-mut-2); /* 图例说明是要读的信息字, dim(3.7)不够 4.5 线 */
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
   }

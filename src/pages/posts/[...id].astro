@@ -322,6 +322,9 @@ const cover = post.data.cover_mode ?? 'hero-large';
     flex-wrap: wrap;
   }
   .back {
+    display: inline-block;
+    padding-block: 4px; /* 命中区 ≥24px, 负 margin 抵消布局 */
+    margin-block: -4px;
     color: #9a9aa2;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
@@ -700,7 +703,7 @@ const cover = post.data.cover_mode ?? 'hero-large';
   .toc-num {
     display: inline-block;
     width: 26px;
-    color: #5f5f66;
+    color: var(--ej-dim); /* 装饰性编号(旁边有正常亮度的链接文字), 收编野灰 #5f5f66 */
     font-size: var(--ej-fs-micro);
     letter-spacing: 0.08em;
     transition: color 120ms ease;
@@ -725,7 +728,9 @@ const cover = post.data.cover_mode ?? 'hero-large';
   }
   .toc-top {
     display: inline-block;
-    margin-top: 14px;
+    padding-block: 4px; /* 命中区 ≥24px; margin-top 14-4 抵消, 底部负值抵消 */
+    margin-top: 10px;
+    margin-bottom: -4px;
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);

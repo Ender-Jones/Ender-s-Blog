@@ -179,10 +179,18 @@ html.ej-splash-active .reveal {
    .ej-link  文字箭头链接: 静默灰 → hover 染语义色 + 辉光 + 右移 2px
    .ej-pill  胶囊: 静默灰字 → hover 实心填色 + 深字 + neon 投影(footer 为原型)
    .ej-orb   圆形微钮(⟳ 等): 发丝圆环 → hover 半圈旋转 + 染色 + 微光 */
+/* 键盘焦点环: 琥珀 = action 语义; 只在 :focus-visible(键盘)出现, 鼠标点击不弹 */
+:focus-visible {
+  outline: 2px solid var(--ej-amber);
+  outline-offset: 2px;
+}
+
 .ej-link {
   --btn-tone: var(--ej-pink-2);
   --btn-tone-rgb: 255, 122, 192;
   display: inline-block;
+  padding-block: 4px; /* 命中区 ≥24px(WCAG 2.5.8), 负 margin 抵消布局 */
+  margin-block: -4px;
   color: #9a9aa2;
   font-family: var(--ej-mono);
   font-size: var(--ej-fs-label);

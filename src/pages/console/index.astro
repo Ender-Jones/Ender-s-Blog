@@ -1178,7 +1178,7 @@ const consoleData = {
   .empty {
     margin: 0;
     padding: 18px 20px;
-    color: var(--ej-dim);
+    color: var(--ej-mut-2); /* 信息字对比度地板 4.5:1(dim 只有 3.7) */
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-small);
   }
@@ -1216,15 +1216,15 @@ const consoleData = {
   }
   .entries :global(.entry-time) {
     flex-shrink: 0;
-    color: var(--ej-dim);
+    color: var(--ej-mut-2); /* 时间戳是信息, 深夜也要认得清 */
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
     font-variant-numeric: tabular-nums;
   }
   .entries :global(.entry-del) {
     flex-shrink: 0;
-    width: 20px;
-    height: 20px;
+    width: 24px; /* WCAG 2.5.8 目标尺寸下限 */
+    height: 24px;
     padding: 0;
     border-radius: 5px;
     cursor: pointer;
@@ -1257,7 +1257,7 @@ const consoleData = {
     letter-spacing: var(--ej-track-label);
   }
   .carry-hint {
-    color: var(--ej-dim);
+    color: var(--ej-mut-2); /* 信息字对比度地板 4.5:1 */
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
     font-weight: var(--ej-fw-medium);
@@ -1356,7 +1356,7 @@ const consoleData = {
     white-space: nowrap;
   }
   .syn-dim {
-    color: #5f5f66;
+    color: var(--ej-mut-2); /* 曾是野灰 #5f5f66(3.1:1), 注解也是要读的字 */
   }
   .s-done { color: #e8e8ea; }
   .s-wip { color: var(--ej-text-2); }
@@ -1374,6 +1374,8 @@ const consoleData = {
     border-bottom: 1px solid rgba(255, 255, 255, 0.055);
   }
   .file-path {
+    padding-block: 4px; /* 命中区 ≥24px, 负 margin 抵消布局 */
+    margin-block: -4px;
     color: var(--ej-text-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
@@ -1389,7 +1391,7 @@ const consoleData = {
     display: flex;
     align-items: baseline;
     gap: 10px;
-    color: var(--ej-dim);
+    color: var(--ej-mut-2); /* 存储状态是信息字 */
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
     font-weight: var(--ej-fw-medium);
@@ -1590,7 +1592,7 @@ const consoleData = {
     justify-content: space-between;
   }
   .rit-count {
-    color: var(--ej-dim);
+    color: var(--ej-mut-2); /* 字数统计是信息字 */
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
     font-variant-numeric: tabular-nums;
@@ -1613,7 +1615,7 @@ const consoleData = {
     cursor: pointer;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: transparent;
-    color: var(--ej-dim);
+    color: var(--ej-mut-2); /* 未选中的能量数字也要认得清 */
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
     font-weight: var(--ej-fw-head);
@@ -1629,7 +1631,7 @@ const consoleData = {
     color: var(--ej-amber-2);
   }
   .rit-opt {
-    color: var(--ej-dim);
+    color: var(--ej-mut-2); /* 可选项文案是要读的字 */
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-micro);
   }
@@ -1713,7 +1715,8 @@ const consoleData = {
   }
   .commit :global(.cl-retry) {
     margin-left: 6px;
-    padding: 1px 8px;
+    padding: 3px 8px; /* 命中高度 ≥24px */
+    margin-block: -2px;
     border-radius: 5px;
     cursor: pointer;
     border: 1px solid rgba(255, 120, 120, 0.35);
@@ -1744,6 +1747,8 @@ const consoleData = {
     letter-spacing: var(--ej-track-label);
   }
   .trail-head a {
+    padding-block: 4px; /* 命中区 ≥24px, 负 margin 抵消布局 */
+    margin-block: -4px;
     color: #9a9aa2;
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
