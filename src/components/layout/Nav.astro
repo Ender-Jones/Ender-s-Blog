@@ -18,8 +18,8 @@ const isActive = (href: string) => path === href || path.startsWith(href);
 // zh 文章在 /posts/zh/ 下, 不带 /zh/ 前缀 → 语言要由 frontmatter 显式给, 着陆页才靠路径推断
 const curLang = lang ?? (path === '/zh/' || path.startsWith('/zh/') ? 'zh' : 'en');
 const isZh = curLang === 'zh';
-const enHref = isZh ? (langAlt ?? '/') : '/';
-const zhHref = isZh ? '/zh/' : (langAlt ?? '/zh/');
+// 单一动作钮: 永远只显示"另一种语言", 点了必切 — 状态展示式双钮会出现"点当前语言=白刷新"
+const altHref = isZh ? (langAlt ?? '/') : (langAlt ?? '/zh/');
 ---
 
 <nav>
@@ -33,10 +33,7 @@ const zhHref = isZh ? '/zh/' : (langAlt ?? '/zh/');
         <a class:list={['link', `tone-${l.tone}`, { active: isActive(l.href) }]} href={l.href} data-route={l.route}>{l.label}</a>
       ))}
       <span class="divider" aria-hidden="true"></span>
-      <span class="lang">
-        <a class:list={['lang-a', { on: !isZh }]} href={enHref} data-route="→ english">EN</a>
-        <a class:list={['lang-a', { on: isZh }]} href={zhHref} data-route="→ 中文">中</a>
-      </span>
+      <a class="lang-a" href={altHref} data-route={isZh ? '→ english' : '→ 中文'}>{isZh ? 'EN' : '中'}</a>
     </div>
   </div>
 </nav>
@@ -144,28 +141,20 @@ const zhHref = isZh ? '/zh/' : (langAlt ?? '/zh/');
     height: 15px;
     background: rgba(255, 255, 255, 0.12);
   }
-  .lang {
-    display: inline-flex;
+  .lang-a {
+    padding: 4px 10px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 999px;
-    padding: 2px;
+    background: rgba(0, 0, 0, 0.25);
+    color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-meta);
-    background: rgba(0, 0, 0, 0.25);
-  }
-  .lang-a {
-    padding: 3px 9px;
-    border-radius: 999px;
-    color: var(--ej-mut-2);
     text-decoration: none;
-    transition: color 120ms ease;
+    transition: all 120ms ease;
   }
   .lang-a:hover {
     color: var(--ej-text);
-  }
-  .lang-a.on {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--ej-text);
+    border-color: rgba(255, 255, 255, 0.28);
   }
   @media (max-width: 720px) {
     .inner {
@@ -176,7 +165,6 @@ const zhHref = isZh ? '/zh/' : (langAlt ?? '/zh/');
     }
   }
   @media (max-width: 560px) {
-    /* 手机上语言开关不再隐藏(zh 机制已是真的): 压成单字开关, 只显示"另一种语言" */
     .divider {
       display: none;
     }
@@ -190,21 +178,8 @@ const zhHref = isZh ? '/zh/' : (langAlt ?? '/zh/');
     .name {
       font-size: 16px;
     }
-    .lang {
-      padding: 0;
-      border: none;
-      background: none;
-    }
     .lang-a {
-      display: none;
-    }
-    .lang-a:not(.on) {
-      display: inline-block;
       padding: 4px 9px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 999px;
-      background: rgba(0, 0, 0, 0.25);
-      color: var(--ej-mut-2);
     }
   }
   @media (max-width: 430px) {
@@ -221,7 +196,7 @@ const zhHref = isZh ? '/zh/' : (langAlt ?? '/zh/');
     .name {
       font-size: 14px;
     }
-    .lang-a:not(.on) {
+    .lang-a {
       padding: 4px 7px;
     }
   }

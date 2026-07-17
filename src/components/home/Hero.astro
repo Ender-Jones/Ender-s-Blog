@@ -27,7 +27,7 @@ const synced = syncedAt
       <p class="body">{home.hero.body}</p>
       <div class="ctas">
         <a class="cta-primary" href="/research/" data-route="→ /research/ — publications & cv">research &amp; cv →</a>
-        <a class="cta-mail" href="mailto:enderjones1872@gmail.com" data-route="✉ enderjones1872@gmail.com">reach me →</a>
+        <a class="ej-pill" href="mailto:enderjones1872@gmail.com" data-route="✉ enderjones1872@gmail.com">reach me</a>
       </div>
     </div>
 
@@ -181,21 +181,6 @@ const synced = syncedAt
       0 1px 2px rgba(0, 0, 0, 0.7),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
-  .cta-mail {
-    color: #9a9aa2;
-    font-family: var(--ej-mono);
-    font-size: var(--ej-fs-small);
-    text-decoration: none;
-    padding-bottom: 2px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
-    transition: all 120ms var(--ej-ease);
-  }
-  .cta-mail:hover {
-    color: var(--ej-pink-2);
-    border-bottom-color: rgba(255, 122, 192, 0.55);
-    text-shadow: 0 0 14px rgba(255, 122, 192, 0.45);
-  }
-
   /* hover = 对焦: 取景角亮起并微张, 扫描线扫过肖像一次. 静止时只留 status 脉冲点. */
   .card {
     position: relative;
