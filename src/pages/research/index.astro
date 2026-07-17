@@ -159,6 +159,10 @@ const signalRows = [
   .paper:hover {
     border-color: rgba(var(--tone-rgb), 0.28);
   }
+  .paper:target {
+    /* 主页面板深链落地时点亮目标卡("你是被带到我这儿的"), 同 GitHub 高亮锚定行 */
+    border-color: rgba(var(--tone-rgb), 0.28);
+  }
   .p-bar {
     position: absolute;
     left: 0;
@@ -215,7 +219,7 @@ const signalRows = [
     font-family: var(--ej-serif);
     font-size: var(--ej-fs-body);
     font-style: italic;
-    font-weight: var(--ej-fw-light);
+    font-weight: var(--ej-fw-body); /* 300 只许 ≥20px 展示尺寸 */
     line-height: 1.5;
   }
   .p-abstract {
