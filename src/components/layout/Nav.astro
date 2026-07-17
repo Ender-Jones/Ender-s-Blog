@@ -104,10 +104,12 @@ const altHref = isZh ? (langAlt ?? '/') : (langAlt ?? '/zh/');
     gap: 26px;
   }
   .link {
+    /* hover = tone pill 背景亮起(动态); active 仍是底部 tone 细边框(不变) */
     --t: var(--ej-pink-2);
     --t-rgb: 255, 122, 192;
-    padding-block: 3px; /* 命中区 ≥24px(窄屏字号缩小后也够), 负 margin 抵消 */
-    margin-block: -3px;
+    padding: 4px 10px 3px;
+    border-radius: 7px;
+    border-bottom: 2px solid transparent;
     color: var(--ej-text-3);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-small);
@@ -115,9 +117,7 @@ const altHref = isZh ? (langAlt ?? '/') : (langAlt ?? '/zh/');
     letter-spacing: 0.08em;
     text-transform: uppercase;
     text-decoration: none;
-    padding-bottom: 3px;
-    border-bottom: 2px solid transparent;
-    transition: color 120ms var(--ej-ease);
+    transition: all 120ms var(--ej-ease);
   }
   .link.tone-amber {
     --t: var(--ej-amber-2);
@@ -129,12 +129,11 @@ const altHref = isZh ? (langAlt ?? '/') : (langAlt ?? '/zh/');
   }
   .link:hover {
     color: var(--t);
-    text-shadow: 0 0 12px rgba(var(--t-rgb), 0.45);
+    background: rgba(var(--t-rgb), 0.1);
   }
   .link.active {
     color: var(--ej-text);
     border-bottom-color: rgba(var(--t-rgb), 0.55);
-    text-shadow: none;
   }
   .divider {
     width: 1px;
@@ -178,6 +177,7 @@ const altHref = isZh ? (langAlt ?? '/') : (langAlt ?? '/zh/');
       gap: 10px;
     }
     .link {
+      padding: 4px 6px; /* pill padding 收窄, 腾出横向空间 */
       font-size: var(--ej-fs-micro);
       letter-spacing: 0.04em;
     }
@@ -197,6 +197,7 @@ const altHref = isZh ? (langAlt ?? '/') : (langAlt ?? '/zh/');
       gap: 8px;
     }
     .link {
+      padding: 4px 0; /* 极窄屏取消 pill 左右 padding, 恢复原布局余量(触屏无 hover) */
       letter-spacing: 0.01em;
     }
     .name {

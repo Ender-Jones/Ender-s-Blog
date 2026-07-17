@@ -46,7 +46,7 @@ const tocItems = toc.map((h) => {
 const showToc = tocItems.length >= 3;
 const giscus = site.comments?.giscus;
 // 题图五档(frontmatter cover_mode): hero-large 大条(默认) / hero-small 矮条 / strip 细带 /
-// showcase 原比例不裁切(构图整体就是重点时用) / none 不渲染题图(只留 og).
+// showcase 裁 3:2 + 四周渐隐融入页面(照片本身是重点时用) / none 不渲染题图(只留 og).
 const cover = post.data.cover_mode ?? 'hero-large';
 ---
 
@@ -76,7 +76,7 @@ const cover = post.data.cover_mode ?? 'hero-large';
     {post.data.image && cover !== 'none' && (
       <figure class:list={['hero', 'reveal', `cover-${cover}`]} style="--reveal-i: 1;">
         {cover === 'showcase' ? (
-          <img class="hero-img hero-natural" src={post.data.image} alt="" loading="eager" decoding="async" />
+          <img class="hero-img hero-natural" src={post.data.image} alt="" style={`object-position: ${post.data.image_focus ?? '50% 50%'};`} loading="eager" decoding="async" />
         ) : (
           <div class="hero-img" style={`background-image: url('${post.data.image}'); background-position: ${post.data.image_focus};`}></div>
         )}
@@ -411,8 +411,23 @@ const cover = post.data.cover_mode ?? 'hero-large';
     height: clamp(90px, 14vh, 130px);
   }
   .hero-natural {
-    height: auto;
+    /* showcase 裁 3:2(摄影经典) + 四周渐隐融入页面: 上下 8% / 左右 3% 渐变带, 无硬边框.
+       裁哪部分由 image_focus(object-position)控制. */
     width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    -webkit-mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 8%, #000 92%, transparent 100%),
+      linear-gradient(to right, transparent 0%, #000 3%, #000 97%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(to bottom, transparent 0%, #000 8%, #000 92%, transparent 100%),
+      linear-gradient(to right, transparent 0%, #000 3%, #000 97%, transparent 100%);
+    mask-composite: intersect;
   }
   .hero figcaption {
     display: flex;
