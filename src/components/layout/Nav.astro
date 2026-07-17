@@ -107,9 +107,10 @@ const altHref = isZh ? (langAlt ?? '/') : (langAlt ?? '/zh/');
     /* hover = tone pill 背景亮起(动态); active 仍是底部 tone 细边框(不变) */
     --t: var(--ej-pink-2);
     --t-rgb: 255, 122, 192;
-    padding: 4px 10px 3px;
+    --pad-x: 10px;
+    position: relative;
+    padding: 4px var(--pad-x) 3px;
     border-radius: 7px;
-    border-bottom: 2px solid transparent;
     color: var(--ej-text-3);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-small);
@@ -133,7 +134,17 @@ const altHref = isZh ? (langAlt ?? '/') : (langAlt ?? '/zh/');
   }
   .link.active {
     color: var(--ej-text);
-    border-bottom-color: rgba(var(--t-rgb), 0.55);
+  }
+  /* active/当前页 = 紧贴文字的直下划线(::after 与 pill padding 解耦, 宽=文字宽) */
+  .link.active::after {
+    content: '';
+    position: absolute;
+    left: var(--pad-x);
+    right: var(--pad-x);
+    bottom: 0;
+    height: 2px;
+    border-radius: 1px;
+    background: rgba(var(--t-rgb), 0.55);
   }
   .divider {
     width: 1px;
@@ -177,7 +188,7 @@ const altHref = isZh ? (langAlt ?? '/') : (langAlt ?? '/zh/');
       gap: 10px;
     }
     .link {
-      padding: 4px 6px; /* pill padding 收窄, 腾出横向空间 */
+      --pad-x: 6px; /* pill padding 收窄; underline 跟随 */
       font-size: var(--ej-fs-micro);
       letter-spacing: 0.04em;
     }
@@ -197,7 +208,7 @@ const altHref = isZh ? (langAlt ?? '/') : (langAlt ?? '/zh/');
       gap: 8px;
     }
     .link {
-      padding: 4px 0; /* 极窄屏取消 pill 左右 padding, 恢复原布局余量(触屏无 hover) */
+      --pad-x: 0px; /* 极窄屏取消 pill 左右 padding, 恢复原布局余量(触屏无 hover) */
       letter-spacing: 0.01em;
     }
     .name {
