@@ -19,9 +19,12 @@
   text-wrap: pretty;
 }
 
+/* 间距梯(2026-07-15, Gestalt 邻近原则): 上空编码层级, 台阶肉眼可辨 —
+   段落流 16 · h4 上空 32 · h3 上空 40 · h2 上空 56(Tailwind Typography lg 同值);
+   标题下空一律 < 上空(贴住自己的内容): h2 16 / h3 12 / h4 8. */
 .prose > h2 {
   counter-increment: ej-section;
-  margin: 52px 0 16px;
+  margin: 56px 0 16px;
   scroll-margin-top: 84px;
   color: var(--ej-text);
   font-family: var(--ej-serif);
@@ -44,7 +47,7 @@
 
 .prose h3 {
   /* h3 = 400 regular serif(试): 靠字号+serif 与正文分, 靠字重与 h2(600) 分层 */
-  margin: 26px 0 12px;
+  margin: 40px 0 12px;
   scroll-margin-top: 84px;
   color: #f0f0f2;
   font-family: var(--ej-serif);
@@ -57,7 +60,7 @@
 .prose h4 {
   /* h4 = mono 大写小标签(站内 kicker 词汇): 层级最深的标题降为"标注",
      与 h3(serif 400)和 strong(600)彻底分频. 正文契约: 最深写到 ####. */
-  margin: 28px 0 10px;
+  margin: 32px 0 8px;
   scroll-margin-top: 84px;
   color: var(--ej-text-3);
   font-family: var(--ej-mono);
@@ -99,7 +102,7 @@
 .prose ul,
 .prose ol {
   display: grid;
-  gap: 8px;
+  gap: 12px; /* 组间 > 组内: 顶层列表项 12, 嵌套子项 8 — 间距本身就是分组信息 */
   padding-left: 4px;
 }
 
@@ -138,6 +141,7 @@
 .prose li ul,
 .prose li ol {
   margin-top: 8px;
+  gap: 8px;
 }
 
 .prose blockquote {
@@ -253,6 +257,24 @@
 .prose .katex {
   font-size: 1.06em;
   color: #e8e8ea;
+}
+
+/* 层级贴合: 标题后的首个块贴紧标题(空隙由标题的下空独掌);
+   子标题紧跟父标题时, 上空收紧一档(它属于刚开始的这一节, 不该自带大留白). */
+.prose h2 + h3 {
+  margin-top: 20px;
+}
+
+.prose h3 + h4 {
+  margin-top: 16px;
+}
+
+.prose :is(h2, h3, h4) + :is(pre, blockquote, table) {
+  margin-top: 0;
+}
+
+.prose :is(h2, h3, h4) + p > .katex-display {
+  margin-top: 0; /* 公式紧贴它的标注(如 FORMULA:), 不再漂 24px */
 }
 
 /* GFM 脚注([^1]): 角标 = mono 粉色带方括号; 文末脚注区 = 发丝线 + note 档暗灰 */
