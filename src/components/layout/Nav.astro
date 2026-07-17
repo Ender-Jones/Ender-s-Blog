@@ -154,7 +154,13 @@ const altHref = isZh ? (langAlt ?? '/') : (langAlt ?? '/zh/');
   }
   .lang-a:hover {
     color: var(--ej-text);
-    border-color: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.32);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
+  }
+  /* 中性色填充(语言切换无专属语义色, 不套四色); 抬起→按下给物理动作感 */
+  .lang-a:active {
+    transform: translateY(0);
   }
   @media (max-width: 720px) {
     .inner {
