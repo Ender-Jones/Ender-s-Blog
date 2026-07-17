@@ -223,6 +223,13 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* CJK 表格: 中文任意字间可断行, 窄屏下列会被压成一字一行的竖排, 永远触发不了
+   横向滚动兜底 — keep-all 让 CJK 按词处理(对英文无影响), 超宽时走 720 以下的 overflow-x. */
+.prose th,
+.prose td {
+  word-break: keep-all;
+}
+
 .prose tr:last-child td {
   border-bottom: none;
 }

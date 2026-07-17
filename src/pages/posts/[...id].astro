@@ -702,9 +702,11 @@ const cover = post.data.cover_mode ?? 'hero-large';
       transform 140ms var(--ej-ease);
   }
   .toc-link.sub {
-    padding: 4px 0 4px 40px;
+    /* 父项文字从 40px 起(14 padding + 26 编号), 子项要再进一档缩进才可见;
+       字号也要真降一档: fs-meta 和 fs-label 同为 13px, 分级得用 micro */
+    padding: 4px 0 4px 54px;
     color: var(--ej-mut-2);
-    font-size: var(--ej-fs-meta);
+    font-size: var(--ej-fs-micro);
   }
   .toc-link:hover {
     color: #e8e8ea;

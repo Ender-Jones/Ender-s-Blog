@@ -1,7 +1,7 @@
 ---
 title: "Regression Model Evaluation Metrics: MAE, MSE, RMSE, and R² Explained"
 date: 2025-05-08T18:23:00+09:00
-description: "A comprehensive guide to key regression model evaluation metrics. Understand the differences, advantages, and limitations of MAE, MSE, RMSE, and R² to choose the right metric for your machine learning projects."
+description: "A quick reference for regression evaluation metrics: what MAE, MSE, RMSE, and R² each measure, when to reach for which, and where they break down."
 kind: research-note
 tags:
   - "AI"
@@ -40,6 +40,42 @@ When we talk about prediction models, we're typically referring to one of two ma
 
 Regression models attempt to find relationships between variables to predict continuous numeric values. But how do we know if our regression model is any good? This is where evaluation metrics come in.
 
+## Quick Reference: Metrics Comparison Table
+
+In a hurry? This table is the whole post in miniature — each metric gets a fuller section below.
+
+| Metric | Full name | Range | Interpretation | Best For | Limitations |
+|--------|-----------|-------|----------------|----------|-------------|
+| MAE | Mean absolute error | [0,&nbsp;∞) | Average error magnitude | General use, robust to outliers | Not differentiable at 0 |
+| MSE | Mean squared error | [0,&nbsp;∞) | Average squared error | Optimization | Sensitive to outliers |
+| RMSE | Root mean squared error | [0,&nbsp;∞) | Error in original units | Easy interpretation | Sensitive to outliers |
+| R² | Coefficient of determination | (-&#x2060;∞,&nbsp;1] | Explained variance | Model comparison | Increases with features |
+| MAPE | Mean absolute percentage error | [0,&nbsp;∞) | Percentage error | Business contexts | Biased, undefined at zero |
+| SMAPE | Symmetric MAPE | [0,&nbsp;2] | Symmetric % error | Forecasting | Unintuitive range |
+
+## How to Choose the Right Evaluation Metric?
+
+### Key Considerations
+
+1. **What is the impact of outliers?**
+   - If outliers should be heavily penalized: MSE/RMSE
+   - If outliers shouldn't dominate evaluation: MAE
+
+2. **Is over-prediction or under-prediction more costly?**
+   - If both are equally important: Symmetric measures like RMSE or MAE
+   - If one direction is more costly: Consider asymmetric measures or custom loss functions
+
+3. **Do you need relative or absolute measures?**
+   - For comparing across datasets: R², MAPE
+   - For interpretation in original units: RMSE, MAE
+
+### General Selection Guidelines
+
+- **Optimize one primary metric** during model training
+- **Evaluate with multiple metrics** to understand different aspects of performance
+- **Consider domain standards** - some fields have conventional metrics
+- **Understand limitations** of each metric in your specific context
+
 ## Theoretical Foundation of Evaluation Metrics
 
 ### Residuals: The Building Blocks
@@ -63,17 +99,6 @@ The process typically flows from model construction to evaluation to refinement:
 3. Improve the model
 4. Repeat until reaching satisfactory performance
 
-## Quick Reference: Metrics Comparison Table
-
-| Metric | Range | Interpretation | Best For | Limitations |
-|--------|-------|----------------|----------|-------------|
-| MAE | [0, ∞) | Average error magnitude | General use, robust to outliers | Not differentiable |
-| MSE | [0, ∞) | Average squared error | Optimization | Sensitive to outliers |
-| RMSE | [0, ∞) | Error in original units | Easy interpretation | Sensitive to outliers |
-| R² | (-∞, 1] | Explained variance | Model comparison | Increases with features |
-| MAPE |  [0, ∞) | Percentage error | Business contexts | Biased, undefined at zero |
-| SMAPE | [0, 2] | Symmetric % error | Forecasting | Unintuitive range |
-
 ## Basic Evaluation Metrics
 
 ### Mean Absolute Error (MAE)
@@ -92,8 +117,12 @@ $$\text{MAE} = \frac{1}{n}\sum_{i=1}^{n}|y_i - \hat{y}_i|$$
 
 #### Limitations:
 - **Equal error weighting**: Assumes all error magnitudes are equally important
-- **Optimization challenges**: Not easily differentiable at zero
+- **Optimization challenges**: Not differentiable at zero (see the box below)
 - **Scale dependence**: Difficult to compare across different datasets
+
+<Callout type="info">
+"Not differentiable at zero": the slope of $|x|$ jumps from -1 to +1 at 0, so there is no unique derivative. Gradient-based optimizers size each step by the gradient — MSE's shrinks along with the error, so steps slow down near the optimum; MAE's stays ±1, so the optimizer can bounce around the minimum. Libraries work around this with subgradients or smooth approximations like the Huber loss.
+</Callout>
 
 <Callout type="info">
 MAE is like a ruler that measures the average distance between predictions and reality, without caring about the direction of the error.
@@ -113,7 +142,7 @@ $$\text{RMSE} = \sqrt{\frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2}$$
 
 #### Advantages:
 - **Penalizes larger errors**: Due to the squared term
-- **Differentiable**: Easier to use in optimization algorithms
+- **Differentiable everywhere**: Smooth gradients, optimizer-friendly (contrast MAE's kink at zero)
 - **Unbiased predictions**: Minimizing MSE leads to centered predictions
 
 #### Limitations:
@@ -219,29 +248,6 @@ These metrics:
 - Penalize models with more parameters
 - Help prevent overfitting
 - Cannot be compared across different datasets
-
-## How to Choose the Right Evaluation Metric?
-
-### Key Considerations
-
-1. **What is the impact of outliers?**
-   - If outliers should be heavily penalized: MSE/RMSE
-   - If outliers shouldn't dominate evaluation: MAE
-
-2. **Is over-prediction or under-prediction more costly?**
-   - If both are equally important: Symmetric measures like RMSE or MAE
-   - If one direction is more costly: Consider asymmetric measures or custom loss functions
-
-3. **Do you need relative or absolute measures?**
-   - For comparing across datasets: R², MAPE
-   - For interpretation in original units: RMSE, MAE
-
-### General Selection Guidelines
-
-- **Optimize one primary metric** during model training
-- **Evaluate with multiple metrics** to understand different aspects of performance
-- **Consider domain standards** - some fields have conventional metrics
-- **Understand limitations** of each metric in your specific context
 
 ## Conclusion: Best Practices
 
