@@ -244,9 +244,15 @@ html.ej-splash-active .reveal {
   display: inline-grid;
   place-items: center;
   cursor: pointer;
-  font-size: var(--ej-fs-note);
-  line-height: 1;
   transition: all 220ms var(--ej-ease);
+}
+
+/* 图标用内联 SVG 而非文字字形: button 不继承字体, ⟳ 曾以 UA 兜底字体渲染,
+   字形在字框里偏位导致圆心不对齐 — SVG 与字体度量脱钩, 永远居中. */
+.ej-orb svg {
+  display: block;
+  width: 14px;
+  height: 14px;
 }
 
 .ej-orb:hover {
