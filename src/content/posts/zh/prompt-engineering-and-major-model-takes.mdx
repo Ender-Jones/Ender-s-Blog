@@ -1,7 +1,7 @@
 ---
-title: "My Take on Prompt Engineering and Major AI Models"
+title: "我对提示词工程和主流大模型的看法"
 date: 2025-09-01T22:49:00+09:00
-description: "A pragmatic look at prompt engineering, with practical techniques and a personal comparison of today's leading AI models like Claude, GPT, and Gemini."
+description: "对提示词工程的一次务实梳理: 真正有用的技巧, 加上对 Claude、GPT、Gemini 这些主流模型的个人横评."
 tags:
   - "AI"
   - "Prompt Engineering"
@@ -14,7 +14,7 @@ tags:
 language: zh
 i18n_alt: /posts/prompt-engineering-and-major-model-takes/
 image: "/img/posts/chatgpt-plus.jpg"
-image_alt: "Title image from the release period of ChatGPT Plus."
+image_alt: "ChatGPT Plus 发布时期的题图."
 image_role: mood
 image_focus: "50% 50%"
 cover_mode: hero-small
@@ -24,140 +24,140 @@ import Callout from '../../../components/content/Callout.astro';
 import Epigraph from '../../../components/content/Epigraph.astro';
 
 <Epigraph
-  lines={['— Was ist schlecht? - Alles, was aus der Schwäche stammt.']}
-  translationLines={['— What is evil? – Everything that comes from weakness.']}
+  lines={['— Was ist schlecht? — Alles, was aus der Schwäche stammt.']}
+  translationLines={['— 什么是恶? — 一切源于软弱的东西.']}
   source="— Friedrich Nietzsche"
 />
 
 
-## My Stance on Prompt Engineering
+## 我对提示词工程的立场
 
-To be frank, I believe deep specialization in prompt engineering yields diminishing returns for the average user. While it's a fascinating field, mastering a few powerful, general principles is far more practical than getting lost in the weeds. This post is a summary of my journey: what I've learned, what I already knew, and my personal take on the major AI models I work with daily.
+说实话, 我认为对普通用户而言, 在提示词工程上钻得太深, 收益是递减的. 这个领域本身很有意思, 但掌握几条强而通用的原则, 远比在细枝末节里打转来得实际. 这篇是我一路下来的总结: 学到了什么, 早就知道什么, 以及对每天打交道的几个主流模型的个人看法.
 
-## Practical Techniques That Actually Work
+## 真正有用的实战技巧
 
-Even with a minimalist philosophy, I’ve picked up a couple of effective techniques that have notably improved my AI interactions.
+哪怕秉持极简主义, 我还是攒下了几个确实有效、明显改善了我和 AI 交互质量的技巧.
 
-### 1. Use HTML-like Tags for Structure
+### 1. 用类 HTML 标签组织结构
 
-I used to rely on code blocks to structure my prompts. However, I've found that using HTML-like tags is a more robust method to delineate different parts of a prompt. It helps the AI clearly distinguish between instructions, references, and examples.
+我过去习惯用代码块来组织提示词. 后来发现, 用类 HTML 的标签来划分提示词的不同部分要稳健得多 — AI 能清楚地分辨哪些是指令、哪些是参考材料、哪些是示例.
 
-For example:
+比如:
 ```xml
 <instructions>
-Please analyze the following user feedback.
+请分析以下用户反馈.
 </instructions>
 <feedback_text>
-The user reported that the application crashes on startup.
+用户报告应用在启动时崩溃.
 </feedback_text>
 ```
 
-### 2. AI's Persona
+### 2. 给 AI 设定人设
 
-Assigning a persona to the AI is a technique I hadn't used habitually, but it can be surprisingly effective. It's more than just a gimmick; it sets a specific context, tone, and knowledge level for the AI to emulate.
+给 AI 指定一个人设, 是我以前没有习惯性使用的技巧, 但效果出人意料地好. 它不只是噱头: 它为 AI 划定了要模仿的语境、语气和知识水平.
 
-For instance:
-> "Assume you are a seasoned professor of AI research. Please guide me through the core concepts of reinforcement learning."
+比如:
+> “假设你是一位资深的 AI 研究教授. 请带我过一遍强化学习的核心概念.”
 
 <Callout type="tip">
-This often yields more detailed and contextually appropriate responses than a generic query.
+比起干巴巴的提问, 这样往往能得到更详细、也更贴合语境的回答.
 </Callout>
 
 <Callout type="tip">
-Structure and persona turn a generic request into a precise directive, like aiming a spotlight instead of just turning on the room lights.
+结构和人设把一句泛泛的请求变成一条精确的指令 — 像把聚光灯对准目标, 而不是把整间屋的灯都打开.
 </Callout>
 
-## Core Principles That Always Matter
+## 始终重要的核心原则
 
-Some aspects of interacting with AI have been clear from the start and remain fundamental to getting quality results.
+和 AI 打交道, 有些道理从一开始就很清楚, 至今仍是拿到高质量结果的根基.
 
-### 1. Maximize Signal, Minimize Noise
+### 1. 信号最大化, 噪声最小化
 
-Context is king, but *relevant* context is the kingdom. Provide the model with what it needs to succeed, not just everything you have. State the goal, constraints, and key assumptions. When asking for code, include the function’s purpose, its API, and where it fits in the system.
+上下文为王, 但*相关的*上下文才是整个王国. 给模型的应该是它做好这件事所需要的东西, 而不是你手上有的所有东西. 说清目标、约束和关键假设; 要代码时, 给出函数的用途、它的 API、以及它在系统里的位置.
 
-Conversely, "polluting" the context with irrelevant information, like a blurry photo of a screen for a debugging session, is counterproductive.
+反过来, 用无关信息“污染”上下文 — 比如调试时甩过去一张糊掉的屏幕照片 — 只会帮倒忙.
 
-### 2. Deconstruct Large Problems
+### 2. 拆解大问题
 
-Expecting an AI to handle a vague, large-scale request in one go is a recipe for mediocrity. Breaking down a complex task into smaller, sequential steps is a far superior strategy.
+指望 AI 一口气搞定一个模糊的大需求, 得到的多半是平庸. 把复杂任务拆成更小的、按顺序推进的步骤, 是远远更优的策略.
 
-For instance, instead of asking to "create a presentation about Topic X," a better approach is to break it down:
-1.  Outline the key sections for a presentation on Topic X.
-2.  Draft the content for each slide.
-3.  Suggest a visual theme and layout.
-4.  Generate speaker notes.
+比如, 与其直接说“做一份关于 X 主题的演示文稿”, 不如拆开来:
+1.  列出 X 主题演示的核心章节
+2.  起草每一页的内容
+3.  给出视觉主题与版式建议
+4.  生成演讲备注
 
-If you don't know the steps, you can ask the AI to propose a plan.  
- Still, applying your own domain knowledge to deconstruct the task will **always** produce a superior outcome.
+不知道该怎么拆的话, 可以先让 AI 提一份计划.  
+ 即便如此, 用你自己的领域知识来拆任务, **永远**会得到更好的结果.
 
 <Callout type="tip">
-Great prompts are built on two pillars: a focused signal and manageable steps.
+好提示词立在两根柱子上: 聚焦的信号, 和大小可控的步骤.
 </Callout>
 
-## My Practical Checklist
+## 我的实战清单
 
-Here’s a distilled checklist of the tactics I find myself using daily.
+下面是我每天都在用的招数, 浓缩成一张清单.
 
-1.  **Structure First**: Use tags (`<goal>`, `<context>`, `<constraints>`) to clearly delineate the components of your prompt.
-2.  **Persona on Purpose**: Only assign a persona when it meaningfully adds constraints or provides a useful frame of reference (e.g., "act as a skeptical code reviewer").
-3.  **Plan Before Execution**: For complex tasks, ask the AI for a concise plan or outline first. Agreeing on the structure prevents wasted effort.
-4.  **Evidence-First for Facts**:
-    -   Insist on citations with URLs *before* the AI makes a claim.
-    -   For research tasks, ask for an "evidence table" (source, claim, URL) before the final synthesis.
-5.  **Specify the Output**: Clearly define the desired format, length, style, and any acceptance criteria the output must meet.
-6.  **Iterate Smartly**: Work in small loops. Freeze what’s working and change only one variable at a time to isolate what improves the result.
+1.  **结构先行**: 用标签(`<goal>`、`<context>`、`<constraints>`)清楚地划分提示词的各个组成部分.
+2.  **人设要有目的**: 只在人设能实质性增加约束、或提供有用的参照系时才用(比如“扮演一个挑剔的代码审查者”).
+3.  **先计划后执行**: 复杂任务先要一份简明的计划或大纲, 结构谈拢了再动手, 免得白费功夫.
+4.  **事实问题证据先行**:
+    -   要求 AI 在给出论断*之前*先给带 URL 的出处.
+    -   调研类任务, 先要一张“证据表”(来源、论断、URL), 再让它做最终综合.
+5.  **指定输出**: 明确定义想要的格式、长度、风格, 以及输出必须满足的验收标准.
+6.  **聪明地迭代**: 小步循环. 冻结有效的部分, 一次只改一个变量, 才能定位到底是什么带来了改进.
 
-## A Comparative Look at Major AI Models
+## 主流模型横评
 
-It's clear that not all models are created equal. Different models excel at different tasks, and understanding their strengths is key to using them effectively. Here are my personal observations.
+模型和模型显然不是生而平等的. 不同模型擅长不同的事, 理解各自的长处才能用得顺手. 以下是我的个人观察.
 
-### Summary
+### 总览
 
-| Feature              | Claude                                      | GPT                                     | Gemini                                            |
+| 特性 | Claude | GPT | Gemini |
 | -------------------- | ------------------------------------------- | --------------------------------------- | ------------------------------------------------- |
-| **Primary Strength** | Code Generation                             | Brainstorming & Ideation                | Information Synthesis<br />& Brainstorming          |
-| **Coding Ability**   | Excellent<br />(can over-engineer)            | Capable All-rounder                     | Reliable<br />(sticks to prompt)                    |
-| **Hallucination**    | Very Low                                    | High<br />(without self-awareness)        | High<br />(but sometimes obvious)                   |
-| **Prompt Adherence** | Low<br />(often adds<br />unrequested features) | Medium<br />(can add<br />extra complexity) | High<br />(sticks closely<br />to requirements)       |
-| **Search & Vetting** | Normal                                      | Normal                                  | Strong<br />(excels at<br />synthesizing information) |
+| **核心强项** | 代码生成 | 头脑风暴与发想 | 信息综合<br />与头脑风暴 |
+| **编码能力** | 顶级<br />(会过度工程) | 称职的全能选手 | 可靠<br />(严格贴题) |
+| **幻觉** | 极低 | 高<br />(且毫无自知) | 高<br />(但有时很明显) |
+| **提示词遵循** | 低<br />(常加没要求的功能) | 中<br />(会加多余的复杂度) | 高<br />(紧贴需求) |
+| **搜索与查证** | 一般 | 一般 | 强<br />(擅长综合信息) |
 
 
-### 💻 Claude: The Coder
+### 💻 Claude: 代码担当
 
-In my experience, **Claude is a top-tier model for coding tasks**. Its ability to understand and generate code is exceptional. A standout feature is its remarkably low hallucination rate—it rarely invents facts, which builds a high degree of trust. However, this strength in coding is sometimes a double-edged sword. It can be prone to over-engineering solutions by adding unrequested features without mentioning them. For instance, when asked for a script to simply transmit raw BVP sensor data, it preemptively added logic to calculate and send heart rate as well. While its writing capabilities are also strong, its performance in brainstorming and decision-making seems weaker, often favoring "safe" or middle-of-the-road answers.
+就我的经验, **Claude 在编码任务上是第一梯队**. 它理解和生成代码的能力都非常出色, 最突出的是幻觉率低得惊人 — 几乎不编造事实, 这一点攒下了很高的信任. 不过, 编码上的强有时也是把双刃剑: 它容易过度工程, 加上一些没人要求的功能, 而且不打招呼. 比如我要一个只负责传输 BVP 传感器原始数据的脚本, 它自作主张把心率计算和发送的逻辑也加了进去. 写作能力同样不弱, 但头脑风暴和拿主意就显得平庸, 常常偏向“安全”的中间路线答案.
 
-### 🧠 GPT: The Brainstormer
+### 🧠 GPT: 脑暴担当
 
-I find **GPT to be a strong contender for brainstorming and ideation**, rivaling others in its ability to generate creative options and explore different angles of a topic. However, it seems to struggle with vetting the credibility of online sources, often accepting what it finds at face value. Similar to Gemini, it can be prone to hallucinations without self-awareness and also shares Claude's habit of trying to anticipate user needs, sometimes adding unnecessary complexity. While its coding abilities are solid, I feel they don't quite reach Claude's level. It's a capable all-rounder but hasn't become my go-to for specialized tasks.
+**GPT 在头脑风暴和发想上很能打**, 生成创意选项、换角度审视话题的能力不输给谁. 但它似乎不太会核查网络信源的可信度, 搜到什么信什么. 和 Gemini 类似, 它也容易产生幻觉且毫无自知; 又和 Claude 一样爱揣测用户需求, 有时加上不必要的复杂度. 编码能力扎实, 但我感觉够不到 Claude 的水平. 一个称职的全能选手, 却始终没成为我处理专项任务的首选.
 
-### 🧩 Gemini: The Synthesizer
+### 🧩 Gemini: 综合担当
 
-From my perspective, **Gemini excels at search-related queries and synthesizing information**, with brainstorming capabilities that are on par with GPT's. In contrast to other models, Gemini seems to have a better grasp of what a user explicitly asks for, sticking closer to the prompt's requirements.
+在我看来, **Gemini 擅长搜索类查询和信息综合**, 头脑风暴能力与 GPT 不相上下. 和其他模型相比, Gemini 更能抓住用户明确要求的东西, 更贴着提示词的需求走.
 
-Regarding its coding abilities, while the raw output may not always match the complexity of Claude's, its greatest strength is its predictability and reliability. It follows instructions with high fidelity, making it a valuable partner when you need the output to strictly match the requirements.
-Through my long-term coding collaboration with Gemini 2.5 Pro, its most impressive trait is its **long-context memory**. It demonstrates a remarkable ability to recall details from earlier in a complex, extended conversation—a significant advantage for iterative development.
+编码方面, 它的产出复杂度未必总能比得上 Claude, 但最大的长处是可预测、靠得住. 它高度忠实地执行指令 — 当你需要输出严格对齐需求时, 它是可贵的搭档.
+在和 Gemini 2.5 Pro 长期协作写代码的过程中, 最让我印象深刻的是它的**长上下文记忆**: 在漫长复杂的对话里, 它能记起很早之前的细节 — 这对迭代式开发是显著的优势.
 
-The main drawback, however, is its tendency to **hallucinate**. This can manifest in subtle ways, but sometimes it's stark. For instance, when asked to find research papers, it might invent one with a plausible title, authors, and a fake URL that leads nowhere.
+但它主要的缺点是爱产生**幻觉**. 有时很隐蔽, 有时却很扎眼: 比如让它找论文, 它可能凭空造出一篇 — 标题像模像样, 作者齐全, 还附一个哪儿也打不开的假 URL.
 
 <Callout type="tip">
-Each AI model has its own 'personality' and skillset. Finding the right one for your task is the first step to a great result.
+每个模型都有自己的“性格”和技能点. 为手头的任务找对模型, 是好结果的第一步.
 </Callout>
 
 
-## Debatable "Best Practices"
+## 存疑的“最佳实践”
 
-There are a few commonly cited prompting techniques that I'm not yet convinced of.
--   **Focus on "Dos" over "Don'ts"**: The idea that you should always frame requests positively.
--   **Use a respectful tone**: The theory that being polite to the AI yields better results.
+有几条广为流传的提示词技巧, 我还没有被说服.
+-   **多说“要做什么”, 少说“别做什么”**: 即请求永远应该用正向表述.
+-   **保持礼貌的语气**: 即对 AI 客气一点会得到更好的结果.
 
-My experience hasn't shown these to have a consistent, measurable impact, but I remain open to the possibility.
+在我自己的使用里, 这两条都没有表现出稳定、可测的影响 — 但我保持开放.
 
-## Conclusion
+## 结语
 
-In the end, effective interaction with AI is less about secret handshakes and more about clarity, context, and choosing the right tool for the job. While the models evolve, the core principles of clear communication and structured thinking remain timeless.
+归根结底, 和 AI 的高效协作靠的不是什么秘密暗号, 而是清晰、上下文, 和为任务选对工具. 模型会一直演化, 但清晰表达和结构化思考这两条核心原则不会过时.
 
 ---
 
 <Callout type="info">
-This post reflects my current understanding and personal experience. The field of AI is evolving at an incredible pace, and these takes are subject to change as the models—and my interactions with them—continue to develop.
+这篇文章反映的是我此刻的理解和个人经验. AI 领域的演化快得惊人, 随着模型 — 以及我和它们的相处方式 — 继续发展, 这些看法随时可能改变.
 </Callout>
