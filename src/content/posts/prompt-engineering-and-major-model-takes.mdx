@@ -1,7 +1,8 @@
 ---
 title: "My Take on Prompt Engineering and Major AI Models"
 date: 2025-09-01T22:49:00+09:00
-description: "A pragmatic look at prompt engineering, with practical techniques and a personal comparison of today's leading AI models like Claude, GPT, and Gemini."
+updated: 2026-07-22T21:00:00+09:00
+description: "A pragmatic look at prompt engineering — techniques that outlive model churn — plus a dated model corner: the 2026 takes up front, the September 2025 snapshot frozen below."
 tags:
   - "AI"
   - "Prompt Engineering"
@@ -33,6 +34,82 @@ import Epigraph from '../../components/content/Epigraph.astro';
 ## My Stance on Prompt Engineering
 
 To be frank, I believe deep specialization in prompt engineering yields diminishing returns for the average user. While it's a fascinating field, mastering a few powerful, general principles is far more practical than getting lost in the weeds. This post is a summary of my journey: what I've learned, what I already knew, and my personal take on the major AI models I work with daily.
+
+## The Model Takes
+
+Takes on models spoil faster than any other opinion on this page, so this section is dated on purpose: the current read comes first, and the September 2025 snapshot stays frozen below it — partly as a record of how fast the ground moves.
+
+### The 2026 update — July 2026
+
+Why now? Because the ground moved again: Chinese models have erupted once more, the race between GPT and Claude keeps tightening, and K3 now beats Fable outright in some dimensions — at a lower price. The map needed redrawing.
+
+|                          | Claude                                                 | GPT                                              | Gemini                                        |
+| ------------------------ | ------------------------------------------------------ | ------------------------------------------------ | --------------------------------------------- |
+| **Coding**               | In a league of its own<br />(Claude Code)                | Solid; codex is pushing,<br />front-end is weak    | Honestly bad now                              |
+| **Research & thinking**  | The partner — argues back,<br />holds its own take       | Thorough, but the answer<br />is a wall of text    | Too eager to agree                            |
+| **Search & information** | Deep research is decent;<br />not Google                 | Fine                                             | The best — it owns<br />the search engine       |
+| **Images & video**       | No image generation at all                             | Image gen is absurdly good;<br />reads video       | Good images; video<br />is nearly effortless    |
+| **The catch**            | Brutally expensive,<br />tight limits                    | Long by default,<br />even when told not to be     | Guesses you from<br />stale chats               |
+
+#### Gemini: the talker
+
+The bad news first: at coding, Gemini has started to drool — still ahead of part of the domestic pack, though not of its front-runners; more on that at the end. The good news is what it stands on: the best search engine there is, which makes it close to unbeatable at information acquisition, with respectable synthesis on top. But its alignment is tuned to please. It would rather look after your feelings than solve the problem outright, let alone argue a decision with you — and when it lays out options, they can feel like they are there for show. Images are decent, and video is nearly effortless, since YouTube lives in the same house. As a partner for talking through ideas, an eight out of ten. For code, no.
+
+<Callout type="tip">
+One habit matters more on Gemini than anywhere else: delete old conversations, diligently. It reads stale chats to guess your situation — and guesses wrong.
+</Callout>
+
+#### GPT: the right default
+
+Disclosure before the complaints: they are personal, and for most people GPT remains the right pick — absent a hard reason against it, choose it and you will be fine. It has real advantages in compute, cost and price, and codex has been doing honest work lately. My problems with it are temperamental. One: it runs on minimal assumptions — look first, act later, one thing at a time. Admirably steady, and the exact opposite of Claude, which assumes, and has opinions. Two: when we discuss research or untangle methodology, the reply runs to thousands of characters as a matter of routine — organized, perhaps, but volume is volume, and tone instructions barely dent it. For a reader with ADHD, that is a real cost. Three: its front-end work is weak and its taste sometimes loses to Gemini — and since most of the world writes its front-ends with GPT, everything ends up looking the same, which makes it worse. The other side of the ledger: its image generation is absurdly good (I draw with it for fun), and it can genuinely watch video — two things Claude cannot do at all. Claude's image "generation" is code drawing SVG stroke by stroke, which is to say: it does not exist.
+
+#### Claude: the work partner
+
+Claude is my personal favorite, and I say so with both eyes open: tokens are brutally expensive, the limits on Fable are tight, and more than one of the company's choices I actively dislike. But the work is the work. At coding, Claude Code on top of a model sitting at or near SOTA across the board puts it in a league of its own — I know the criticisms in circulation, and I share some of them, but I use it to get work done, not to worship a company. And for the part of my day that matters most — talking through research directions, organizing and integrating information, arguing a point to its depth, learning something hard — it is the strongest I have used. It has carried real weight in how I sort out my research decisions. Its deep research is genuinely decent; at raw search, Google still wins.
+
+#### Tools, not idols
+
+One last point, probably the only one in this section that will not expire: do not turn models into fandoms. This is not idol-chasing. They are tools — for me, tools and working partners at once, which is exactly why a model that argues back with a defensible take of its own is worth more than one that only agrees. No company worship either: the moment a tool stops earning its keep, replace it, same day. Concretely — Kimi K3 is already an Opus-class model, and at web dev it beats even Fable 5 by a clear margin. The day it talks research at Claude's level for a third of the price, I switch.
+
+### Frozen: the September 2025 snapshot
+
+<Callout type="info">
+Frozen as shot, September 2025. Every model below has changed since — read it as a period piece. The current takes sit above.
+</Callout>
+
+It's clear that not all models are created equal. Different models excel at different tasks, and understanding their strengths is key to using them effectively. Here are my personal observations.
+
+#### Summary
+
+| Feature              | Claude                                      | GPT                                     | Gemini                                            |
+| -------------------- | ------------------------------------------- | --------------------------------------- | ------------------------------------------------- |
+| **Primary Strength** | Code Generation                             | Brainstorming & Ideation                | Information Synthesis<br />& Brainstorming          |
+| **Coding Ability**   | Excellent<br />(can over-engineer)            | Capable All-rounder                     | Reliable<br />(sticks to prompt)                    |
+| **Hallucination**    | Very Low                                    | High<br />(without self-awareness)        | High<br />(but sometimes obvious)                   |
+| **Prompt Adherence** | Low<br />(often adds<br />unrequested features) | Medium<br />(can add<br />extra complexity) | High<br />(sticks closely<br />to requirements)       |
+| **Search & Vetting** | Normal                                      | Normal                                  | Strong<br />(excels at<br />synthesizing information) |
+
+
+#### Claude: The Coder
+
+In my experience, **Claude is a top-tier model for coding tasks**. Its ability to understand and generate code is exceptional. A standout feature is its remarkably low hallucination rate—it rarely invents facts, which builds a high degree of trust. However, this strength in coding is sometimes a double-edged sword. It can be prone to over-engineering solutions by adding unrequested features without mentioning them. For instance, when asked for a script to simply transmit raw BVP sensor data, it preemptively added logic to calculate and send heart rate as well. While its writing capabilities are also strong, its performance in brainstorming and decision-making seems weaker, often favoring "safe" or middle-of-the-road answers.
+
+#### GPT: The Brainstormer
+
+I find **GPT to be a strong contender for brainstorming and ideation**, rivaling others in its ability to generate creative options and explore different angles of a topic. However, it seems to struggle with vetting the credibility of online sources, often accepting what it finds at face value. Similar to Gemini, it can be prone to hallucinations without self-awareness and also shares Claude's habit of trying to anticipate user needs, sometimes adding unnecessary complexity. While its coding abilities are solid, I feel they don't quite reach Claude's level. It's a capable all-rounder but hasn't become my go-to for specialized tasks.
+
+#### Gemini: The Synthesizer
+
+From my perspective, **Gemini excels at search-related queries and synthesizing information**, with brainstorming capabilities that are on par with GPT's. In contrast to other models, Gemini seems to have a better grasp of what a user explicitly asks for, sticking closer to the prompt's requirements.
+
+Regarding its coding abilities, while the raw output may not always match the complexity of Claude's, its greatest strength is its predictability and reliability. It follows instructions with high fidelity, making it a valuable partner when you need the output to strictly match the requirements.
+Through my long-term coding collaboration with Gemini 2.5 Pro, its most impressive trait is its **long-context memory**. It demonstrates a remarkable ability to recall details from earlier in a complex, extended conversation—a significant advantage for iterative development.
+
+The main drawback, however, is its tendency to **hallucinate**. This can manifest in subtle ways, but sometimes it's stark. For instance, when asked to find research papers, it might invent one with a plausible title, authors, and a fake URL that leads nowhere.
+
+<Callout type="tip">
+Each AI model has its own 'personality' and skillset. Finding the right one for your task is the first step to a great result.
+</Callout>
 
 ## Practical Techniques That Actually Work
 
@@ -106,43 +183,6 @@ Here’s a distilled checklist of the tactics I find myself using daily.
     -   For research tasks, ask for an "evidence table" (source, claim, URL) before the final synthesis.
 5.  **Specify the Output**: Clearly define the desired format, length, style, and any acceptance criteria the output must meet.
 6.  **Iterate Smartly**: Work in small loops. Freeze what’s working and change only one variable at a time to isolate what improves the result.
-
-## A Comparative Look at Major AI Models
-
-It's clear that not all models are created equal. Different models excel at different tasks, and understanding their strengths is key to using them effectively. Here are my personal observations.
-
-### Summary
-
-| Feature              | Claude                                      | GPT                                     | Gemini                                            |
-| -------------------- | ------------------------------------------- | --------------------------------------- | ------------------------------------------------- |
-| **Primary Strength** | Code Generation                             | Brainstorming & Ideation                | Information Synthesis<br />& Brainstorming          |
-| **Coding Ability**   | Excellent<br />(can over-engineer)            | Capable All-rounder                     | Reliable<br />(sticks to prompt)                    |
-| **Hallucination**    | Very Low                                    | High<br />(without self-awareness)        | High<br />(but sometimes obvious)                   |
-| **Prompt Adherence** | Low<br />(often adds<br />unrequested features) | Medium<br />(can add<br />extra complexity) | High<br />(sticks closely<br />to requirements)       |
-| **Search & Vetting** | Normal                                      | Normal                                  | Strong<br />(excels at<br />synthesizing information) |
-
-
-### 💻 Claude: The Coder
-
-In my experience, **Claude is a top-tier model for coding tasks**. Its ability to understand and generate code is exceptional. A standout feature is its remarkably low hallucination rate—it rarely invents facts, which builds a high degree of trust. However, this strength in coding is sometimes a double-edged sword. It can be prone to over-engineering solutions by adding unrequested features without mentioning them. For instance, when asked for a script to simply transmit raw BVP sensor data, it preemptively added logic to calculate and send heart rate as well. While its writing capabilities are also strong, its performance in brainstorming and decision-making seems weaker, often favoring "safe" or middle-of-the-road answers.
-
-### 🧠 GPT: The Brainstormer
-
-I find **GPT to be a strong contender for brainstorming and ideation**, rivaling others in its ability to generate creative options and explore different angles of a topic. However, it seems to struggle with vetting the credibility of online sources, often accepting what it finds at face value. Similar to Gemini, it can be prone to hallucinations without self-awareness and also shares Claude's habit of trying to anticipate user needs, sometimes adding unnecessary complexity. While its coding abilities are solid, I feel they don't quite reach Claude's level. It's a capable all-rounder but hasn't become my go-to for specialized tasks.
-
-### 🧩 Gemini: The Synthesizer
-
-From my perspective, **Gemini excels at search-related queries and synthesizing information**, with brainstorming capabilities that are on par with GPT's. In contrast to other models, Gemini seems to have a better grasp of what a user explicitly asks for, sticking closer to the prompt's requirements.
-
-Regarding its coding abilities, while the raw output may not always match the complexity of Claude's, its greatest strength is its predictability and reliability. It follows instructions with high fidelity, making it a valuable partner when you need the output to strictly match the requirements.
-Through my long-term coding collaboration with Gemini 2.5 Pro, its most impressive trait is its **long-context memory**. It demonstrates a remarkable ability to recall details from earlier in a complex, extended conversation—a significant advantage for iterative development.
-
-The main drawback, however, is its tendency to **hallucinate**. This can manifest in subtle ways, but sometimes it's stark. For instance, when asked to find research papers, it might invent one with a plausible title, authors, and a fake URL that leads nowhere.
-
-<Callout type="tip">
-Each AI model has its own 'personality' and skillset. Finding the right one for your task is the first step to a great result.
-</Callout>
-
 
 ## Debatable "Best Practices"
 
