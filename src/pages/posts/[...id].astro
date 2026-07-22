@@ -3,7 +3,8 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import RouteHint from '../../components/home/RouteHint.astro';
-import { quotes, site } from '../../lib/data';
+import Coda from '../../components/Coda.astro';
+import { site } from '../../lib/data';
 import 'katex/dist/katex.min.css';
 import '../../styles/prose.css';
 
@@ -172,73 +173,9 @@ const cover = post.data.cover_mode ?? 'hero-large';
       )}
     </section>
 
-    <section class="coda-sec reveal" style="--reveal-i: 3;">
-      <blockquote id="coda-quote"></blockquote>
-      <p class="coda-trans" id="coda-trans"></p>
-      <p class="coda-source-line">— <span id="coda-source"></span> <span class="coda-lang" id="coda-lang"></span></p>
-      <button id="coda-reroll" class="ej-orb" type="button" aria-label="another quote" data-route="⟳ another quote"
-        ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button>
-    </section>
+    <Coda lang={post.data.language === 'zh' ? 'zh' : 'en'} pinned={post.data.coda} revealIndex={3} />
   </main>
 </BaseLayout>
-
-<script is:inline type="application/json" id="coda-data" data-pinned={post.data.coda ?? ''} data-lang={post.data.language ?? 'en'} set:html={JSON.stringify(quotes)} />
-
-<script is:inline>
-  (function () {
-    var data = document.getElementById('coda-data');
-    var quote = document.getElementById('coda-quote');
-    var trans = document.getElementById('coda-trans');
-    var source = document.getElementById('coda-source');
-    var lang = document.getElementById('coda-lang');
-    var btn = document.getElementById('coda-reroll');
-    if (!data || !quote || !source || !btn) return;
-    var quotes = JSON.parse(data.textContent || '[]');
-    if (!quotes.length) return;
-    // frontmatter 固定的 coda 优先(可指向 pinned_only 条目); 随机池排除 pinned_only —
-    // 印自己的句子只在自己的文章末尾出现, 不与名言同池轮播. zh 页面优先显示中译.
-    var pinned = data.getAttribute('data-pinned') || '';
-    var pageLang = data.getAttribute('data-lang') || 'en';
-    var pool = quotes.filter(function (q) {
-      return !q.pinned_only;
-    });
-    var pinnedQ = null;
-    for (var i = 0; i < quotes.length; i++) {
-      if (quotes[i].id === pinned) pinnedQ = quotes[i];
-    }
-    var cur = pinnedQ || pool[Math.floor(Math.random() * pool.length)];
-    if (!cur) return;
-    var fading = false;
-    var show = function () {
-      var q = cur;
-      quote.textContent = /^[«“"]/.test(q.text) ? q.text : '“' + q.text + '”';
-      trans.textContent = (pageLang === 'zh' && q.trans_zh) ? q.trans_zh : (q.trans || '');
-      source.textContent = q.source;
-      lang.textContent = (q.lang || 'en').toUpperCase();
-    };
-    show();
-    btn.addEventListener('click', function () {
-      var candidates = pool.filter(function (q) {
-        return q !== cur;
-      });
-      if (!candidates.length || fading) return;
-      btn.classList.remove('spin');
-      void btn.offsetWidth;
-      btn.classList.add('spin');
-      var next = candidates[Math.floor(Math.random() * candidates.length)];
-      fading = true;
-      quote.classList.add('fade');
-      trans.classList.add('fade');
-      setTimeout(function () {
-        cur = next;
-        show();
-        quote.classList.remove('fade');
-        trans.classList.remove('fade');
-        fading = false;
-      }, 230);
-    });
-  })();
-</script>
 
 <script>
   const bar = document.getElementById('read-progress');
@@ -589,74 +526,6 @@ const cover = post.data.cover_mode ?? 'hero-large';
   }
   .cm-note {
     letter-spacing: 0.02em;
-  }
-
-  /* 文尾 coda: 全宽分隔线下的居中终止和弦(诗的体系) — 引文/译文/出处/⟳ 全部居中,
-     高度恒定: 引文区预留 3 行、译文区预留 1 行, 换引文不再抖动页面. */
-  .coda-sec {
-    margin: clamp(56px, 9vh, 88px) 0 0;
-    padding: clamp(44px, 7vh, 64px) 0 clamp(48px, 7vh, 72px);
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    display: grid;
-    justify-items: center;
-    text-align: center;
-  }
-  .coda-sec blockquote {
-    margin: 0;
-    max-width: 30ch;
-    color: var(--ej-text-2);
-    font-family: var(--ej-serif);
-    font-size: clamp(20px, 2.2vw, 26px);
-    font-style: italic;
-    font-weight: var(--ej-fw-light);
-    line-height: 1.45;
-    text-wrap: balance;
-    min-height: 4.4em;
-    opacity: 1;
-    transform: translateY(0);
-    transition:
-      opacity 220ms ease,
-      transform 260ms var(--ej-ease);
-  }
-  .coda-sec blockquote.fade,
-  .coda-trans.fade {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  .coda-trans {
-    margin: 12px 0 0;
-    max-width: 58ch;
-    min-height: 1.65em;
-    color: var(--ej-mut);
-    font-family: var(--ej-sans);
-    font-size: var(--ej-fs-note);
-    font-weight: var(--ej-fw-body);
-    line-height: 1.65;
-    opacity: 1;
-    transition:
-      opacity 200ms ease,
-      transform 260ms var(--ej-ease);
-  }
-  .coda-source-line {
-    margin: 16px 0 0;
-    color: var(--ej-mut);
-    font-family: var(--ej-mono);
-    font-size: var(--ej-fs-label);
-    font-weight: var(--ej-fw-medium);
-  }
-  #coda-reroll {
-    margin-top: 18px;
-  }
-  .coda-lang {
-    margin-left: 4px;
-    padding: 1px 6px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    color: var(--ej-dim);
-    font-family: var(--ej-mono);
-    font-size: var(--ej-fs-micro);
-    font-weight: var(--ej-fw-head);
-    letter-spacing: var(--ej-track-key);
   }
 
   .toc-rail {

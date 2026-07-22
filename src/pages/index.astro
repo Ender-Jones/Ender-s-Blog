@@ -7,7 +7,7 @@ import LiveStrip from '../components/home/LiveStrip.astro';
 import ResearchSection from '../components/home/ResearchSection.astro';
 import WritingSection from '../components/home/WritingSection.astro';
 import ProofWall from '../components/home/ProofWall.astro';
-import Coda from '../components/home/Coda.astro';
+import Coda from '../components/Coda.astro';
 import { home } from '../lib/data';
 ---
 
@@ -22,6 +22,6 @@ import { home } from '../lib/data';
     <ResearchSection />
     <WritingSection />
     <ProofWall />
-    <Coda />
+    <Coda lang="en" revealIndex={4} screen="coda" />
   </main>
 </BaseLayout>
