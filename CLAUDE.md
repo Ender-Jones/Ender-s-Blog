@@ -107,6 +107,7 @@ Ops runbook: [docs/MAINTENANCE.md](docs/MAINTENANCE.md).
 | What the console does and when | `docs/CONSOLE.md` — behavior contract; edit it before touching console code |
 | Refresh the commit-wall data | `npm run activity:cache` (needs `GITHUB_TOKEN` or a logged-in `gh`) |
 | Run content checks manually | `npm run check:content` (also runs automatically on commit, see below) |
+| Figure out which yml feeds which page / verify after a data edit | **`docs/DATA.md`** — file→page map, where to eyeball, zh parity, gotchas |
 
 Rule: anything you'd hand-maintain at the "homepage data" level (research panel's paper list,
 readout card's status line, hero copy, etc.) lives in `src/data/*.yml` with inline comments and

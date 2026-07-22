@@ -6,6 +6,9 @@
 subtitle: one line, three papers
 protocol: UBFC-PHYS · TSST-INSPIRED
 
+# 页头斜体论题句(2026-07-22 从 site.yml 移入 — 可译成句住语言配对文件)
+thesis: estimating stress from facial video and physiological signals — reproduced faithfully, evaluated honestly.
+
 papers:
   - status: Published
     tone: pink
@@ -96,4 +99,4 @@ tags:
   - reproducibility
   - stress detection
   - VLM/LLM
-updated: 2026-07-10
+updated: 2026-07-22

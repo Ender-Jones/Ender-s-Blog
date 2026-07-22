@@ -5,6 +5,9 @@
 subtitle: 一条线, 三篇论文
 protocol: UBFC-PHYS · TSST-INSPIRED
 
+# 页头斜体论题句(2026-07-22 从 site.yml 移入; 按"中文独立创作"原则写, 口吻请自便)
+thesis: 从面部视频与生理信号里读出压力 — 复现要忠实, 评估要诚实.
+
 papers:
   - status: 已发表
     tone: pink
@@ -89,4 +92,4 @@ tags:
   - reproducibility
   - stress detection
   - VLM/LLM
-updated: 2026-07-18
+updated: 2026-07-22

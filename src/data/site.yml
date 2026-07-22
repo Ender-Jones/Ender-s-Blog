@@ -1,52 +1,36 @@
-# 站点身份/联系信息的唯一来源(经 lib/data.ts 的 site 导出供全站消费).
-# ⚠ url 仍指旧 V2 域名 — 自定义域名落地日一起换(见 CLAUDE.md go-live checklist).
-name: EnderJones
-url: https://enderjones.com
-role: PhD candidate
-location: Tokyo, Japan
-avatar: /img/author/ang.JPG
-hero_portrait: /img/author/identity-portrait.jpg
-research_oneliner: A reproducible re-evaluation of video-based stress estimation.
-about_lead: I keep this site as a research notebook, personal archive, and proof that I am still working.
+# 站点身份/联系信息的唯一来源(经 lib/data.ts 的 site 导出供全站消费). 文件→页面地图见 docs/DATA.md.
+# 分界原则(2026-07-22): 这里只放语言无关的身份数据 — 中英页面共用, mono 值保持英文(site chrome);
+# 需要翻译的成句(如 research 页的 thesis)住语言配对文件 research.yml / research.zh.yml.
+# 2026-07-22 清理: 12 个 V2 遗留死字段已删(name/url/role/avatar/hero_portrait 等, 见 git 历史).
+
+location: Tokyo, Japan            # About 页 base 行
 
 identity:
-  terminal_title: 'EnderJones@Chiba,Japan: ~/Blog'
-  role_detail: PhD Candidate · AI / Affective Computing
-  focus_label: Video-based Stress Estimation
-  stack:
-    - PyTorch
-    - Time-series
-    - Multimodal ML
-  thesis: estimating stress from facial video and physiological signals — reproduced faithfully, evaluated honestly.
-  signals:
+  role_detail: PhD Candidate · AI / Deep learning   # About 页 role 行
+  signals:                        # Research 页头 signals 行
     - rPPG
     - EDA
     - landmarks
-  models:
+  models:                         # Research 页头 models 行
     - CCT-LSTM
     - multimodal fusion
     - sequence modeling
-  tools:
+  tools:                          # Research 页头 stack 行(⚠ 页面标签叫 stack, 字段叫 tools)
     - pytorch
     - neurokit2
     - linux
     - reproducible experiments
-  languages:
+  languages:                      # About 页 langs 行
     - Chinese
     - English
     - Japanese
-  portrait_caption: Decoding stress from physiological traces.
 
-github_card:
-  title: Code, experiments, and small tools.
-  description: Repositories, experiments, and the rough edges of things I am building.
-
-socials:
+socials:                          # About 页联系方式行(经 getSocialLinks)
   github: https://github.com/Ender-Jones
   twitter: https://x.com/EnderJones1872
   email: mailto:enderjones1872@gmail.com
 
-comments:
+comments:                         # 文章页 giscus 评论区接线参数 — 纯配置, 不用动
   giscus:
     repo: Ender-Jones/Ender-s-Blog
     repo_id: R_kgDOTUHT4w

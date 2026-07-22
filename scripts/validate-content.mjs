@@ -1,6 +1,7 @@
 // 内容门禁: commit 前(hooks/pre-commit)和构建前(npm run build)自动跑.
 // 只校验"能在 VSCode 里手写出错"的东西; 深层 schema 校验由 astro 的 zod 负责.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { execSync } from 'node:child_process';
 import { join, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -111,6 +112,57 @@ if (quoteTexts !== quoteSources) {
 const quoteIds = new Set(
   [...quotesSource.matchAll(/^ +- +id: *([a-z0-9-]+) *$/gm)].map((m) => m[1]),
 );
+
+// research 双语镜像: 两文件的 key 骨架(键名+缩进+顺序)必须逐行一致 —
+// EN 加了字段 zh 没跟、嵌套层级走样, 都在这里挂掉. 值内容不比(那是翻译, 人管).
+// 零依赖约束(pre-commit 跑在宿主 node 上, 没有 yaml parser): 按缩进提取骨架.
+function ymlSkeleton(source) {
+  const skeleton = [];
+  let blockIndent = -1; // >=0 表示在 >- / | 块标量里, 跳过更深缩进的内容行
+  for (const raw of source.split('\n')) {
+    if (!raw.trim() || raw.trim().startsWith('#')) continue;
+    const indent = raw.match(/^ */)[0].length;
+    if (blockIndent >= 0) {
+      if (indent > blockIndent) continue;
+      blockIndent = -1;
+    }
+    const m = raw.match(/^( *)(- +)?([A-Za-z_][\w-]*): *(.*)$/);
+    if (m) {
+      skeleton.push(`${indent}:${m[2] ? '- ' : ''}${m[3]}`);
+      if (/^[>|]/.test(m[4])) blockIndent = indent;
+    } else if (/^ *- /.test(raw)) {
+      skeleton.push(`${indent}:-`); // 裸列表项(如 signals 的 - rPPG)只比个数和位置
+    }
+  }
+  return skeleton;
+}
+
+const MIRROR_PAIRS = [
+  ['src/data/research.yml', 'src/data/research.zh.yml'],
+  ['src/data/about.yml', 'src/data/about.zh.yml'],
+];
+for (const [enPath, zhPath] of MIRROR_PAIRS) {
+  const en = ymlSkeleton(readFileSync(join(ROOT, enPath), 'utf8'));
+  const zh = ymlSkeleton(readFileSync(join(ROOT, zhPath), 'utf8'));
+  const max = Math.max(en.length, zh.length);
+  for (let i = 0; i < max; i += 1) {
+    if (en[i] !== zh[i]) {
+      fail(join(ROOT, zhPath), `mirror drift vs ${enPath} at node ${i + 1}: en="${en[i] ?? '(end)'}" zh="${zh[i] ?? '(end)'}" — 双语文件 key 结构必须逐行一致`);
+      break; // 首个分歧点即止, 后面全是连锁错位
+    }
+  }
+  // 时间漂移(warn 不 fail — 翻译滞后是正当中间态): EN 的 git 最后提交晚于 zh 就提示
+  try {
+    const ts = (f) => Number(execSync(`git log -1 --format=%ct -- "${f}"`, { cwd: ROOT, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim());
+    const enTs = ts(enPath);
+    const zhTs = ts(zhPath);
+    if (enTs && zhTs && enTs > zhTs) {
+      console.warn(`⚠ ${enPath} committed after ${zhPath} — 译文可能没跟上(warn, 不拦)`);
+    }
+  } catch {
+    /* 无 git 历史的环境(CI 浅克隆等)静默跳过 */
+  }
+}
 
 const posts = listMarkdownFiles(join(CONTENT, 'posts'));
 const worklogs = listMarkdownFiles(join(CONTENT, 'worklogs'));

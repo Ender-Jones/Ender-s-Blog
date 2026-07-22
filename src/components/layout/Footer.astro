@@ -1,14 +1,30 @@
 ---
+// 联系方式单源: site.yml socials(经 getSocialLinks)— 换账号只改 yml, 这里不再硬编码.
+import { getSocialLinks } from '../../lib/data';
+
 const year = new Date().getFullYear();
+const socials = getSocialLinks();
+// 每个渠道的胶囊着装(蓝填充/ghost/默认), 与接线前的手写版一致.
+const pillStyle = {
+  github: { class: 'ej-pill', style: '--btn-fill: var(--ej-blue);' },
+  twitter: { class: 'ej-pill ej-pill--ghost', style: undefined },
+  email: { class: 'ej-pill', style: undefined },
+};
 ---
 
 <footer>
   <div class="inner">
     <span class="line">© {year} Ender Jones — still working.</span>
     <div class="pills">
-      <a class="ej-pill" style="--btn-fill: var(--ej-blue);" href="https://github.com/Ender-Jones" target="_blank" rel="noopener">GitHub</a>
-      <a class="ej-pill ej-pill--ghost" href="https://x.com/EnderJones1872" target="_blank" rel="noopener">X</a>
-      <a class="ej-pill" href="mailto:enderjones1872@gmail.com">Email</a>
+      {socials.map((s) => (
+        <a
+          class={pillStyle[s.key].class}
+          style={pillStyle[s.key].style}
+          href={s.href}
+          target={s.key === 'email' ? undefined : '_blank'}
+          rel={s.key === 'email' ? undefined : 'noopener'}
+        >{s.label}</a>
+      ))}
     </div>
   </div>
 </footer>

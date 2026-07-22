@@ -1,4 +1,5 @@
 import aboutYaml from '../data/about.yml';
+import aboutZhYaml from '../data/about.zh.yml';
 import homeYaml from '../data/home.yml';
 import zhYaml from '../data/zh.yml';
 import quotesYaml from '../data/quotes.yml';
@@ -14,29 +15,13 @@ export type SocialLinks = {
 };
 
 export type SiteData = {
-  name: string;
-  url: string;
-  role: string;
   location: string;
-  avatar: string;
-  hero_portrait?: string;
-  research_oneliner: string;
-  about_lead: string;
   identity: {
-    terminal_title: string;
     role_detail: string;
-    focus_label: string;
-    stack: string[];
-    thesis: string;
     signals: string[];
     models: string[];
     tools: string[];
     languages: string[];
-    portrait_caption: string;
-  };
-  github_card?: {
-    title: string;
-    description: string;
   };
   socials: SocialLinks;
   comments?: {
@@ -81,6 +66,7 @@ export type TimelineEntry = {
 export type ResearchData = {
   subtitle: string;
   protocol: string;
+  thesis: string;
   papers: Paper[];
   metric: {
     label: string;
@@ -149,6 +135,7 @@ export type ZhData = {
 
 export const home = homeYaml as HomeData;
 export const about = aboutYaml as AboutData;
+export const aboutZh = aboutZhYaml as AboutData;
 export const zh = zhYaml as ZhData;
 export const quotes = (quotesYaml as { quotes: Quote[] }).quotes;
 
