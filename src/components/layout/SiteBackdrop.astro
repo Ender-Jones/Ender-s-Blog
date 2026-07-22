@@ -1,5 +1,5 @@
 ---
-// 暗房底层: 56px 微网格 + 七枚异速漂移光点, 均以慢于内容的速度视差.
+// 暗房底层: 56px 微网格 + 六枚异速漂移光点, 均以慢于内容的速度视差.
 ---
 
 <div class="grid" data-parallax="0.05" aria-hidden="true"></div>
@@ -9,7 +9,6 @@
 <span class="dot dot-d" data-parallax="0.08" aria-hidden="true"><span></span></span>
 <span class="dot dot-e" data-parallax="0.12" aria-hidden="true"><span></span></span>
 <span class="dot dot-f" data-parallax="0.07" aria-hidden="true"><span></span></span>
-<span class="dot dot-g" data-parallax="0.13" aria-hidden="true"><span></span></span>
 
 <style>
   .grid {
@@ -39,9 +38,9 @@
     width: 4px;
     height: 4px;
     background: var(--ej-pink);
-    opacity: 0.36;
+    opacity: 0.39;
     filter: blur(1.5px);
-    box-shadow: 0 0 11px rgba(255, 122, 192, 0.55);
+    box-shadow: 0 0 11px rgba(255, 122, 192, 0.6);
     animation: ej-drift-a 34s ease-in-out infinite;
   }
   .dot-b {
@@ -52,9 +51,9 @@
     width: 3px;
     height: 3px;
     background: var(--ej-blue);
-    opacity: 0.31;
+    opacity: 0.34;
     filter: blur(1px);
-    box-shadow: 0 0 10px rgba(76, 194, 255, 0.5);
+    box-shadow: 0 0 10px rgba(76, 194, 255, 0.54);
     animation: ej-drift-b 42s ease-in-out infinite;
   }
   .dot-c {
@@ -65,7 +64,7 @@
     width: 3px;
     height: 3px;
     background: #e4e4e7;
-    opacity: 0.22;
+    opacity: 0.24;
     filter: blur(1px);
     animation: ej-drift-c 28s ease-in-out infinite;
   }
@@ -77,9 +76,9 @@
     width: 3px;
     height: 3px;
     background: var(--ej-pink);
-    opacity: 0.25;
+    opacity: 0.27;
     filter: blur(1px);
-    box-shadow: 0 0 9px rgba(255, 122, 192, 0.4);
+    box-shadow: 0 0 9px rgba(255, 122, 192, 0.44);
     animation: ej-drift-b 48s ease-in-out infinite;
   }
   .dot-e {
@@ -90,12 +89,12 @@
     width: 3px;
     height: 3px;
     background: var(--ej-blue);
-    opacity: 0.23;
+    opacity: 0.25;
     filter: blur(1px);
-    box-shadow: 0 0 8px rgba(76, 194, 255, 0.35);
+    box-shadow: 0 0 8px rgba(76, 194, 255, 0.38);
     animation: ej-drift-c 40s ease-in-out infinite;
   }
-  /* f/g 补在右下与左上的空档(a-e 偏左上与中带), 参数沿用既有梯度不新增亮度档 */
+  /* f 补右下空档(a-e 偏左上与中带), 参数沿用既有梯度不新增亮度档 */
   .dot-f {
     bottom: 28%;
     right: 22%;
@@ -104,22 +103,9 @@
     width: 3px;
     height: 3px;
     background: #e4e4e7;
-    opacity: 0.2;
-    filter: blur(1px);
-    animation: ej-drift-a 46s ease-in-out infinite;
-  }
-  .dot-g {
-    top: 34%;
-    left: 30%;
-  }
-  .dot-g > span {
-    width: 2px;
-    height: 2px;
-    background: var(--ej-pink);
     opacity: 0.22;
     filter: blur(1px);
-    box-shadow: 0 0 8px rgba(255, 122, 192, 0.35);
-    animation: ej-drift-c 52s ease-in-out infinite;
+    animation: ej-drift-a 46s ease-in-out infinite;
   }
   @media (prefers-reduced-motion: reduce) {
     .dot > span {

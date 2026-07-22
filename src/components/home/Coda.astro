@@ -5,11 +5,14 @@ import { quotes } from '../../lib/data';
 
 const pool = quotes.filter((q) => !q.pinned_only);
 const first = pool[0];
+// 已自带引号(« » 或 “ ”)的原文不再套一层. 注意: 正则不能直写在 {} 里 — JSX 会当成注释开头.
+const firstText = /^[«“"]/.test(first.text) ? first.text : `“${first.text}”`;
 ---
 
 <section class="reveal" style="--reveal-i: 4;" data-screen="coda">
   <div class="wrap">
-    <blockquote id="coda-quote">{first.lang === 'fr' ? first.text : `“${first.text}”`}</blockquote>
+    <blockquote id="coda-quote">{firstText}</blockquote>
+    <p class="coda-trans" id="coda-trans">{first.trans ?? ''}</p>
     <div class="meta-row">
       <p class="source">— <span id="coda-source">{first.source}</span></p>
       <button id="coda-reroll" class="ej-orb" type="button" aria-label="another quote" data-route="⟳ another quote"
@@ -24,9 +27,10 @@ const first = pool[0];
   (function () {
     var data = document.getElementById('coda-data');
     var quote = document.getElementById('coda-quote');
+    var trans = document.getElementById('coda-trans');
     var source = document.getElementById('coda-source');
     var btn = document.getElementById('coda-reroll');
-    if (!data || !quote || !source || !btn) return;
+    if (!data || !quote || !trans || !source || !btn) return;
     var quotes = JSON.parse(data.textContent || '[]');
     if (!quotes.length) return;
     // 已自带引号(« » 或 “ ”)的原文不再套一层
@@ -38,6 +42,8 @@ const first = pool[0];
     var show = function () {
       var q = quotes[qi];
       quote.textContent = dress(q.text);
+      // 主页是英文页: 非英语原文配英译; 本来就是英语的条目没有 trans, 这行自然空着
+      trans.textContent = q.trans || '';
       source.textContent = q.source;
     };
     show();
@@ -50,11 +56,13 @@ const first = pool[0];
       if (n >= qi) n += 1;
       fading = true;
       quote.classList.add('fade');
+      trans.classList.add('fade');
       source.parentElement.classList.add('fade');
       setTimeout(function () {
         qi = n;
         show();
         quote.classList.remove('fade');
+        trans.classList.remove('fade');
         source.parentElement.classList.remove('fade');
         fading = false;
       }, 230);
@@ -84,6 +92,26 @@ const first = pool[0];
       transform 260ms var(--ej-ease);
   }
   blockquote.fade {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  /* 译文行: 恒定高度预留(与 blockquote 一样), 换引文时不让下面的 meta 行跳动 */
+  .coda-trans {
+    margin: 12px 0 0;
+    max-width: 58ch;
+    min-height: 1.65em;
+    color: var(--ej-mut);
+    font-family: var(--ej-sans);
+    font-size: var(--ej-fs-note);
+    font-weight: var(--ej-fw-body);
+    line-height: 1.65;
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 200ms ease,
+      transform 260ms var(--ej-ease);
+  }
+  .coda-trans.fade {
     opacity: 0;
     transform: translateY(8px);
   }
