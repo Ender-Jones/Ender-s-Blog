@@ -1,11 +1,5 @@
 ---
 // tone = 悬停/激活的语义色: 作品与人=粉(公开/活着), worklog=琥珀(today/next 的家), research=蓝(信号/数据)
-const links = [
-  { label: 'Writing', href: '/posts/', route: '→ /posts/', tone: 'pink' },
-  { label: 'Worklog', href: '/worklog/', route: '→ /worklog/', tone: 'amber' },
-  { label: 'Research', href: '/research/', route: '→ /research/', tone: 'blue' },
-  { label: 'About', href: '/about/', route: '→ /about/', tone: 'pink' },
-];
 // langAlt = 本页译文的 URL(文章页传 i18n_alt), lang = 本页语言(文章页传 frontmatter).
 // 有了它, 语言开关就上下文感知: 在有译文的文章上点"中"→ 去这篇的中文版, 而非 /zh/ 着陆页.
 interface Props {
@@ -18,13 +12,29 @@ const isActive = (href: string) => path === href || path.startsWith(href);
 // zh 文章在 /posts/zh/ 下, 不带 /zh/ 前缀 → 语言要由 frontmatter 显式给, 着陆页才靠路径推断
 const curLang = lang ?? (path === '/zh/' || path.startsWith('/zh/') ? 'zh' : 'en');
 const isZh = curLang === 'zh';
+// nav 链接语言感知(2026-07-23): zh 页面上指向 zh 对应页, 不把中文读者弹回英文区;
+// worklog 没有中文版(日志跟着工作走), 两语都指 /worklog/. 链接文字是 chrome, 保持英文.
+const links = isZh
+  ? [
+      { label: 'Writing', href: '/zh/writing/', route: '→ /zh/writing/', tone: 'pink' },
+      { label: 'Worklog', href: '/worklog/', route: '→ /worklog/', tone: 'amber' },
+      { label: 'Research', href: '/zh/research/', route: '→ /zh/research/', tone: 'blue' },
+      { label: 'About', href: '/zh/about/', route: '→ /zh/about/', tone: 'pink' },
+    ]
+  : [
+      { label: 'Writing', href: '/posts/', route: '→ /posts/', tone: 'pink' },
+      { label: 'Worklog', href: '/worklog/', route: '→ /worklog/', tone: 'amber' },
+      { label: 'Research', href: '/research/', route: '→ /research/', tone: 'blue' },
+      { label: 'About', href: '/about/', route: '→ /about/', tone: 'pink' },
+    ];
 // 单一动作钮: 永远只显示"另一种语言", 点了必切 — 状态展示式双钮会出现"点当前语言=白刷新"
 const altHref = isZh ? (langAlt ?? '/') : (langAlt ?? '/zh/');
+const homeHref = isZh ? '/zh/' : '/';
 ---
 
 <nav>
   <div class="inner">
-    <a class="logo" href="/" data-route="→ / — home">
+    <a class="logo" href={homeHref} data-route={`→ ${homeHref} — home`}>
       <span class="name">Ender Jones</span>
       <span class="caret" aria-hidden="true"></span>
     </a>

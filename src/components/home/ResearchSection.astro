@@ -1,20 +1,26 @@
 ---
 // §2 Research: 三篇论文面板(状态色: pink=published / blue=review / amber=writing) + 指标卡.
-import { research } from '../../lib/data';
+// zh 主页传 data=researchZh + base=/zh/research/; "Research" 标题是 serif chrome, 两语共用.
+import { research, type ResearchData } from '../../lib/data';
 
-const papers = research.papers;
+interface Props {
+  data?: ResearchData;
+  base?: string;
+}
+const { data = research, base = '/research/' } = Astro.props;
+const papers = data.papers;
 ---
 
 <section class="reveal" style="--reveal-i: 1;" data-screen="research">
   <div class="wrap">
     <div class="head">
-      <h2>Research <span class="sub">{research.subtitle}</span></h2>
-      <span class="protocol">{research.protocol}</span>
+      <h2>Research <span class="sub">{data.subtitle}</span></h2>
+      <span class="protocol">{data.protocol}</span>
     </div>
     <div class="grid">
       <div class="ej-card panels">
         {papers.map((p) => (
-          <a class:list={['panel', `tone-${p.tone}`]} href={`/research/#${p.anchor}`} data-route={`→ /research/#${p.anchor}`}>
+          <a class:list={['panel', `tone-${p.tone}`]} href={`${base}#${p.anchor}`} data-route={`→ ${base}#${p.anchor}`}>
             <span class="linebar" aria-hidden="true"></span>
             <span class="status-row">
               <span class="dot" aria-hidden="true"></span>
@@ -27,12 +33,12 @@ const papers = research.papers;
         ))}
       </div>
       <div class="ej-card metric">
-        <span class="metric-label"><span class="metric-dot" aria-hidden="true"></span>{research.metric.label}</span>
-        <span class="metric-value">{research.metric.value}</span>
-        <span class="metric-note">{research.metric.notes.map((n, i) => (<>{i > 0 && <br />}{n}</>))}</span>
+        <span class="metric-label"><span class="metric-dot" aria-hidden="true"></span>{data.metric.label}</span>
+        <span class="metric-value">{data.metric.value}</span>
+        <span class="metric-note">{data.metric.notes.map((n, i) => (<>{i > 0 && <br />}{n}</>))}</span>
       </div>
     </div>
-    <p class="keywords">{research.keywords} · <span class="kw-next">{research.keywords_next}</span></p>
+    <p class="keywords">{data.keywords} · <span class="kw-next">{data.keywords_next}</span></p>
   </div>
 </section>
 

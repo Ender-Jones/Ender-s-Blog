@@ -1,8 +1,20 @@
 ---
 // §3 Writing: pinned 精选卡 + 最新三行(签名式行悬停: 侧条·标题右移·缩略图滑入).
+// zh 主页传 lang=zh + hub=/zh/writing/ + t; "Writing" 标题是 serif chrome, 两语共用.
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('posts')).filter((p) => p.data.language === 'en');
+interface Props {
+  lang?: 'en' | 'zh';
+  hub?: string;
+  t?: { sub: string; all: string; read: string };
+}
+const {
+  lang = 'en',
+  hub = '/posts/',
+  t = { sub: 'essays · poems · research notes', all: 'all writing →', read: 'read →' },
+} = Astro.props;
+
+const posts = (await getCollection('posts')).filter((p) => p.data.language === lang);
 const byDateDesc = [...posts].sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 const featured = byDateDesc.find((p) => p.data.pinned) ?? byDateDesc[byDateDesc.length - 1];
@@ -25,8 +37,8 @@ const fMin = minutes(featured.body);
 <section class="reveal" style="--reveal-i: 2;" data-screen="writing">
   <div class="wrap">
     <div class="head">
-      <h2>Writing <span class="sub">essays · poems · research notes</span></h2>
-      <a class="ej-pill" href="/posts/" data-route="→ /posts/ — the archive">all writing →</a>
+      <h2>Writing <span class="sub">{t.sub}</span></h2>
+      <a class="ej-pill" href={hub} data-route={`→ ${hub} — the archive`}>{t.all}</a>
     </div>
 
     <a class="ej-card featured" href={href(featured.id)} data-route={`→ ${href(featured.id)}`}>
@@ -45,7 +57,7 @@ const fMin = minutes(featured.body);
               <span class="tag">#{t}</span>
             ))}
           </span>
-          <span class="f-arrow">read →</span>
+          <span class="f-arrow">{t.read}</span>
         </span>
       </span>
     </a>

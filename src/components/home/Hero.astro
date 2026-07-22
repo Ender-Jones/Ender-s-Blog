@@ -1,13 +1,27 @@
 ---
 // §1 Hero: 左侧 claim + CTA, 右侧 Subject readout 卡(活 JST 时钟 + 状态脉冲).
+// zh 主页传 hero(zh.yml)/claimEm/t/researchHref; readout 卡与 synced 行是 mono chrome, 两语共用英文.
 import { getCollection } from 'astro:content';
 import { home } from '../../lib/data';
 import { getCurrentThread } from '../../lib/parseWorklog';
 
-const claim = home.hero.claim;
+interface Props {
+  hero?: { kicker: string; claim: string; body: string };
+  claimEm?: string;
+  researchHref?: string;
+  t?: { research: string; reach: string };
+}
+const {
+  hero = home.hero,
+  claimEm,
+  researchHref = '/research/',
+  t = { research: 'research & cv →', reach: 'reach me' },
+} = Astro.props;
+
+const claim = hero.claim;
 const words = claim.split(' ');
-const claimTail = words[words.length - 1];
-const claimHead = words.length > 1 ? words.slice(0, -1).join(' ') + ' ' : '';
+const claimTail = claimEm && claim.endsWith(claimEm) ? claimEm : words[words.length - 1];
+const claimHead = claim.slice(0, claim.length - claimTail.length);
 
 const worklogs = await getCollection('worklogs');
 const thread = getCurrentThread(worklogs);
@@ -20,14 +34,14 @@ const synced = syncedAt
 <section class="reveal" style="--reveal-i: 0;" data-screen="hero">
   <div class="hero">
     <div class="left">
-      <p class="kicker">{home.hero.kicker}</p>
+      <p class="kicker">{hero.kicker}</p>
       <h1 class="claim">
         {claimHead}<em>{claimTail}</em><span class="caret" aria-hidden="true"></span>
       </h1>
-      <p class="body">{home.hero.body}</p>
+      <p class="body">{hero.body}</p>
       <div class="ctas">
-        <a class="cta-primary" href="/research/" data-route="→ /research/ — publications & cv">research &amp; cv →</a>
-        <a class="ej-pill" href="mailto:enderjones1872@gmail.com" data-route="✉ enderjones1872@gmail.com">reach me</a>
+        <a class="cta-primary" href={researchHref} data-route={`→ ${researchHref} — publications & cv`}>{t.research}</a>
+        <a class="ej-pill" href="mailto:enderjones1872@gmail.com" data-route="✉ enderjones1872@gmail.com">{t.reach}</a>
       </div>
     </div>
 

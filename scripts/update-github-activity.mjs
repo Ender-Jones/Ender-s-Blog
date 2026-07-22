@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
+import { existsSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import process from 'node:process';
 
@@ -8,7 +8,20 @@ const login = process.env.GITHUB_LOGIN ?? 'Ender-Jones';
 const weeks = Number(process.env.ACTIVITY_WEEKS ?? 12);
 const now = new Date();
 const { start, end, dayCount } = getAlignedWindow(weeks, now);
-const days = await readGitHubContributionDays({ login, start, end, dayCount });
+
+// 软失败(2026-07-23, 挂进 build 链之故): 拿不到凭证/请求失败时保留缓存快照继续构建 —
+// CF 构建环境有 GITHUB_TOKEN 会每次刷新; 本地 docker 容器没凭证就用仓库里的缓存.
+let days;
+try {
+  days = await readGitHubContributionDays({ login, start, end, dayCount });
+} catch (error) {
+  const cache = join(root, 'src/data/github-activity.json');
+  if (existsSync(cache)) {
+    console.warn(`⚠ activity refresh skipped (${error.message?.split('\n')[0]}) — keeping cached snapshot.`);
+    process.exit(0);
+  }
+  throw error;
+}
 
 const snapshot = {
   generatedAt: now.toISOString(),

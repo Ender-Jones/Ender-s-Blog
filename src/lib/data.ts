@@ -131,7 +131,8 @@ export const research = researchYaml as ResearchData;
 export const researchZh = researchZhYaml as ResearchData;
 export const tagMeta = tagsYaml as Record<string, TagMeta>;
 export type ZhData = {
-  hero: { kicker: string; claim: string; body: string };
+  splash: { greeting: string };
+  hero: { kicker: string; claim: string; claim_em?: string; body: string };
   notes: string[];
 };
 

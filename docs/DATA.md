@@ -14,8 +14,8 @@
 
 | 文件 | 喂哪些页面 | 改完去哪看 | 中英对照 |
 |---|---|---|---|
-| `home.yml` | 主页 splash 问候 + hero 三行 + readout 卡; **readout.status 还复用在 About 的 NOW 卡** | `/` 和 `/about/` | zh.yml 只镜像 hero; splash/readout 无中文(⁠/zh/ 是简化着陆页, 非全镜像) |
-| `zh.yml` | /zh/ 着陆页 hero + 底部 notes | `/zh/` | 对应 home.yml 的 hero 部分 |
+| `home.yml` | 主页 splash 问候 + hero 三行 + readout 卡; **readout.status 还复用在 About 的 NOW 卡** | `/` 和 `/about/` | 与 zh.yml 结对: splash 问候与 hero **成对改**; readout/LIVE/墙/NOW 是 chrome, 两语共用英文 |
+| `zh.yml` | **/zh/ 中文主页**(splash 问候 + hero + claim_em 强调尾词)+ `/zh/writing/` 的 notes | `/zh/` 和 `/zh/writing/` | 同上; claim_em 必须是 claim 的结尾(中文没空格, 斜体尾词靠它) |
 | `about.yml` | About 页全部文案(lead/自述段/essay 链接/三重身份行/ADHD 短节/colophon), 经共享骨架 `components/about/AboutPage.astro` | `/about/` | 与 about.zh.yml 结对, **改内容两边成对动**(MIRROR_PAIRS 盯结构; 文案按"中英分开创作"原则各写各的) |
 | `about.zh.yml` | 只喂 `/zh/about/` | `/zh/about/` | 同上 |
 | `research.yml` | `/research/` 整页 + **主页 research 面板** | `/research/` + 主页中段 | 与 research.zh.yml 结对, **改内容两边必须同步** |

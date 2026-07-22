@@ -1,16 +1,29 @@
 ---
-// 开场 splash: 每会话一次(sessionStorage), 4.4s 自动进入, 点击/按键跳过.
+// 开场 splash: 每会话一次(sessionStorage, 两个语言主页共用 seen 标记), 自动进入, 点击/按键跳过.
+// zh 主页传 greeting/claim/claimEm/hint; 强调尾词: EN 按空格取末词, zh 没有空格 → claimEm 显式给.
 import { home } from '../../lib/data';
 
-const claim = home.hero.claim;
+interface Props {
+  greeting?: string;
+  claim?: string;
+  claimEm?: string;
+  hint?: string;
+}
+const {
+  greeting = home.splash.greeting,
+  claim = home.hero.claim,
+  claimEm,
+  hint = '中文版 — 右上角 EN / 中 切换',
+} = Astro.props;
+
 const words = claim.split(' ');
-const claimTail = words[words.length - 1];
-const claimHead = words.length > 1 ? words.slice(0, -1).join(' ') + ' ' : '';
+const claimTail = claimEm && claim.endsWith(claimEm) ? claimEm : words[words.length - 1];
+const claimHead = claim.slice(0, claim.length - claimTail.length);
 ---
 
 <div class="splash" id="ej-splash" aria-hidden="true">
   <div class="stack">
-    <p class="greeting">{home.splash.greeting}</p>
+    <p class="greeting">{greeting}</p>
     <h1 class="claim">
       {claimHead}<em>{claimTail}</em><span class="caret" aria-hidden="true"></span>
     </h1>
@@ -29,7 +42,7 @@ const claimHead = words.length > 1 ? words.slice(0, -1).join(' ') + ' ' : '';
   <span class="auto">
     <span class="bar"><span class="fill"></span></span>
     <span class="label">AUTO — CLICK OR ANY KEY TO SKIP</span>
-    <span class="zh-hint">中文版 — 右上角 EN / 中 切换</span>
+    <span class="zh-hint">{hint}</span>
   </span>
 </div>
 
