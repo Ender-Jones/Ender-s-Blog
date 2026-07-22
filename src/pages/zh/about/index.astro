@@ -1,0 +1,7 @@
+---
+// zh About: about.zh.yml 喂共享骨架(EN 版在 /about/). mono 标签保持英文是站点 chrome 规则.
+import AboutPage from '../../../components/about/AboutPage.astro';
+import { aboutZh } from '../../../lib/data';
+---
+
+<AboutPage data={aboutZh} lang="zh" langAlt="/about/" t={{ reach: '找到我' }} />

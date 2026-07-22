@@ -1,0 +1,366 @@
+---
+// About 页共享骨架: /about/(en) 与 /zh/about/(zh) 都渲染它, 数据与少量可译串由路由喂.
+// 结构: 自述开场 → blog 的三重身份 → ADHD 系统短节 → Now → 联系 → Colophon.
+// mono 大写标签(kicker/THIS BLOG THREE WAYS/NOW/COLOPHON/点行 key)是站点 chrome, 两个语言都保持英文;
+// 成句内容全部来自 about.yml / about.zh.yml(镜像对, 结构必须一致 — validate 的 MIRROR_PAIRS 盯着).
+// Now 行复用 home.yml 的 status 与 worklog 的 NOW 句(两处按设计保持英文 — 活体信号是给全世界看的).
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layout/BaseLayout.astro';
+import RouteHint from '../home/RouteHint.astro';
+import { home, site, getSocialLinks, type AboutData } from '../../lib/data';
+import { getNowLine, getWorklogDays } from '../../lib/worklogDays';
+
+interface Props {
+  data: AboutData;
+  lang: 'en' | 'zh';
+  langAlt: string;
+  t: { reach: string };
+}
+const { data, lang, langAlt, t } = Astro.props;
+
+const socials = getSocialLinks();
+const worklogs = await getCollection('worklogs');
+const nowLine = getNowLine(worklogs, getWorklogDays(worklogs))?.text;
+
+const nowRows = [
+  { key: 'base', value: site.location },
+  { key: 'role', value: site.identity.role_detail },
+  { key: 'langs', value: site.identity.languages.join(' · ') },
+  { key: 'status', value: home.readout.status },
+];
+---
+
+<BaseLayout title="About — Ender Jones" description={data.lead} lang={lang} langAlt={langAlt} noindex>
+  <RouteHint />
+  <main style="--ej-page-w: 980px;">
+    <section class="reveal" style="--reveal-i: 0;">
+      <p class="ej-kicker">ABOUT — WHO KEEPS THIS BLOG</p>
+      <h1 class="ej-h1">About.<span class="ej-caret" aria-hidden="true"></span></h1>
+      <p class="lead">{data.lead}</p>
+      <div class="intro">
+        <span class="portrait" aria-hidden="true"></span>
+        <div class="paras">
+          {data.paras.map((p) => (
+            <p>{p}</p>
+          ))}
+          <a class="ej-link essay" href={data.essay_link.href} data-route={`→ ${data.essay_link.href}`}>{data.essay_link.label}</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="notebook reveal" style="--reveal-i: 1;">
+      <div class="ej-card nb-card">
+        <span class="nb-label">THIS BLOG, THREE WAYS</span>
+        <div class="nb-rows">
+          {data.notebook.map((row) => (
+            <span class="ej-dotrow">
+              <span class="k">{row.key}</span>
+              <span class="lead" aria-hidden="true"></span>
+              <span class="nb-val">{row.value}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="system reveal" style="--reveal-i: 2;">
+      <h2>{data.system.title}</h2>
+      <p class="sys-body">{data.system.body}</p>
+      <a class="ej-link sys-link" href={data.system.link} data-route={`→ ${data.system.link}`}>{data.system.link_label}</a>
+    </section>
+
+    <section class="now reveal" style="--reveal-i: 3;">
+      <div class="ej-card now-card">
+        <div class="now-head">
+          <span class="nb-label">NOW</span>
+          <span class="now-clock"><span id="about-clock">--:--</span> JST</span>
+        </div>
+        <div class="nb-rows">
+          {nowRows.map((row) => (
+            <span class="ej-dotrow">
+              <span class="k">{row.key}</span>
+              <span class="lead" aria-hidden="true"></span>
+              <span class="nb-val">{row.key === 'status' && <span class="pulse" aria-hidden="true"></span>}{row.value}</span>
+            </span>
+          ))}
+        </div>
+        {nowLine && (
+          <a class="now-line" href="/worklog/" data-route="→ /worklog/">
+            <span class="now-chip">NOW</span>
+            <span class="now-text">{nowLine}</span>
+          </a>
+        )}
+      </div>
+    </section>
+
+    <section class="contact reveal" style="--reveal-i: 4;">
+      <h2>{t.reach}</h2>
+      <div class="c-rows">
+        {socials.map((s) => (
+          <a class:list={['c-row', 'ej-dotrow', `c-${s.key}`]} href={s.href} target={s.key === 'email' ? undefined : '_blank'} rel="noopener" data-route={s.key === 'email' ? `✉ ${s.value}` : `↗ ${s.value}`}>
+            <span class="k">{s.label}</span>
+            <span class="lead" aria-hidden="true"></span>
+            <span class="c-val">{s.value}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="colophon reveal" style="--reveal-i: 5;">
+      <span class="col-label">COLOPHON</span>
+      {data.colophon.map((line) => (
+        <p class="col-line">{line}</p>
+      ))}
+    </section>
+  </main>
+</BaseLayout>
+
+<script>
+  const el = document.getElementById('about-clock');
+  if (el) {
+    const tick = () => {
+      el.textContent = new Date()
+        .toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo', hour12: false })
+        .slice(0, 5);
+    };
+    tick();
+    setInterval(tick, 1000);
+  }
+</script>
+
+<style>
+  .lead {
+    margin: 22px 0 0;
+    max-width: 34ch;
+    color: var(--ej-text-2);
+    font-family: var(--ej-serif);
+    font-size: clamp(21px, 2.4vw, 28px);
+    font-style: italic;
+    font-weight: var(--ej-fw-light);
+    line-height: 1.45;
+    text-wrap: balance;
+  }
+  .intro {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    margin-top: 26px;
+  }
+  .portrait {
+    flex-shrink: 0;
+    width: 84px;
+    height: 84px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: url('/img/author/ang.JPG') center / cover;
+    filter: grayscale(0.45) brightness(0.92);
+    box-shadow: 0 10px 26px -12px rgba(0, 0, 0, 0.9);
+  }
+  .paras {
+    display: grid;
+    gap: 12px;
+    max-width: 60ch;
+  }
+  .paras p {
+    margin: 0;
+    color: var(--ej-text-3);
+    font-size: var(--ej-fs-body);
+    line-height: var(--ej-lh-loose);
+    text-wrap: pretty;
+  }
+  .essay {
+    justify-self: start;
+  }
+
+  .notebook,
+  .now {
+    padding: clamp(40px, 6vh, 56px) 0 0;
+  }
+  .nb-card,
+  .now-card {
+    padding: 18px 24px 16px;
+  }
+  .nb-label {
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-meta);
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-label);
+    text-transform: uppercase;
+  }
+  .nb-rows {
+    display: grid;
+    gap: 2px;
+    margin-top: 10px;
+  }
+  .nb-val {
+    flex-shrink: 0;
+    max-width: 62%;
+    text-align: right;
+    color: #e8e8ea;
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-small);
+    line-height: var(--ej-lh-body);
+    transition: color 120ms ease;
+  }
+  .ej-dotrow:hover .nb-val { color: #fff; }
+
+  .system {
+    padding: clamp(44px, 6vh, 60px) 0 0;
+    max-width: 640px;
+  }
+  h2 {
+    margin: 0;
+    color: var(--ej-text);
+    font-family: var(--ej-serif);
+    font-size: 26px;
+    font-weight: var(--ej-fw-body);
+  }
+  .sys-body {
+    margin: 14px 0 0;
+    color: var(--ej-text-3);
+    font-size: var(--ej-fs-body);
+    line-height: var(--ej-lh-read);
+    text-wrap: pretty;
+  }
+  .sys-link {
+    margin-top: 14px;
+  }
+
+  .now-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .now-clock {
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-meta);
+    font-weight: var(--ej-fw-medium);
+    font-variant-numeric: tabular-nums;
+  }
+  .pulse {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--ej-pink);
+    margin-right: 8px;
+    box-shadow:
+      0 0 9px rgba(255, 122, 192, 0.8),
+      0 0 20px rgba(255, 122, 192, 0.3);
+    animation: ej-pulse 3s ease-in-out infinite;
+  }
+  .now-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.008);
+    transition: all 120ms var(--ej-ease);
+  }
+  .now-line:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.02);
+  }
+  .now-chip {
+    flex-shrink: 0;
+    padding: 2px 8px;
+    border: 1px solid rgba(255, 122, 192, 0.4);
+    border-radius: 4px;
+    color: var(--ej-pink-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-micro);
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-caps);
+  }
+  .now-text {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--ej-text-3);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-small);
+  }
+
+  .contact {
+    padding: clamp(44px, 6vh, 60px) 0 0;
+    max-width: 640px;
+  }
+  .c-rows {
+    display: grid;
+    gap: 2px;
+    margin-top: 14px;
+  }
+  .c-row {
+    padding: 9px 2px;
+    text-decoration: none;
+  }
+  .c-val {
+    flex-shrink: 0;
+    color: #e8e8ea;
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-small);
+    transition: all 120ms var(--ej-ease);
+  }
+  .c-github:hover .c-val {
+    color: var(--ej-blue-2);
+    text-shadow: 0 0 12px rgba(76, 194, 255, 0.5);
+  }
+  .c-twitter:hover .c-val {
+    color: #ffffff;
+  }
+  .c-email:hover .c-val {
+    color: var(--ej-pink-2);
+    text-shadow: 0 0 12px rgba(255, 122, 192, 0.5);
+  }
+
+  .colophon {
+    padding: clamp(48px, 7vh, 64px) 0 clamp(56px, 8vh, 72px);
+  }
+  .col-label {
+    display: block;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-meta);
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-label);
+  }
+  .col-line {
+    /* colophon 是成句内容不是 chrome: note 档 + 亮一级的灰(家规: 成句 ≥ note) */
+    margin: 8px 0 0;
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-note);
+    line-height: var(--ej-lh-read);
+  }
+
+  @media (max-width: 720px) {
+    .intro {
+      flex-direction: column;
+    }
+  }
+  @media (max-width: 560px) {
+    /* 点线行在窄屏改为堆叠: key 上, value 下 */
+    .nb-rows .ej-dotrow {
+      flex-wrap: wrap;
+      gap: 3px 10px;
+    }
+    .nb-rows .ej-dotrow > .lead {
+      display: none;
+    }
+    .nb-val {
+      flex-basis: 100%;
+      max-width: 100%;
+      text-align: left;
+    }
+  }
+</style>
