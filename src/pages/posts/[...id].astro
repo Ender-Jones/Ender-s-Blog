@@ -62,7 +62,7 @@ const cover = post.data.cover_mode ?? 'hero-large';
         <a class="back" href="/posts/" data-route="→ /posts/ — the archive">← writing</a>
         <span class="div" aria-hidden="true"></span>
         <span class:list={['kind-chip', `tone-${tone}`]}><span class="kind-dot" aria-hidden="true"></span>{kindChip}</span>
-        <span class="meta">{fmtDate(post.data.date)} · {post.data.language.toUpperCase()} · {minutes} min read</span>
+        <span class="meta">{fmtDate(post.data.date)}{post.data.updated && ` · updated ${fmtDate(post.data.updated)}`} · {post.data.language.toUpperCase()} · {minutes} min read</span>
         {post.data.i18n_alt && (
           <a class="ej-link" href={post.data.i18n_alt} data-route={`→ ${post.data.i18n_alt}`}>
             {post.data.language === 'en' ? '中文版 →' : 'EN version →'}

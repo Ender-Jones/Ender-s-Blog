@@ -46,6 +46,7 @@ const posts = defineCollection({
     .object({
       title: text,
       date: z.coerce.date(),
+      updated: z.coerce.date().optional(), // 实质性修订日(措辞打磨不算); 有值则文章页 meta 行显示 · updated
       description: text.optional(),
       kind: postKind.default('essay'),
       tags: z.array(text).default([]),
