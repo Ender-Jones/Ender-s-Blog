@@ -43,10 +43,22 @@ const homeHref = isZh ? '/zh/' : '/';
         <a class:list={['link', `tone-${l.tone}`, { active: isActive(l.href) }]} href={l.href} data-route={l.route}>{l.label}</a>
       ))}
       <span class="divider" aria-hidden="true"></span>
-      <a class="lang-a" href={altHref} data-route={isZh ? '→ english' : '→ 中文'}>{isZh ? 'EN' : '中'}</a>
+      <a class="lang-a" href={altHref} data-lang-target={isZh ? 'en' : 'zh'} data-route={isZh ? '→ english' : '→ 中文'}>{isZh ? 'EN' : '中'}</a>
     </div>
   </div>
 </nav>
+
+<script>
+  // 语言开关点击 = 用户表达偏好, 记住它(EN 主页的自动检测只在无偏好时按浏览器语言跳 /zh/)
+  const langBtn = document.querySelector<HTMLAnchorElement>('.lang-a');
+  langBtn?.addEventListener('click', () => {
+    try {
+      localStorage.setItem('ej-lang', langBtn.dataset.langTarget ?? 'en');
+    } catch {
+      /* 隐私模式等存不进就算了 — 检测退回浏览器语言 */
+    }
+  });
+</script>
 
 <style>
   nav {
