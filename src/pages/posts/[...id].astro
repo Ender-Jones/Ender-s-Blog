@@ -405,7 +405,11 @@ const cover = post.data.cover_mode ?? 'hero-large';
       inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
   .cover-hero-small .hero-img {
-    height: clamp(150px, 22vh, 220px);
+    /* 2026-07-18 印: 原 clamp(150-220px) 定高条在桌面宽度下是 5:1+ 的极端比例 — 改成固定 3:1
+       (Twitter header 同款横幅比), 窄屏 min-height 兜底; 这是以后非 showcase 封面的标准形态候选 */
+    aspect-ratio: 3 / 1;
+    height: auto;
+    min-height: 150px;
   }
   .cover-strip .hero-img {
     height: clamp(90px, 14vh, 130px);
