@@ -1,6 +1,7 @@
 ---
-// /zh/ 中文着陆页(方案 B): 中文 hero + 中文文章列表; worklog/research 保持英文.
-// 文案入口: src/data/zh.yml. 中文文章 = posts 里 language: zh 的条目(翻译中标题暂为英文).
+// /zh/ 中文着陆页: 中文 hero + 与英文 /posts/ 同构的文章列表(年份分组/筛选 chips/desc/徽章/缩略图).
+// 文案入口: src/data/zh.yml. 中文文章 = posts 里 language: zh 的条目.
+// 语言开关对位: /zh/ ↔ /posts/(枢纽页互指, 2026-07-22 修 — 此前回退到 / 造成不对称).
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import RouteHint from '../../components/home/RouteHint.astro';
@@ -9,10 +10,16 @@ import { zh } from '../../lib/data';
 const posts = (await getCollection('posts'))
   .filter((p) => p.data.language === 'zh')
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const newestId = posts[0]?.id;
 
 const fmtDate = (d: Date) =>
   d.toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' });
+// 中文按字数估时: ~400 字/分钟(混排取中值)
+const minutes = (body: string | undefined) =>
+  Math.max(1, Math.ceil((body ?? '').replace(/\s/g, '').length / 400));
 const toneOf = (kind: string) => (kind === 'poem' || kind === 'essay' ? 'pink' : 'blue');
+const kindLabel = (kind: string) =>
+  kind === 'research-note' ? 'note' : kind === 'field-report' ? 'field' : kind;
 const kindZh: Record<string, string> = {
   essay: '随笔',
   poem: '诗',
@@ -21,9 +28,19 @@ const kindZh: Record<string, string> = {
   'field-report': '实录',
 };
 const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
+
+const KIND_ORDER = ['essay', 'poem', 'note', 'field'];
+const kinds = [...new Set(posts.map((p) => kindLabel(p.data.kind)))].sort(
+  (a, b) => KIND_ORDER.indexOf(a) - KIND_ORDER.indexOf(b),
+);
+const years = [...new Set(posts.map((p) => String(p.data.date.getFullYear())))];
+const groups = years.map((year) => ({
+  year,
+  posts: posts.filter((p) => String(p.data.date.getFullYear()) === year),
+}));
 ---
 
-<BaseLayout title="Ender Jones — 研究笔记本" description={zh.hero.body} lang="zh" noindex>
+<BaseLayout title="Ender Jones — 研究笔记本" description={zh.hero.body} lang="zh" langAlt="/posts/" noindex>
   <RouteHint />
   <main style="--ej-page-w: 980px;">
     <section class="reveal" style="--reveal-i: 0;">
@@ -37,30 +54,88 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
       </div>
     </section>
 
-    <section class="list reveal" style="--reveal-i: 1;">
-      <div class="sec-head">
-        <h2>文章 <span class="sec-sub">翻译进行中</span></h2>
-        <a class="ej-link" href="/posts/" data-route="→ /posts/ — 英文档案">English archive →</a>
+    <section class="filter reveal" style="--reveal-i: 1;">
+      <div class="chips" id="kind-chips">
+        <button class="chip active" type="button" data-kind="all">ALL</button>
+        {kinds.map((k) => (
+          <button class="chip" type="button" data-kind={k}>{k.toUpperCase()}S</button>
+        ))}
+        <span class="count" id="post-count">{posts.length} of {posts.length} posts</span>
       </div>
-      {posts.map((p) => (
-        <a class:list={['row', `tone-${toneOf(p.data.kind)}`]} href={href(p.id)} data-route={`→ ${href(p.id)}`}>
-          <span class="bar" aria-hidden="true"></span>
-          <span class="date">{fmtDate(p.data.date)}</span>
-          <span class="mid">
-            <strong class="title">{p.data.title}</strong>
-          </span>
-          <span class="meta">{kindZh[p.data.kind] ?? p.data.kind}</span>
-        </a>
-      ))}
     </section>
 
-    <section class="foot reveal" style="--reveal-i: 2;">
+    <section class="list reveal" style="--reveal-i: 2;">
+      {groups.map((g) => (
+        <div class="group" data-year={g.year}>
+          <div class="group-head">
+            <span class="year">{g.year}</span>
+            <span class="rule" aria-hidden="true"></span>
+            <span class="group-count">{g.posts.length} post{g.posts.length === 1 ? '' : 's'}</span>
+          </div>
+          {g.posts.map((p) => {
+            const tone = toneOf(p.data.kind);
+            const kl = kindLabel(p.data.kind);
+            const badge = p.data.pinned ? 'PINNED' : p.id === newestId ? 'LATEST' : '';
+            return (
+              <a class:list={['row', `tone-${tone}`]} data-kind={kl} href={href(p.id)} data-route={`→ ${href(p.id)}`}>
+                <span class="bar" aria-hidden="true"></span>
+                <span class="date">{fmtDate(p.data.date)}</span>
+                <span class="mid">
+                  <span class="title-line">
+                    <strong class="title">{p.data.title}</strong>
+                    {badge && <span class="badge">{badge}</span>}
+                  </span>
+                  {p.data.description && <span class="desc">{p.data.description}</span>}
+                </span>
+                <span class="meta">{kindZh[p.data.kind] ?? p.data.kind} · {minutes(p.body)} min</span>
+                {p.data.image && <span class="thumb" style={`background-image: url('${p.data.image}');`} aria-hidden="true"></span>}
+              </a>
+            );
+          })}
+        </div>
+      ))}
+      <p class="tail">档案长得很慢, 是故意的 — 每一篇都对得上它的 worklog 轨迹.</p>
+    </section>
+
+    <section class="foot reveal" style="--reveal-i: 3;">
       <a class="ej-link ej-link--amber" href="/worklog/" data-route="→ /worklog/">worklog(EN)→</a>
-      <a class="ej-link ej-link--blue" href="/research/" data-route="→ /research/">research(EN)→</a>
+      <a class="ej-link ej-link--blue" href="/zh/research/" data-route="→ /zh/research/">研究 →</a>
       <a class="ej-link" href="/about/" data-route="→ /about/">about(EN)→</a>
     </section>
   </main>
 </BaseLayout>
+
+<script>
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('#kind-chips .chip')];
+  const rows = [...document.querySelectorAll<HTMLElement>('.row[data-kind]')];
+  const groups = [...document.querySelectorAll<HTMLElement>('.group')];
+  const count = document.getElementById('post-count');
+
+  const apply = (kind: string) => {
+    let visible = 0;
+    for (const row of rows) {
+      const on = kind === 'all' || row.dataset.kind === kind;
+      row.style.display = on ? '' : 'none';
+      if (on) visible += 1;
+    }
+    for (const group of groups) {
+      const n = [...group.querySelectorAll<HTMLElement>('.row')].filter(
+        (r) => r.style.display !== 'none',
+      ).length;
+      group.style.display = n ? '' : 'none';
+      const label = group.querySelector('.group-count');
+      if (label) label.textContent = `${n} post${n === 1 ? '' : 's'}`;
+    }
+    if (count) count.textContent = `${visible} of ${rows.length} posts`;
+  };
+
+  for (const chip of chips) {
+    chip.addEventListener('click', () => {
+      chips.forEach((c) => c.classList.toggle('active', c === chip));
+      apply(chip.dataset.kind ?? 'all');
+    });
+  }
+</script>
 
 <style>
   h1 {
@@ -93,33 +168,81 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
     line-height: 1.8;
   }
 
-  .list {
-    padding: clamp(36px, 6vh, 52px) 0 0;
+  .filter {
+    padding: clamp(28px, 4vh, 40px) 0 0;
   }
-  .sec-head {
+  .chips {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    padding: 3px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-meta);
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-chip);
+    transition: all 130ms var(--ej-ease);
+  }
+  .chip:hover {
+    border-color: rgba(255, 255, 255, 0.24);
+    color: #e8e8ea;
+  }
+  .chip.active {
+    border-color: rgba(255, 122, 192, 0.45);
+    background: rgba(255, 122, 192, 0.08);
+    color: var(--ej-pink-2);
+    text-shadow: 0 0 12px rgba(255, 122, 192, 0.4);
+  }
+  .count {
+    margin-left: auto;
+    color: var(--ej-mut-2); /* 信息字对比度地板 4.5:1 */
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-meta);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .list {
+    padding: clamp(20px, 3vh, 30px) 0 0;
+  }
+  .group {
+    margin: 0 0 14px;
+  }
+  .group-head {
     display: flex;
     align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 8px;
+    gap: 14px;
+    padding: 18px 2px 8px;
   }
-  h2 {
-    margin: 0;
-    color: var(--ej-text);
-    font-family: var(--ej-serif);
-    font-size: 26px;
-    font-weight: var(--ej-fw-body);
-  }
-  .sec-sub {
-    color: var(--ej-mut-2);
+  .year {
+    color: var(--ej-mut);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
-    font-weight: var(--ej-fw-medium);
-    margin-left: 10px;
+    font-weight: var(--ej-fw-head);
+    letter-spacing: var(--ej-track-label);
   }
+  .rule {
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.055);
+    transform: translateY(-3px);
+  }
+  .group-count {
+    color: var(--ej-mut-2); /* 信息字对比度地板 4.5:1 */
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-meta);
+  }
+
   .row {
     position: relative;
     display: grid;
-    grid-template-columns: 110px minmax(0, 1fr) 90px;
+    grid-template-columns: 110px minmax(0, 1fr) 150px;
     gap: 20px;
     align-items: baseline;
     padding: 17px 12px 17px 14px;
@@ -141,6 +264,7 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
     box-shadow: 0 0 9px rgba(var(--tone-rgb), 0.55);
     opacity: 0;
     transform: scaleY(0.55);
+    transform-origin: center;
     transition:
       opacity 180ms var(--ej-ease),
       transform 220ms var(--ej-ease);
@@ -155,30 +279,112 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
     font-size: var(--ej-fs-label);
     font-weight: var(--ej-fw-medium);
     font-variant-numeric: tabular-nums;
+    transition: color 180ms ease;
+  }
+  .row:hover .date {
+    color: #e9e9ec;
   }
   .mid {
     min-width: 0;
+    display: grid;
+    gap: 5px;
+  }
+  .title-line {
+    min-width: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
   }
   .title {
     color: var(--ej-text-2);
     font-family: var(--ej-serif);
     font-size: var(--ej-fs-title);
     font-weight: var(--ej-fw-body);
-    line-height: 1.4;
+    letter-spacing: var(--ej-track-body);
+    line-height: var(--ej-lh-snug);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    transform: translateX(0);
     transition:
       color 180ms ease,
       transform 220ms var(--ej-ease);
-    display: inline-block;
   }
   .row:hover .title {
-    color: #fff;
+    color: #ffffff;
+    transform: translateX(4px);
+  }
+  .badge {
+    flex-shrink: 0;
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-meta);
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-key);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    padding: 1px 7px;
+  }
+  .desc {
+    color: #8f8f96;
+    font-size: var(--ej-fs-note);
+    line-height: 1.55;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    transform: translateX(0);
+    transition:
+      color 180ms ease,
+      transform 240ms var(--ej-ease);
+  }
+  .row:hover .desc {
+    color: #9d9da5;
     transform: translateX(4px);
   }
   .meta {
     color: var(--ej-mut-2);
     font-family: var(--ej-mono);
     font-size: var(--ej-fs-label);
+    font-weight: var(--ej-fw-medium);
     text-align: right;
+    transition: opacity 200ms ease;
+  }
+  .row:hover .meta {
+    opacity: 0.12;
+  }
+  .thumb {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    width: 92px;
+    height: 58px;
+    border-radius: 7px;
+    border: 1px solid rgba(var(--tone-rgb), 0.35);
+    background-size: cover;
+    background-position: center;
+    box-shadow:
+      0 16px 34px -14px rgba(0, 0, 0, 0.95),
+      0 0 0 3px rgba(10, 10, 12, 0.65);
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(-46%) translateX(6px) scale(0.98);
+    transition:
+      opacity 200ms var(--ej-ease),
+      transform 260ms var(--ej-ease);
+  }
+  .row:hover .thumb {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0) scale(1);
+    transition-delay: 40ms;
+  }
+  .tail {
+    margin: 26px 0 0;
+    color: var(--ej-mut-2); /* 成句要读的字, 对比度地板 4.5:1 */
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-meta);
   }
 
   .foot {
@@ -197,8 +403,13 @@ const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
       align-items: start;
       padding: 15px 12px 15px 14px;
     }
-    .meta {
+    .meta,
+    .thumb {
       display: none;
+    }
+    .title,
+    .desc {
+      white-space: normal;
     }
   }
 </style>
