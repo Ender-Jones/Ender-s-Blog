@@ -34,7 +34,7 @@ const kindLabel = (kind: string) =>
 const href = (id: string) => `/posts/${id.replace(/\.(md|mdx)$/, '')}/`;
 ---
 
-<BaseLayout title={`#${label} — Ender Jones`} description={`Posts filed under #${label}.`} noindex>
+<BaseLayout title={`#${label} — Ender Jones`} description={`Posts filed under #${label}.`}>
   <RouteHint />
   <main style="--ej-page-w: 980px;">
     <section class="reveal" style="--reveal-i: 0;">

@@ -11,7 +11,7 @@ import Coda from '../components/Coda.astro';
 import { home } from '../lib/data';
 ---
 
-<BaseLayout title="Ender's Blog" description={home.hero.body} noindex>
+<BaseLayout title="Ender's Blog" description={home.hero.body}>
   {/* 语言自动检测(只在 EN 主页, 深链不拦): 浏览器是中文且用户没表达过偏好 → /zh/;
       用户点过语言开关后以偏好为准(Nav 存 ej-lang). 内联+置顶 = 在正文解析前跑完, 避免闪屏. */}
   <script is:inline>

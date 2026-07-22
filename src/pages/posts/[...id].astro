@@ -51,7 +51,7 @@ const giscus = site.comments?.giscus;
 const cover = post.data.cover_mode ?? 'hero-large';
 ---
 
-<BaseLayout title={`${post.data.title} — Ender Jones`} description={post.data.description} ogImage={post.data.image} lang={post.data.language} langAlt={post.data.i18n_alt} noindex>
+<BaseLayout title={`${post.data.title} — Ender Jones`} description={post.data.description} ogImage={post.data.image} lang={post.data.language} langAlt={post.data.i18n_alt}>
   <RouteHint />
   <div class="read-progress" id="read-progress" aria-hidden="true"></div>
   <div class="orb orb-a" data-parallax="0.05" aria-hidden="true"></div>

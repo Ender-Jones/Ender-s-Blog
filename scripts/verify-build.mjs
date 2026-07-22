@@ -18,7 +18,8 @@ const REQUIRED_FILES = [
   'index.html',
   '404.html',
   'robots.txt',
-  'sitemap.xml',
+  'sitemap-index.xml',
+  'sitemap-0.xml',
   '_headers',
   'googleea7f91fa26471a51.html',
 ];
@@ -51,8 +52,8 @@ if (existsSync(join(DIST, 'robots.txt'))) {
   if (!robots.includes('Sitemap:')) fail('robots.txt missing Sitemap line');
 }
 
-if (existsSync(join(DIST, 'sitemap.xml'))) {
-  const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8');
+if (existsSync(join(DIST, 'sitemap-0.xml'))) {
+  const sitemap = readFileSync(join(DIST, 'sitemap-0.xml'), 'utf8');
   for (const file of posts) {
     const slug = stripExtension(basename(file));
     if (!sitemap.includes(`/posts/${slug}/`)) fail(`sitemap missing /posts/${slug}/`);

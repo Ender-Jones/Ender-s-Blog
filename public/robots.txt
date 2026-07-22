@@ -1,0 +1,7 @@
+# enderjones.com — 公开面全放行; console(录入台)/dev(样张实验室)/api 不给爬.
+User-agent: *
+Disallow: /console/
+Disallow: /dev/
+Disallow: /api/
+
+Sitemap: https://enderjones.com/sitemap-index.xml

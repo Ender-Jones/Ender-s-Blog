@@ -1,0 +1,25 @@
+# 每日 04:00 JST(19:00 UTC)触发 CF Pages 重建 — commit 墙与 NOW 行的"几天前"保持新鲜.
+# 依赖 repo secret CF_DEPLOY_HOOK(CF Pages → Settings → Builds & deployments → Deploy hooks).
+# secret 未配置时静默跳过, 不红叉.
+name: Nightly rebuild
+
+on:
+  schedule:
+    - cron: '0 19 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Cloudflare Pages deploy hook
+        env:
+          HOOK: ${{ secrets.CF_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "CF_DEPLOY_HOOK not configured — skipping."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" > /dev/null && echo "rebuild triggered."
