@@ -2,7 +2,12 @@
 # 手动加一条: 复制任意一段, 改字段即可. trans(英译)/trans_zh(中译)可省略; lang 是原文语言.
 # id 用于在文章 frontmatter 里固定 coda(coda: <id>); 不固定的文章随机抽.
 # pinned_only: true = 只在固定它的文章末尾出现, 永不进随机池 — 印的话只在自己的地盘上响,
-# 不和名人名言同池轮播(2026-07-23 定). 名言池来源: 印的实教名言库(见 memory).
+# 不和名人名言同池轮播(2026-07-23 定).
+#
+# 名言池来源(2026-07-23): 印的私人名言库 =《欢迎来到实力至上主义教室》三季 38 集的开场引言,
+# 逐条回到原作者/原作核对. 未收录的几条: 攀不到可靠原文出处的(叔本华"天才高于疯狂一层楼"
+# 查无德语原句, 疑为英语圈转述; 克尔凯郭尔条丹麦语原句未寻得), 以及南丁格尔/休厄尔两条
+# 措辞未能回到原书核实的. 中译一律自译(简体, 站内口吻), 沿用惯译的只有"他人即地狱"这类定译.
 quotes:
   - id: baudelaire-nuages
     text: "« J’aime les nuages… les nuages qui passent… là-bas… là-bas… les merveilleux nuages ! »"
@@ -22,6 +27,192 @@ quotes:
     trans_zh: "感情里只有一条法则: 让所爱的人幸福."
     source: "Stendhal, diary, 19 June 1805"
     lang: fr
+  - id: larochefoucauld-habilete
+    text: "C’est une grande habileté que de savoir cacher son habileté."
+    trans: "It is a great skill to know how to conceal one’s skill."
+    trans_zh: "懂得藏起自己的本事, 本身就是极大的本事."
+    source: "La Rochefoucauld, Maximes"
+    lang: fr
+  - id: larochefoucauld-verite
+    text: "Il ne faut pas s’offenser que les autres nous cachent la vérité, puisque nous nous la cachons si souvent à nous-mêmes."
+    trans: "We should not be offended that others hide the truth from us, since we so often hide it from ourselves."
+    trans_zh: "别人对我们隐瞒真相, 不值得动怒 — 我们自己瞒起自己来, 何尝少过."
+    source: "La Rochefoucauld, Maximes"
+    lang: fr
+  - id: smith-exchange
+    text: "Nobody ever saw a dog make a fair and deliberate exchange of one bone for another with another dog."
+    trans_zh: "从没有人见过一条狗和另一条狗公平而审慎地交换骨头."
+    source: "Adam Smith, The Wealth of Nations"
+    lang: en
+  - id: sartre-enfer
+    text: "L’enfer, c’est les autres."
+    trans: "Hell is other people."
+    trans_zh: "他人即地狱."
+    source: "Sartre, Huis clos"
+    lang: fr
+  - id: sartre-liberte
+    text: "L’homme est condamné à être libre."
+    trans: "Man is condemned to be free."
+    trans_zh: "人是被判处了自由的."
+    source: "Sartre, L’existentialisme est un humanisme"
+    lang: fr
+  - id: rousseau-mensonges
+    text: "Il y a deux sortes de mensonges : celui de fait qui regarde le passé, celui de droit qui regarde l’avenir."
+    trans: "There are two kinds of lies: one of fact, which looks to the past; one of duty, which looks to the future."
+    trans_zh: "谎言有两种: 一种关于已经发生的事实, 一种关于尚未履行的责任."
+    source: "Rousseau, Émile"
+    lang: fr
+  - id: lafontaine-ami
+    text: "Rien n’est si dangereux qu’un ignorant ami ; mieux vaudrait un sage ennemi."
+    trans: "Nothing is so dangerous as an ignorant friend; a wise enemy would be better."
+    trans_zh: "没有什么比一个无知的朋友更危险 — 宁可要一个明智的敌人."
+    source: "La Fontaine, Fables"
+    lang: fr
+  - id: dante-speranza
+    text: "Lasciate ogne speranza, voi ch’intrate."
+    trans: "Abandon all hope, you who enter here."
+    trans_zh: "入此门者, 当弃绝一切希望."
+    source: "Dante, Inferno"
+    lang: it
+  - id: schopenhauer-schicksal
+    text: "Was aber die Leute gemeiniglich das Schicksal nennen, sind meistens nur ihre eigenen dummen Streiche."
+    trans: "What people commonly call fate is mostly just their own foolish doings."
+    trans_zh: "人们通常称之为命运的东西, 多半只是自己干的蠢事."
+    source: "Schopenhauer, Parerga und Paralipomena"
+    lang: de
+  - id: horace-aequam
+    text: "Aequam memento rebus in arduis servare mentem."
+    trans: "Remember to keep an even mind in hard times."
+    trans_zh: "身处逆境, 记得守住一颗平静的心."
+    source: "Horace, Odes II.3"
+    lang: la
+  - id: horace-vis
+    text: "Vis consili expers mole ruit sua."
+    trans: "Force without judgement collapses under its own weight."
+    trans_zh: "没有谋略的力量, 会被自身的重量压垮."
+    source: "Horace, Odes III.4"
+    lang: la
+  - id: kafka-suenden
+    text: "Es gibt zwei menschliche Hauptsünden, aus welchen sich alle anderen ableiten: Ungeduld und Lässigkeit."
+    trans: "There are two cardinal human sins from which all others derive: impatience and indolence."
+    trans_zh: "人有两种主要的罪, 其余一切都由它们派生: 急躁与懈怠."
+    source: "Kafka, Zürauer Aphorismen"
+    lang: de
+  - id: descartes-ames
+    text: "Les plus grandes âmes sont capables des plus grands vices aussi bien que des plus grandes vertus."
+    trans: "The greatest souls are capable of the greatest vices as well as the greatest virtues."
+    trans_zh: "最伟大的灵魂, 既能有最大的恶德, 也能有最高的美德."
+    source: "Descartes, Discours de la méthode"
+    lang: fr
+  - id: descartes-desirs
+    text: "Tâcher toujours plutôt à me vaincre que la fortune, et à changer mes désirs que l’ordre du monde."
+    trans: "To conquer myself rather than fortune, and to change my desires rather than the order of the world."
+    trans_zh: "宁可改变自己的欲望, 也不去改变世界的秩序."
+    source: "Descartes, Discours de la méthode"
+    lang: fr
+  - id: byron-adversity
+    text: "Adversity is the first path to truth."
+    trans_zh: "逆境是通往真理的第一条路."
+    source: "Byron, Don Juan"
+    lang: en
+  - id: poincare-douter
+    text: "Douter de tout ou tout croire, ce sont deux solutions également commodes, qui l’une et l’autre nous dispensent de réfléchir."
+    trans: "To doubt everything or to believe everything are two equally convenient solutions; both spare us the trouble of thinking."
+    trans_zh: "怀疑一切与相信一切, 是同样省事的两种办法 — 两者都免去了思考."
+    source: "Poincaré, La Science et l’Hypothèse"
+    lang: fr
+  - id: virgil-vulnus
+    text: "Tacitum vivit sub pectore vulnus."
+    trans: "The wound lives on, silent, beneath the breast."
+    trans_zh: "那道伤口, 无声地活在心里."
+    source: "Virgil, Aeneid IV"
+    lang: la
+  - id: virgil-audentis
+    text: "Audentis Fortuna iuvat."
+    trans: "Fortune favours the bold."
+    trans_zh: "命运眷顾勇敢的人."
+    source: "Virgil, Aeneid X"
+    lang: la
+  - id: confucius-guo
+    text: "过而不改, 是谓过矣."
+    trans: "To err and not correct it — that is the error."
+    trans_zh: "有错而不改, 这才叫错."
+    source: "《论语·卫灵公》"
+    lang: zh
+  - id: machiavelli-rovina
+    text: "Il popolo molte volte desidera la rovina sua, ingannato da una falsa specie di bene."
+    trans: "A people will often desire its own ruin, deceived by a false appearance of good."
+    trans_zh: "人们常常被虚假的善所骗, 亲手盼来自己的毁灭."
+    source: "Machiavelli, Discorsi"
+    lang: it
+  - id: goethe-knecht
+    text: "Wer sich nicht selbst befiehlt, bleibt immer Knecht."
+    trans: "Whoever cannot command himself remains a servant forever."
+    trans_zh: "管不住自己的人, 永远是别人的奴仆."
+    source: "Goethe, Zahme Xenien"
+    lang: de
+  - id: nietzsche-feind
+    text: "Aber der schlimmste Feind, dem du begegnen kannst, wirst du immer dir selber sein."
+    trans: "But the worst enemy you can meet will always be yourself."
+    trans_zh: "你所能遇到的最坏的敌人, 永远是你自己."
+    source: "Nietzsche, Also sprach Zarathustra"
+    lang: de
+  - id: nietzsche-vergessen
+    text: "Es ist unnütz: man vergisst nicht, wenn man vergessen will."
+    trans: "It is useless: one does not forget when one wants to forget."
+    trans_zh: "没有用的: 越是想忘, 越是忘不掉."
+    source: "Nietzsche, Morgenröte"
+    lang: de
+  - id: eliot-choice
+    text: "The strongest principle of growth lies in human choice."
+    trans_zh: "成长最强的动力, 在于人的选择."
+    source: "George Eliot, Daniel Deronda"
+    lang: en
+  - id: plautus-lupus
+    text: "Lupus est homo homini, non homo, quom qualis sit non novit."
+    trans: "Man is a wolf to man, not a man, when he does not know who the other is."
+    trans_zh: "人对人是狼 — 当他还不知道对方是谁的时候."
+    source: "Plautus, Asinaria"
+    lang: la
+  - id: gita-karma
+    text: "Karmaṇy evādhikāras te mā phaleṣu kadācana."
+    trans: "To the work alone you have a right, never to its fruits."
+    trans_zh: "你有权行动, 但无权索取行动的果实."
+    source: "Bhagavad Gita 2.47"
+    lang: sa
+  - id: cicero-iniuria
+    text: "Accipere quam facere praestat iniuriam."
+    trans: "It is better to receive a wrong than to do one."
+    trans_zh: "宁可承受不义, 也不要施加不义."
+    source: "Cicero, Tusculanae Disputationes"
+    lang: la
+  - id: cicero-summum
+    text: "Summum ius summa iniuria."
+    trans: "The strictest justice is the greatest injustice."
+    trans_zh: "极致的法, 就是极致的不义."
+    source: "Cicero, De Officiis"
+    lang: la
+  - id: jung-souls
+    text: "People will do anything, no matter how absurd, in order to avoid facing their own souls."
+    trans_zh: "为了不与自己的灵魂照面, 人什么荒唐事都做得出来."
+    source: "Jung, Psychology and Alchemy"
+    lang: en
+  - id: santayana-past
+    text: "Those who cannot remember the past are condemned to repeat it."
+    trans_zh: "记不住过去的人, 注定要重蹈覆辙."
+    source: "Santayana, The Life of Reason"
+    lang: en
+  - id: hobbes-method
+    text: "The first cause of absurd conclusions I ascribe to the want of method."
+    trans_zh: "荒谬结论的头一个成因, 我归于方法的欠缺."
+    source: "Hobbes, Leviathan"
+    lang: en
+  - id: pliny-amor
+    text: "Amor magister est optimus."
+    trans: "Love is the best teacher."
+    trans_zh: "爱是最好的老师."
+    source: "Pliny the Younger, Letters"
+    lang: la
   - id: distance-seasons
     text: "The seasons keep their faith — but we who swore to meet beneath each moon have let time break."
     source: "What Distance Taught Us, 2026"

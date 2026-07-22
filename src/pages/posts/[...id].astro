@@ -211,7 +211,7 @@ const cover = post.data.cover_mode ?? 'hero-large';
     var fading = false;
     var show = function () {
       var q = cur;
-      quote.textContent = q.lang === 'fr' ? q.text : '“' + q.text + '”';
+      quote.textContent = /^[«“"]/.test(q.text) ? q.text : '“' + q.text + '”';
       trans.textContent = (pageLang === 'zh' && q.trans_zh) ? q.trans_zh : (q.trans || '');
       source.textContent = q.source;
       lang.textContent = (q.lang || 'en').toUpperCase();

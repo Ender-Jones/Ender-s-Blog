@@ -29,11 +29,15 @@ const first = pool[0];
     if (!data || !quote || !source || !btn) return;
     var quotes = JSON.parse(data.textContent || '[]');
     if (!quotes.length) return;
+    // 已自带引号(« » 或 “ ”)的原文不再套一层
+    var dress = function (t) {
+      return /^[«“"]/.test(t) ? t : '“' + t + '”';
+    };
     var qi = Math.floor(Math.random() * quotes.length);
     var fading = false;
     var show = function () {
       var q = quotes[qi];
-      quote.textContent = q.lang === 'fr' ? q.text : '“' + q.text + '”';
+      quote.textContent = dress(q.text);
       source.textContent = q.source;
     };
     show();

@@ -1,5 +1,5 @@
 ---
-// 暗房底层: 56px 微网格 + 三枚异速漂移光点, 均以慢于内容的速度视差.
+// 暗房底层: 56px 微网格 + 七枚异速漂移光点, 均以慢于内容的速度视差.
 ---
 
 <div class="grid" data-parallax="0.05" aria-hidden="true"></div>
@@ -8,6 +8,8 @@
 <span class="dot dot-c" data-parallax="0.14" aria-hidden="true"><span></span></span>
 <span class="dot dot-d" data-parallax="0.08" aria-hidden="true"><span></span></span>
 <span class="dot dot-e" data-parallax="0.12" aria-hidden="true"><span></span></span>
+<span class="dot dot-f" data-parallax="0.07" aria-hidden="true"><span></span></span>
+<span class="dot dot-g" data-parallax="0.13" aria-hidden="true"><span></span></span>
 
 <style>
   .grid {
@@ -92,6 +94,32 @@
     filter: blur(1px);
     box-shadow: 0 0 8px rgba(76, 194, 255, 0.35);
     animation: ej-drift-c 40s ease-in-out infinite;
+  }
+  /* f/g 补在右下与左上的空档(a-e 偏左上与中带), 参数沿用既有梯度不新增亮度档 */
+  .dot-f {
+    bottom: 28%;
+    right: 22%;
+  }
+  .dot-f > span {
+    width: 3px;
+    height: 3px;
+    background: #e4e4e7;
+    opacity: 0.2;
+    filter: blur(1px);
+    animation: ej-drift-a 46s ease-in-out infinite;
+  }
+  .dot-g {
+    top: 34%;
+    left: 30%;
+  }
+  .dot-g > span {
+    width: 2px;
+    height: 2px;
+    background: var(--ej-pink);
+    opacity: 0.22;
+    filter: blur(1px);
+    box-shadow: 0 0 8px rgba(255, 122, 192, 0.35);
+    animation: ej-drift-c 52s ease-in-out infinite;
   }
   @media (prefers-reduced-motion: reduce) {
     .dot > span {
