@@ -18,6 +18,7 @@ export type SiteData = {
   location: string;
   identity: {
     role_detail: string;
+    focus: string;
     signals: string[];
     models: string[];
     tools: string[];

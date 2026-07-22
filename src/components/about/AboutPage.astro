@@ -25,6 +25,7 @@ const nowLine = getNowLine(worklogs, getWorklogDays(worklogs))?.text;
 const nowRows = [
   { key: 'base', value: site.location },
   { key: 'role', value: site.identity.role_detail },
+  { key: 'focus', value: site.identity.focus },
   { key: 'langs', value: site.identity.languages.join(' · ') },
   { key: 'status', value: home.readout.status },
 ];
