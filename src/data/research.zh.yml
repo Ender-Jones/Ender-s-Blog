@@ -73,7 +73,7 @@ timeline:
   - when: "2025"
     label: 博士课程开始 — 信息学, 情感计算方向
     tone: gray
-  # 红线同 research.yml: 不挂直达真名的外链(IEICE 技报页列真名)
+  # 红线同 research.yml: 时间线只挂经过隐私复核的外链
   - when: "2023"
     label: 硕士 — 图挖掘做钓鱼网站检测, 而后转向情感计算
     tone: gray

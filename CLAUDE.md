@@ -185,8 +185,8 @@ site-wide copy sweep retired the "notebook" framing. Nothing on the site is know
    only public IOU on the site). Two rounds of scouting are already done; read Claude's memory
    `adhd-essay-scout` before starting.
 
-**Standing red line**: no public résumé/CV download on the site, no photos, no link that leads
-straight to his real name (that's why the IEICE technical-report page isn't linked).
+**Standing red line**: no public résumé/CV download on the site, no photos of the author beyond
+the avatar, and every outbound link passes a privacy check before it ships.
 
 **The day a custom domain lands** (see Deployment → Go-live checklist above): drop noindex +
 sitemap + 04:00 cron + activity refresh.

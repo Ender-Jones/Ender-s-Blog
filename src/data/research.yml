@@ -79,7 +79,7 @@ timeline:
   - when: "2025"
     label: PhD course started — informatics, affective computing line
     tone: gray
-  # 红线(2026-07-11): 站上不放任何直达本名的外链 — IEICE 技报页(ken.ieice.org)列真名, 故时间线不挂它.
+  # 红线(2026-07-11): 时间线只挂经过隐私复核的外链, 新条目默认不带 link.
   - when: "2023"
     label: M.S. — graph mining for phishing detection, then the turn to affect
     tone: gray
