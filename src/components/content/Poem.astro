@@ -1,7 +1,7 @@
 ---
 // 诗: 居中衬线斜体, 行距宽, 结语引号收束.
 type Props = {
-  title: string;
+  title?: string;
   lines: string[];
   closing?: string;
 };
@@ -10,7 +10,7 @@ const { title, lines, closing } = Astro.props;
 ---
 
 <div class="poem">
-  <h2>{title}</h2>
+  {title && <h2>{title}</h2>}
   <p class="verse">
     {lines.map((line) => <span>{line}</span>)}
   </p>

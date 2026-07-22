@@ -23,3 +23,8 @@ quotes:
     source: "Who Am I?, 2025"
     link_label: "read the essay"
     lang: en
+  - id: whoami-road
+    text: "A kid wanted to be a scientist, and I hope the road still goes on."
+    source: "Who Am I?, 2026"
+    link_label: "read the essay"
+    lang: en
