@@ -159,36 +159,31 @@ Pages Secret `GITHUB_TOKEN` (rotates yearly, see `docs/MAINTENANCE.md`). Behavio
 
 Fonts are final (V2 trio, Lexend rejected, type-lab removed). Site is live. Left:
 
+Content is current as of 2026-07-22: zh mirrors done (posts + Research + About), who-am-i
+rewritten, the prompt post's model takes redone with the 2025 snapshot frozen in place, and the
+site-wide copy sweep retired the "notebook" framing. Nothing on the site is knowingly stale.
+
 **Ender's**
-1. zh translations: DONE — every prose post has a zh mirror in Ender's own voice (the poem is
-   exempt). The Research zh page is built too (`/zh/research/` + `research.zh.yml`).
-2. Content refresh (2026-07-18 audit; full map in Claude's memory `content-refresh-2026-07`):
-   who-am-i is DONE (2026-07-22: full 2026 rewrite by Ender took over `/posts/who-am-i/`,
-   pinned; 2025 original archived verbatim at `/posts/who-am-i-2025/`, cross-linked from the
-   2026 ending — mirror-pages structure, no surgery on the original). Remaining: the prompt
-   post's model-takes section (only that section + description are dated; new takes must come
-   from Ender). Posts now support an
-   `updated:` frontmatter field for honest revision stamps.
-3. Search-magnet post topic (⚠ site still `noindex`, payoff waits for the custom domain; do an
-   SERP check before writing to confirm no one's already nailed it).
-   Origin story and formula (2026-07-12): a ghostty cheatsheet on some blog ranked #1 on a
-   one-search query and he himself lingered on it a while — the perfect signal is a query with
-   clear intent × weak-competition SERP × above-the-fold answer (table/diagram/copyable code) ×
-   evergreen topic × genuinely his territory. Dwell time is exactly what Google's "did the last
-   user bounce back" signal rewards.
-   Shortlist (2026-07-12, after his pass; all tool/method only, no unpublished numbers):
-   - ⭐ statistical-test cheatsheet for **comparing two models under cross-validation**
-     (corrected paired t-test / Nadeau–Bengio + Hedges' g, copyable python) — angle: "for people
-     bad at stats" (his own self-assessment), he's the first reader
-   - ⭐ zh: **data-leakage checklist** (subject-level vs record-level split table, matches the
-     "reproducible evaluation" persona)
-   - ⭐ **UBFC-Phys dataset field guide** (directory layout/T1-T3 semantics/sample rate/gotchas;
-     dataset facts only)
-   - backup ideas: MediaPipe 478-landmark cheat sheet / zh CF Pages+D1+Access postmortem /
-     pyVHR rPPG cheat sheet
+1. Search-magnet post — **topic decided, not yet written**. SERP scouting done 2026-07-22 (full
+   findings + already-verified dataset facts in Claude's memory `search-magnet-scout`):
+   - **Write first: UBFC-Phys field guide** (directory layout / T1–T3 semantics / sample rates /
+     gotchas). SERP is genuinely empty — the official page is a blurb and the real structure is
+     locked inside a READ_ME.docx you must download; no third-party guide exists. Small audience,
+     cleanest possible win, lowest writing cost. Dataset facts only — the number embargo holds.
+   - Second: **zh data-leakage wedge** — write *only* the subject-level vs record-level angle
+     (near-empty in Chinese); a general leakage checklist drowns in the CSDN/知乎 red ocean.
+   - Later: **corrected paired t-test cheatsheet** — biggest demand, most crowded SERP
+     (scikit-learn already ships Nadeau–Bengio code); the one open gap is Hedges' g for CV
+     model comparison.
+   - Formula (2026-07-12, from the ghostty cheatsheet that held his own attention): clear-intent
+     query × weak-competition SERP × above-the-fold answer × evergreen × genuinely his territory.
+   - ⚠ Site is still `noindex`, so ranking payoff waits for the custom domain — the first post's
+     real job is to test whether the formula works at all.
 
 **Co-written**
-4. ADHD worklog methodology essay (pays off the About page's "a longer essay is coming").
+2. ADHD worklog methodology essay (pays off the About page's "a longer essay is coming" — the
+   only public IOU on the site). Two rounds of scouting are already done; read Claude's memory
+   `adhd-essay-scout` before starting.
 
 **Standing red line**: no public résumé/CV download on the site, no photos, no link that leads
 straight to his real name (that's why the IEICE technical-report page isn't linked).
@@ -197,7 +192,9 @@ straight to his real name (that's why the IEICE technical-report page isn't link
 sitemap + 04:00 cron + activity refresh.
 
 **Low priority**
-5. Pass over on a real mobile device; photography section design; expand `quotes.yml`.
+3. Pass over on a real mobile device; photography section design; expand `quotes.yml`;
+   the 10-day range heading in `2026-04` has never rendered (split the heading vs extend the
+   parser — Ender's call, and legacy files are never rewritten).
 
 ## Lineage
 
