@@ -182,7 +182,7 @@ const cover = post.data.cover_mode ?? 'hero-large';
   </main>
 </BaseLayout>
 
-<script is:inline type="application/json" id="coda-data" data-pinned={post.data.coda ?? ''} set:html={JSON.stringify(quotes)} />
+<script is:inline type="application/json" id="coda-data" data-pinned={post.data.coda ?? ''} data-lang={post.data.language ?? 'en'} set:html={JSON.stringify(quotes)} />
 
 <script is:inline>
   (function () {
@@ -195,33 +195,42 @@ const cover = post.data.cover_mode ?? 'hero-large';
     if (!data || !quote || !source || !btn) return;
     var quotes = JSON.parse(data.textContent || '[]');
     if (!quotes.length) return;
-    // frontmatter 固定的 coda 优先; 没固定的文章随机抽
+    // frontmatter 固定的 coda 优先(可指向 pinned_only 条目); 随机池排除 pinned_only —
+    // 印自己的句子只在自己的文章末尾出现, 不与名言同池轮播. zh 页面优先显示中译.
     var pinned = data.getAttribute('data-pinned') || '';
-    var pinnedIdx = quotes.findIndex(function (q) {
-      return q.id === pinned;
+    var pageLang = data.getAttribute('data-lang') || 'en';
+    var pool = quotes.filter(function (q) {
+      return !q.pinned_only;
     });
-    var qi = pinnedIdx >= 0 ? pinnedIdx : Math.floor(Math.random() * quotes.length);
+    var pinnedQ = null;
+    for (var i = 0; i < quotes.length; i++) {
+      if (quotes[i].id === pinned) pinnedQ = quotes[i];
+    }
+    var cur = pinnedQ || pool[Math.floor(Math.random() * pool.length)];
+    if (!cur) return;
     var fading = false;
     var show = function () {
-      var q = quotes[qi];
+      var q = cur;
       quote.textContent = q.lang === 'fr' ? q.text : '“' + q.text + '”';
-      trans.textContent = q.trans || '';
+      trans.textContent = (pageLang === 'zh' && q.trans_zh) ? q.trans_zh : (q.trans || '');
       source.textContent = q.source;
       lang.textContent = (q.lang || 'en').toUpperCase();
     };
     show();
     btn.addEventListener('click', function () {
-      if (quotes.length < 2 || fading) return;
+      var candidates = pool.filter(function (q) {
+        return q !== cur;
+      });
+      if (!candidates.length || fading) return;
       btn.classList.remove('spin');
       void btn.offsetWidth;
       btn.classList.add('spin');
-      var m = Math.floor(Math.random() * (quotes.length - 1));
-      if (m >= qi) m += 1;
+      var next = candidates[Math.floor(Math.random() * candidates.length)];
       fading = true;
       quote.classList.add('fade');
       trans.classList.add('fade');
       setTimeout(function () {
-        qi = m;
+        cur = next;
         show();
         quote.classList.remove('fade');
         trans.classList.remove('fade');

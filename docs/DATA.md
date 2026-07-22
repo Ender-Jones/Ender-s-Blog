@@ -21,7 +21,7 @@
 | `research.yml` | `/research/` 整页 + **主页 research 面板** | `/research/` + 主页中段 | 与 research.zh.yml 结对, **改内容两边必须同步** |
 | `research.zh.yml` | 只喂 `/zh/research/` | `/zh/research/` | 同上 |
 | `site.yml` | 文章页 giscus 配置; Research 页头点行(signals/models/stack); About 的 base/role/langs 行 + 联系方式 | `/research/`、`/zh/research/`、`/about/`、任一文章评论区 | **只放语言无关数据**(分界原则 2026-07-22): 中英共用, mono 值保持英文(site chrome); 可译成句一律住语言配对文件 |
-| `quotes.yml` | 主页 coda(随机)+ 文章 coda(frontmatter `coda: <id>` 固定, 否则随机) | 主页刷新几次 / 指定文章底部 | 引文原文属于作品, 不翻译 |
+| `quotes.yml` | 主页 coda(随机)+ 文章 coda(frontmatter `coda: <id>` 固定, 否则随机) | 主页刷新几次 / 指定文章底部 | 原文不译; `trans`(英)/`trans_zh`(中)双轨, zh 文章页优先显示中译; **`pinned_only` 条目(印自己的句子)永不进随机池** |
 | `tags.yml` | tag chip 四色语义 + `/tags/<tag>` 页; 未注册 tag 故意 fail build | 任一文章 tag 行 | 标签全英文, 中英文章共用 |
 | `github-activity.json` | 主页 commit 墙 | 不手改 — `npm run activity:cache` 生成 | — |
 

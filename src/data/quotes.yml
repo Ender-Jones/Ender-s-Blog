@@ -1,30 +1,29 @@
 # Coda 引文库(主页/文章页底部).
-# 手动加一条: 复制任意一段, 改字段即可. trans(译文)和 link_label 可省略.
+# 手动加一条: 复制任意一段, 改字段即可. trans(英译)/trans_zh(中译)可省略; lang 是原文语言.
 # id 用于在文章 frontmatter 里固定 coda(coda: <id>); 不固定的文章随机抽.
+# pinned_only: true = 只在固定它的文章末尾出现, 永不进随机池 — 印的话只在自己的地盘上响,
+# 不和名人名言同池轮播(2026-07-23 定). 名言池来源: 印的实教名言库(见 memory).
 quotes:
   - id: baudelaire-nuages
-    text: "« J'aime les nuages… les nuages qui passent… là-bas… là-bas… les merveilleux nuages ! »"
+    text: "« J’aime les nuages… les nuages qui passent… là-bas… là-bas… les merveilleux nuages ! »"
     trans: "I love the clouds… the clouds that pass… up there… up there… the marvelous clouds!"
-    source: "Baudelaire, L'Étranger"
-    link_label: "Who Am I?"
+    trans_zh: "我爱云…飘过的云…在那边…在那边…那些奇妙的云!"
+    source: "Baudelaire, L’Étranger"
     lang: fr
-  - id: distance-petal
-    text: "Spring remembered every petal, but forgot who I was waiting for."
-    source: "What Distance Taught Us, 2026"
-    link_label: "read the poem"
-    lang: en
+  - id: nietzsche-schwaeche
+    text: "— Was ist schlecht? — Alles, was aus der Schwäche stammt."
+    trans: "— What is evil? — Everything that comes from weakness."
+    trans_zh: "— 什么是恶? — 一切源于软弱的东西."
+    source: "Nietzsche, Der Antichrist"
+    lang: de
+  - id: stendhal-sentiment
+    text: "Il n’y a qu’une loi en sentiment. C’est de faire le bonheur de ce qu’on aime."
+    trans: "There is only one law in emotion: to bring happiness to those we love."
+    trans_zh: "感情里只有一条法则: 让所爱的人幸福."
+    source: "Stendhal, diary, 19 June 1805"
+    lang: fr
   - id: distance-seasons
     text: "The seasons keep their faith — but we who swore to meet beneath each moon have let time break."
     source: "What Distance Taught Us, 2026"
-    link_label: "read the poem"
     lang: en
-  - id: whoami-kid
-    text: "A kid wanted to be a scientist, but lost precious things on the road."
-    source: "Who Am I?, 2025"
-    link_label: "read the essay"
-    lang: en
-  - id: whoami-road
-    text: "A kid wanted to be a scientist, and I hope the road still goes on."
-    source: "Who Am I?, 2026"
-    link_label: "read the essay"
-    lang: en
+    pinned_only: true

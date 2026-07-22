@@ -106,10 +106,11 @@ export type HomeData = {
 export type Quote = {
   id?: string;
   text: string;
-  trans?: string;
+  trans?: string; // 英译
+  trans_zh?: string; // 中译(zh 文章页优先显示)
   source: string;
-  link_label?: string;
   lang?: string;
+  pinned_only?: boolean; // true = 只在固定它的文章出现, 不进随机池
 };
 
 export type TagTone = 'research' | 'personal' | 'neutral';
