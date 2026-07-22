@@ -1,3 +1,5 @@
+# 标签注册表 — 文章 frontmatter 里的每个 tag 必须在这里有条目(slug 化后比对),
+# 未注册的 tag 会故意 fail build(validate-content). tone 决定 tag 页与 chip 的四色语义.
 ai:
   tone: research
 ai-models:

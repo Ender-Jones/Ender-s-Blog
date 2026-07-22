@@ -93,17 +93,17 @@ Ops runbook: [docs/MAINTENANCE.md](docs/MAINTENANCE.md).
 |---|---|
 | Write a new post | `src/content/posts/<slug>.mdx` — copy frontmatter from any neighbor; images in `public/img/posts/` — body contract: sections start at `##`, ladder stops at `####` (validator-enforced); everything GFM can emit is dressed |
 | Check/adjust article typography | `src/styles/prose.css` (all token-fed); eyeball every element at once on `/dev/prose-lab` |
-| Hand-write a worklog entry | `src/content/worklogs/YYYY-MM.md` — one file per month, append `## YYYY-MM-DD` sections |
+| Hand-write a worklog entry | `src/content/worklogs/YYYY-MM.md` — one file per month, append `## YYYY-MM-DD` sections; **format contract: `docs/WORKLOG.md`** (syntax, render map, red lines, checklist) |
 | Add/change a coda quote | `src/data/quotes.yml` — pin one to a post via frontmatter `coda: <id>`, else random |
 | Register a new tag | `src/data/tags.yml` — an unregistered tag fails the build on purpose |
 | Change identity/contact info | `src/data/site.yml` |
 | Change About page copy | `src/data/about.yml` — bio/three-identities/ADHD section/colophon all live here |
-| Change Research page content | `src/data/research.yml` — paper details/timeline (education years still need filling in)/what's next |
+| Change Research page content | `src/data/research.yml` (EN) + `src/data/research.zh.yml` (zh mirror — keep both in sync); shared renderer `src/components/research/ResearchPage.astro`, routes `/research/` + `/zh/research/` |
 | Change colors/fonts/motion | `src/styles/tokens.css` — the one source of design tokens for the whole site |
 | Unfinished drafts | `drafts/` — never enters `src/content`, no `draft: true` flag |
 | Pages | `src/pages/` — routing is file-based |
 | Components | `src/components/` — `content/` holds the four MDX components (Epigraph/Figure/Callout/Poem) |
-| Worklog parsing | `src/lib/worklogDays.ts` (day entries/week grouping) + `src/lib/parseWorklog.ts` (NOW-line fallback) |
+| Worklog parsing | `src/lib/worklogDays.ts` (day entries/week grouping) + `src/lib/parseWorklog.ts` (NOW-line fallback) — behavior contract `docs/WORKLOG.md`, edit it before touching worklog code |
 | What the console does and when | `docs/CONSOLE.md` — behavior contract; edit it before touching console code |
 | Refresh the commit-wall data | `npm run activity:cache` (needs `GITHUB_TOKEN` or a logged-in `gh`) |
 | Run content checks manually | `npm run check:content` (also runs automatically on commit, see below) |
@@ -159,12 +159,15 @@ Pages Secret `GITHUB_TOKEN` (rotates yearly, see `docs/MAINTENANCE.md`). Behavio
 Fonts are final (V2 trio, Lexend rejected, type-lab removed). Site is live. Left:
 
 **Ender's**
-1. Translate `src/content/posts/zh/` — the research-notes post (evaluation metrics) has a full
-   draft translation already, waiting on his pass for tone; prompt-engineering essay and
-   who-am-i are still untranslated (the poem is exempt); also decide whether the Research page
-   gets a Chinese version (leaning no).
-2. Extreme font-size tier is live — say how it reads whenever (dial back/tune = 8 lines in
-   `tokens.css`).
+1. zh translations: DONE — every prose post has a zh mirror in Ender's own voice (the poem is
+   exempt). The Research zh page is built too (`/zh/research/` + `research.zh.yml`).
+2. Content refresh (2026-07-18 audit; full map in Claude's memory `content-refresh-2026-07`):
+   who-am-i is DONE (2026-07-22: full 2026 rewrite by Ender took over `/posts/who-am-i/`,
+   pinned; 2025 original archived verbatim at `/posts/who-am-i-2025/`, cross-linked from the
+   2026 ending — mirror-pages structure, no surgery on the original). Remaining: the prompt
+   post's model-takes section (only that section + description are dated; new takes must come
+   from Ender). Posts now support an
+   `updated:` frontmatter field for honest revision stamps.
 3. Search-magnet post topic (⚠ site still `noindex`, payoff waits for the custom domain; do an
    SERP check before writing to confirm no one's already nailed it).
    Origin story and formula (2026-07-12): a ghostty cheatsheet on some blog ranked #1 on a

@@ -1,3 +1,5 @@
+# 站点身份/联系信息的唯一来源(经 lib/data.ts 的 site 导出供全站消费).
+# ⚠ url 仍指旧 V2 域名 — 自定义域名落地日一起换(见 CLAUDE.md go-live checklist).
 name: EnderJones
 url: https://enderjones.com
 role: PhD candidate
