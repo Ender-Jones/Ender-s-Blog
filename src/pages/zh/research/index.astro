@@ -1,0 +1,13 @@
+---
+// Research(zh): 骨架同 EN(components/research/ResearchPage.astro), 数据在 src/data/research.zh.yml.
+// thesis 行(site.identity.thesis)暂保英文 — 它是签名句级别的 chrome, 要不要译等印裁决.
+import ResearchPage from '../../../components/research/ResearchPage.astro';
+import { researchZh } from '../../../lib/data';
+---
+
+<ResearchPage
+  data={researchZh}
+  lang="zh"
+  langAlt="/research/"
+  t={{ line: '这条线', timeline: '时间线', worklog: '这一页的逐日版本 →' }}
+/>

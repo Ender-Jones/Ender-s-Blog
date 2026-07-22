@@ -1,0 +1,92 @@
+# Research 数据的中文镜像 — 只喂 /zh/research/ 页; 字段结构与 research.yml 完全一致, 改内容两边都要动.
+# 论文标题保持英文(论文的正式名); protocol/keywords 等技术串保持英文; 散文字段翻译.
+# ⚠ 数字纪律与红线同 research.yml: J-BHI 见刊前不放任何未发表数字; 不放直达真名的外链.
+
+subtitle: 一条线, 三篇论文
+protocol: UBFC-PHYS · TSST-INSPIRED
+
+papers:
+  - status: 已发表
+    tone: pink
+    title: EDA-augmented CCT-LSTM for stress-task classification
+    dek: "这条线的第一座公开车站 — 接触信号加入视频."
+    venue: KICS · 短文
+    anchor: kics-2025
+    abstract: >-
+      在 UBFC-Phys 上复现 CCT-LSTM 的压力任务分类, 并在受试者级协议下引入腕戴
+      EDA 做增强. 定位就是 preliminary — 期刊版会扩展并重新评估它.
+    contribution: 设计融合方案与受试者级评估协议; 全部实验由我完成.
+    links: {}
+  - status: 已并入
+    tone: blue
+    title: A reliability audit of remote-PPG under social stress
+    dek: "接触信号为什么留下: 越是压力发生的时刻, rPPG 越靠不住."
+    venue: 审计 → 期刊 §motivation
+    anchor: ispacs-2026
+    abstract: >-
+      审计远程光电容积描记(rPPG)在受试者真正紧张时的表现 — 运动、表情与自主神经
+      负荷, 恰恰在最要紧的时刻劣化信号. 这份审计比它的会场活得久: 如今它成了
+      期刊版的动机一节.
+    contribution: 搭建审计流水线与运动伪影分析.
+    links: {}
+  - status: 撰写中
+    tone: amber
+    title: The journal version — reproducible, fully open
+    dek: 严格协议, 完整消融, 诚实的阴性结果.
+    venue: IEEE J-BHI · 目标
+    anchor: ieee-j-bhi
+    abstract: >-
+      这条线的汇总陈述: 忠实复现基线, 在受试者级划分与多随机种子下做防泄漏的
+      重新评估, 并诚实诊断这份数据到底支持、不支持多细的压力等级 — 以可复现
+      为写作目标, 发布即完全开源.
+    contribution: 正在写 — 逐日进展在 worklog 上.
+    links: {}
+
+metric:
+  label: 评估协议
+  value: 7-fold × 5 seeds
+  notes:
+    - 受试者级划分, 绝不用样本级
+    - 配对统计, 带校正
+  honesty: >-
+    头条数字随期刊见刊落地 — 在那之前, 协议本身就是承诺.
+
+keywords: multimodal video · reproducibility · temporal modeling
+keywords_next: "next: VLM / MLLM for affect"
+whats_next: >-
+  面向情绪识别的视觉-语言方向 — 第二篇期刊的问题, 在这一篇发出后开启:
+  VLM/MLLM 的表征, 能不能像接触信号那样读出情感?
+
+timeline:
+  - when: "2026"
+    label: IEEE J-BHI 期刊版 — 撰写中
+    tone: amber
+  - when: "2026"
+    label: rPPG 可靠性审计 — 并入期刊版
+    tone: blue
+  - when: "2025"
+    label: KICS 短文 — EDA 增强的 CCT-LSTM 发表
+    tone: pink
+  - when: "2025"
+    label: 博士课程开始 — 信息学, 情感计算方向
+    tone: gray
+  # 红线同 research.yml: 不挂直达真名的外链(IEICE 技报页列真名)
+  - when: "2023"
+    label: 硕士 — 图挖掘做钓鱼网站检测, 而后转向情感计算
+    tone: gray
+  - when: "2019"
+    label: 学士, 信息学 — 东京/千叶
+    tone: gray
+
+# ↓ 页头使用(镜像 research.yml 的 About 区字段; zh 无 About 页, 只有 focus/abstract 被 /zh/research/ 读)
+focus: 对基于视频的压力估计, 做一次可复现的重新评估.
+abstract: |
+  在 UBFC-Phys 上复现并诚实地重新评估多模态压力任务分类(EDA 增强的
+  CCT-LSTM) — 期刊版撰写中. 视觉-语言方向是下一步.
+tags:
+  - affective computing
+  - multi-modal DL
+  - reproducibility
+  - stress detection
+  - VLM/LLM
+updated: 2026-07-18

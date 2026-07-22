@@ -1,0 +1,446 @@
+---
+// Research 页共享骨架: /research/(en) 与 /zh/research/(zh) 都渲染它, 数据与少量可译串由路由喂.
+// 结构: thesis → 三站论文卡 → 方法与信号 → 指标 → 时间线 → next.
+// 红线(2026-07-11): 站上不放公开 CV/简历、不放直达本名的外链 — 所以这页没有下载按钮.
+// mono 大写标签(kicker/WHAT'S NEXT/Method & signals)是站点 chrome, 两个语言都保持英文;
+// serif 标题(The line/Timeline)与 worklog 链接文案属内容, 走 t 串翻译.
+import BaseLayout from '../layout/BaseLayout.astro';
+import RouteHint from '../home/RouteHint.astro';
+import { site, type ResearchData } from '../../lib/data';
+
+interface Props {
+  data: ResearchData;
+  lang: 'en' | 'zh';
+  langAlt: string;
+  t: { line: string; timeline: string; worklog: string };
+}
+const { data, lang, langAlt, t } = Astro.props;
+
+const signalRows = [
+  { key: 'signals', value: site.identity.signals.join(' · ') },
+  { key: 'models', value: site.identity.models.join(' · ') },
+  { key: 'stack', value: site.identity.tools.join(' · ') },
+];
+---
+
+<BaseLayout title="Research — Ender Jones" description={data.focus} lang={lang} langAlt={langAlt} noindex>
+  <RouteHint />
+  <main style="--ej-page-w: 980px;">
+    <section class="reveal" style="--reveal-i: 0;">
+      <p class="ej-kicker">RESEARCH — ONE LINE, IN MOTION</p>
+      <h1 class="ej-h1">Research.<span class="ej-caret" aria-hidden="true"></span></h1>
+      <p class="thesis">{site.identity.thesis}</p>
+      <p class="ej-sub">{data.abstract}</p>
+      <p class="tags">{data.tags.join(' · ')}</p>
+    </section>
+
+    <section class="papers reveal" style="--reveal-i: 1;">
+      <div class="sec-head">
+        <h2>{t.line} <span class="sec-sub">{data.subtitle}</span></h2>
+        <span class="sec-meta">{data.protocol}</span>
+      </div>
+      {data.papers.map((p) => (
+        <article class:list={['paper', 'ej-card', `tone-${p.tone}`]} id={p.anchor}>
+          <span class="p-bar" aria-hidden="true"></span>
+          <div class="p-status">
+            <span class="p-dot" aria-hidden="true"></span>
+            <span class="p-status-label">{p.status}</span>
+            <span class="p-venue">{p.venue}</span>
+          </div>
+          <h3>{p.title}</h3>
+          <p class="p-dek">{p.dek}</p>
+          <p class="p-abstract">{p.abstract}</p>
+          <div class="p-foot">
+            <span class="p-contrib">{p.contribution}</span>
+            <span class="p-links">
+              {p.links.paper && <a href={p.links.paper} target="_blank" rel="noopener" data-route="↗ paper">paper ↗</a>}
+              {p.links.code && <a href={p.links.code} target="_blank" rel="noopener" data-route="↗ code">code ↗</a>}
+            </span>
+          </div>
+        </article>
+      ))}
+    </section>
+
+    <section class="method reveal" style="--reveal-i: 2;">
+      <div class="m-grid">
+        <div class="ej-card m-card">
+          <span class="m-label">Method &amp; signals</span>
+          <div class="m-rows">
+            {signalRows.map((row) => (
+              <span class="ej-dotrow">
+                <span class="k">{row.key}</span>
+                <span class="lead" aria-hidden="true"></span>
+                <span class="m-val">{row.value}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+        <div class="ej-card m-card m-metric">
+          <span class="m-label"><span class="m-dot" aria-hidden="true"></span>{data.metric.label}</span>
+          <span class="m-value">{data.metric.value}</span>
+          <span class="m-note">{data.metric.notes.join(' · ')}</span>
+          <p class="m-honesty">{data.metric.honesty}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tl reveal" style="--reveal-i: 3;">
+      <div class="sec-head">
+        <h2>{t.timeline}</h2>
+      </div>
+      <div class="tl-list">
+        {data.timeline.map((tl) => (
+          <div class:list={['tl-row', `tone-${tl.tone}`]}>
+            <span class="tl-when">{tl.when}</span>
+            <span class="tl-node" aria-hidden="true"></span>
+            <span class="tl-label">{tl.label}</span>
+            {tl.link && <a class="ej-link ej-link--blue tl-link" href={tl.link} target="_blank" rel="noopener" data-route={`↗ ${new URL(tl.link).hostname}`}>report ↗</a>}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="next reveal" style="--reveal-i: 4;">
+      <div class="ej-card next-card">
+        <span class="next-label">WHAT'S NEXT</span>
+        <p class="next-text">{data.whats_next}</p>
+        <a class="ej-link next-link" href="/worklog/" data-route="→ /worklog/ — the day-by-day version of this page">{t.worklog}</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .thesis {
+    margin: 22px 0 0;
+    max-width: 30ch;
+    color: var(--ej-text-2);
+    font-family: var(--ej-serif);
+    font-size: clamp(20px, 2.2vw, 26px);
+    font-style: italic;
+    font-weight: var(--ej-fw-light);
+    line-height: 1.45;
+    text-wrap: balance;
+  }
+  .tags {
+    margin: 14px 0 0;
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-label);
+  }
+
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  h2 {
+    margin: 0;
+    color: var(--ej-text);
+    font-family: var(--ej-serif);
+    font-size: 28px;
+    font-weight: var(--ej-fw-body);
+  }
+  .sec-sub {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-label);
+    font-weight: var(--ej-fw-medium);
+    margin-left: 10px;
+  }
+  .sec-meta {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-label);
+    font-weight: var(--ej-fw-medium);
+  }
+
+  .papers {
+    padding: clamp(48px, 7vh, 68px) 0 0;
+  }
+  .paper {
+    position: relative;
+    padding: 22px 26px 20px 30px;
+    margin-bottom: 12px;
+    scroll-margin-top: 84px;
+    transition: border-color 180ms var(--ej-ease);
+  }
+  .paper:hover {
+    border-color: rgba(var(--tone-rgb), 0.28);
+  }
+  .paper:target {
+    /* 主页面板深链落地时点亮目标卡("你是被带到我这儿的"), 同 GitHub 高亮锚定行 */
+    border-color: rgba(var(--tone-rgb), 0.28);
+  }
+  .p-bar {
+    position: absolute;
+    left: 0;
+    top: 20px;
+    bottom: 20px;
+    width: 2px;
+    border-radius: 2px;
+    background: var(--tone);
+    box-shadow: 0 0 9px rgba(var(--tone-rgb), 0.45);
+    opacity: 0.75;
+  }
+  .p-status {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .p-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--tone);
+    box-shadow: 0 0 8px rgba(var(--tone-rgb), 0.7);
+  }
+  .paper.tone-blue .p-dot {
+    animation: ej-pulse 2.8s ease-in-out infinite;
+  }
+  .p-status-label {
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-meta);
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-caps);
+    text-transform: uppercase;
+  }
+  .p-venue {
+    margin-left: auto;
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-label);
+    font-weight: var(--ej-fw-medium);
+  }
+  h3 {
+    margin: 12px 0 0;
+    color: var(--ej-text);
+    font-family: var(--ej-serif);
+    font-size: var(--ej-fs-h3);
+    font-weight: var(--ej-fw-body); /* serif 无 500, medium 实渲染就是 400 — 写诚实值 */
+    letter-spacing: var(--ej-track-body);
+    line-height: var(--ej-lh-snug);
+  }
+  .p-dek {
+    margin: 8px 0 0;
+    color: var(--ej-text-3);
+    font-family: var(--ej-serif);
+    font-size: var(--ej-fs-body);
+    font-style: italic;
+    font-weight: var(--ej-fw-body); /* 300 只许 ≥20px 展示尺寸 */
+    line-height: 1.5;
+  }
+  .p-abstract {
+    margin: 12px 0 0;
+    max-width: 68ch;
+    color: #b8b8c0;
+    font-size: var(--ej-fs-ui);
+    line-height: var(--ej-lh-loose);
+    text-wrap: pretty;
+  }
+  .p-foot {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .p-contrib {
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-meta);
+    line-height: var(--ej-lh-body);
+  }
+  .p-links {
+    display: flex;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+  .p-links a {
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-label);
+    font-weight: var(--ej-fw-medium);
+    text-decoration: none;
+    transition: all 120ms var(--ej-ease);
+  }
+  .p-links a:hover {
+    color: var(--ej-blue-2);
+    text-shadow: 0 0 12px rgba(76, 194, 255, 0.5);
+  }
+
+  .method {
+    padding: clamp(48px, 7vh, 68px) 0 0;
+  }
+  .m-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(250px, 1fr);
+    gap: 14px;
+  }
+  .m-card {
+    padding: 20px 24px;
+  }
+  .m-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-meta);
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-label);
+    text-transform: uppercase;
+  }
+  .m-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--ej-amber);
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.7);
+  }
+  .m-rows {
+    display: grid;
+    gap: 2px;
+    margin-top: 12px;
+  }
+  .m-val {
+    flex-shrink: 0;
+    max-width: 60%;
+    text-align: right;
+    color: #e8e8ea;
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-small);
+    line-height: var(--ej-lh-body);
+    transition: color 120ms ease;
+  }
+  .ej-dotrow:hover .m-val { color: #fff; }
+  .m-metric {
+    display: grid;
+    align-content: center;
+    gap: 8px;
+  }
+  .m-value {
+    color: var(--ej-text);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-metric);
+    font-weight: var(--ej-fw-head);
+    font-variant-numeric: tabular-nums;
+  }
+  .m-note {
+    color: #9a9aa2;
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-label);
+    line-height: var(--ej-lh-body);
+  }
+  .m-honesty {
+    margin: 6px 0 0;
+    color: var(--ej-mut);
+    font-size: var(--ej-fs-small);
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+
+  .tl {
+    padding: clamp(48px, 7vh, 68px) 0 0;
+  }
+  .tl-list {
+    position: relative;
+    padding: 4px 0;
+  }
+  .tl-row {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    padding: 10px 0 10px 2px;
+  }
+  .tl-when {
+    flex-shrink: 0;
+    width: 52px;
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-label);
+    font-weight: var(--ej-fw-medium);
+    font-variant-numeric: tabular-nums;
+  }
+  .tl-node {
+    flex-shrink: 0;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--tone);
+    box-shadow: 0 0 8px rgba(var(--tone-rgb), 0.6);
+    transform: translateY(-1px);
+  }
+  .tl-row.tone-gray .tl-node {
+    box-shadow: none;
+  }
+  .tl-label {
+    color: var(--ej-text-2);
+    font-size: var(--ej-fs-ui);
+    line-height: var(--ej-lh-body);
+  }
+
+  .next {
+    padding: clamp(48px, 7vh, 68px) 0 clamp(56px, 8vh, 72px);
+  }
+  .next-card {
+    display: grid;
+    gap: 10px;
+    padding: 20px 24px;
+  }
+  .next-label {
+    color: var(--ej-mut-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-meta);
+    font-weight: var(--ej-fw-medium);
+    letter-spacing: var(--ej-track-label);
+  }
+  .next-text {
+    margin: 0;
+    max-width: 62ch;
+    color: var(--ej-text-2);
+    font-size: var(--ej-fs-ui);
+    line-height: var(--ej-lh-loose);
+    text-wrap: pretty;
+  }
+  .next-link {
+    justify-self: start;
+  }
+
+  @media (max-width: 980px) {
+    .m-grid {
+      grid-template-columns: 1fr;
+    }
+    .p-foot {
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+  @media (max-width: 560px) {
+    /* 大 serif 标题 + 内联 mono 副标题在窄屏一起换行会交错 → 竖排, 副标题降为独立块行 */
+    .sec-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+      margin-bottom: 14px;
+    }
+    .sec-sub {
+      display: block;
+      margin-left: 0;
+    }
+    /* 长 venue(audit → journal, §motivation)被右推后挤成两行 → 落到独立整宽行左对齐 */
+    .p-status {
+      flex-wrap: wrap;
+      align-items: baseline;
+    }
+    .p-venue {
+      margin-left: 0;
+      flex-basis: 100%;
+    }
+  }
+</style>

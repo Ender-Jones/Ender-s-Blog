@@ -3,6 +3,7 @@ import homeYaml from '../data/home.yml';
 import zhYaml from '../data/zh.yml';
 import quotesYaml from '../data/quotes.yml';
 import researchYaml from '../data/research.yml';
+import researchZhYaml from '../data/research.zh.yml';
 import siteYaml from '../data/site.yml';
 import tagsYaml from '../data/tags.yml';
 
@@ -139,6 +140,7 @@ export type SocialDisplayLink = {
 
 export const site = siteYaml as SiteData;
 export const research = researchYaml as ResearchData;
+export const researchZh = researchZhYaml as ResearchData;
 export const tagMeta = tagsYaml as Record<string, TagMeta>;
 export type ZhData = {
   hero: { kicker: string; claim: string; body: string };
