@@ -4,10 +4,11 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import RouteHint from '../../components/home/RouteHint.astro';
 import WorklogWeeks from '../../components/worklog/WorklogWeeks.astro';
-import { getWorklogDays, groupByWeek } from '../../lib/worklogDays';
+import { getMonthCloses, getWorklogDays, groupByWeek } from '../../lib/worklogDays';
 
 const worklogs = await getCollection('worklogs');
 const days = getWorklogDays(worklogs);
+const closes = getMonthCloses(worklogs);
 const todayIso = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Tokyo' });
 const weeks = groupByWeek(days, todayIso);
 ---
@@ -22,7 +23,7 @@ const weeks = groupByWeek(days, todayIso);
     </section>
 
     <section class="weeks-sec reveal" style="--reveal-i: 1;">
-      <WorklogWeeks weeks={weeks} />
+      <WorklogWeeks weeks={weeks} closes={closes} />
     </section>
   </main>
 </BaseLayout>

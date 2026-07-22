@@ -132,6 +132,38 @@ export function getWorklogDays(worklogs: WorklogEntry[]): WorklogDay[] {
   return [...days.values()].sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
+export type MonthClose = {
+  month: string; // YYYY-MM
+  label: string; // "JUNE 2026"
+  summary: string;
+  bullets: string[];
+  anchor: string; // 该月最后一天 YYYY-MM-DD — 决定卡片插进周流的哪个位置
+};
+
+/** 月结卡数据: 月文件 frontmatter 的 month_close(公开层). 新→旧排序. */
+export function getMonthCloses(worklogs: WorklogEntry[]): MonthClose[] {
+  const closes: MonthClose[] = [];
+  for (const worklog of worklogs) {
+    const mc = worklog.data.month_close;
+    if (!mc) continue;
+    // 月份取自文件名 id("2026-06"), 不用 data.date — +09:00 的月初零点在 UTC 是上个月末, 会算错月
+    const m = worklog.id.match(/^(\d{4})-(\d{2})/);
+    if (!m) continue;
+    const month = `${m[1]}-${m[2]}`;
+    const lastDay = new Date(Date.UTC(Number(m[1]), Number(m[2]), 0));
+    closes.push({
+      month,
+      label: lastDay
+        .toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' })
+        .toUpperCase(),
+      summary: mc.summary,
+      bullets: mc.bullets ?? [],
+      anchor: lastDay.toISOString().slice(0, 10),
+    });
+  }
+  return closes.sort((a, b) => (a.anchor < b.anchor ? 1 : -1));
+}
+
 /** 站点 NOW 线: 最新的逐日 ### Public, 否则回退到任意月份 frontmatter 的 public_thread. */
 export function getNowLine(
   worklogs: WorklogEntry[],

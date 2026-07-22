@@ -5,10 +5,11 @@ import BaseLayout from '../../components/layout/BaseLayout.astro';
 import RouteHint from '../../components/home/RouteHint.astro';
 import WorklogWeeks from '../../components/worklog/WorklogWeeks.astro';
 import CommitWall from '../../components/ui/CommitWall.astro';
-import { getNowLine, getWorklogDays, groupByWeek } from '../../lib/worklogDays';
+import { getMonthCloses, getNowLine, getWorklogDays, groupByWeek } from '../../lib/worklogDays';
 
 const worklogs = await getCollection('worklogs');
 const days = getWorklogDays(worklogs);
+const closes = getMonthCloses(worklogs);
 const todayIso = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Tokyo' });
 
 // NOW: 最新的逐日公开句; 没有则回退到任意月份 frontmatter 的 public_thread.
@@ -86,7 +87,7 @@ const hasArchive = weeks.length > RECENT;
     </section>
 
     <section class="weeks-sec reveal" style="--reveal-i: 2;">
-      <WorklogWeeks weeks={recentWeeks} />
+      <WorklogWeeks weeks={recentWeeks} closes={closes} />
       {hasArchive && (
         <a class="ej-link archive-link" href="/worklog/archive/" data-route="→ /worklog/archive/">earlier weeks → archive</a>
       )}

@@ -1,12 +1,30 @@
 ---
 // 周分组渲染: WEEK 标签 + OPEN 徽章 + 日期范围 + 自动 digest; 日行 = 星期/能量格 + 彩色符号条目 + 公开句.
-import type { WorklogWeek, WorklogItemType } from '../../lib/worklogDays';
+// closes(可选) = 月结卡, 按 anchor(月末日)插进周流的月界处; 比最旧一周还老的卡不渲染
+// (worklog 首页只传 4 周时, 老月份的卡自然只出现在 archive).
+import type { WorklogWeek, WorklogItemType, MonthClose } from '../../lib/worklogDays';
+import MonthCloseCard from './MonthCloseCard.astro';
 
 interface Props {
   weeks: WorklogWeek[];
+  closes?: MonthClose[];
 }
 
-const { weeks } = Astro.props;
+const { weeks, closes = [] } = Astro.props;
+
+// 新→旧合流: 每周之前, 先放掉所有 anchor >= 该周最新一天的月结卡.
+type StreamItem = { kind: 'week'; week: WorklogWeek } | { kind: 'close'; close: MonthClose };
+const stream: StreamItem[] = [];
+{
+  const pending = [...closes].sort((a, b) => (a.anchor < b.anchor ? 1 : -1));
+  for (const w of weeks) {
+    const weekAnchor = w.days[0]?.date ?? '';
+    while (pending.length && pending[0].anchor >= weekAnchor) {
+      stream.push({ kind: 'close', close: pending.shift()! });
+    }
+    stream.push({ kind: 'week', week: w });
+  }
+}
 
 const GLYPH: Record<WorklogItemType, { g: string; cls: string }> = {
   done: { g: '✓', cls: 'g-done' },
@@ -41,7 +59,7 @@ const wdOf = (iso: string) => {
 ---
 
 <div class="weeks">
-  {weeks.map((w) => (
+  {stream.map((it) => it.kind === 'close' ? <MonthCloseCard close={it.close} /> : (() => { const w = it.week; return (
     <div class="week">
       <div class="week-head">
         <span class="wk">WEEK {w.week}</span>
@@ -79,7 +97,7 @@ const wdOf = (iso: string) => {
         </div>
       ))}
     </div>
-  ))}
+  ); })())}
 </div>
 
 <style>

@@ -82,6 +82,8 @@ const worklogs = defineCollection({
       updated: z.coerce.date().optional(),
       description: text.optional(),
       public_thread: publicThread.optional(),
+      // 月度收束的公开层(worklog 流里的月结卡); 私有层是正文里的 ### Month Close 块. 契约: docs/WORKLOG.md
+      month_close: publicThread.optional(),
     })
     .strict(),
 });

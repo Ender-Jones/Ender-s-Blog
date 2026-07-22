@@ -1,0 +1,112 @@
+---
+// 月结卡: 插在 worklog 周流的月界处. 数据 = 月文件 frontmatter month_close(公开层).
+// 语义色 = amber(worklog 域); 摘要衬线斜体(与 NOW 行同族), bullets mono 小字.
+import type { MonthClose } from '../../lib/worklogDays';
+
+interface Props {
+  close: MonthClose;
+}
+
+const { close } = Astro.props;
+---
+
+<div class="mc">
+  <div class="mc-head">
+    <span class="chip">MONTH CLOSE</span>
+    <span class="month">{close.label}</span>
+    <span class="rule" aria-hidden="true"></span>
+  </div>
+  <p class="summary">{close.summary}</p>
+  {close.bullets.length > 0 && (
+    <div class="bullets">
+      {close.bullets.map((b) => (
+        <span class="b-row">
+          <span class="b-dot" aria-hidden="true">·</span>
+          <span class="b-text">{b}</span>
+        </span>
+      ))}
+    </div>
+  )}
+</div>
+
+<style>
+  .mc {
+    margin: 0 0 52px;
+    padding: 22px 24px 20px;
+    border: 1px solid rgba(245, 158, 11, 0.22);
+    border-radius: 10px;
+    background:
+      linear-gradient(180deg, rgba(245, 158, 11, 0.045), rgba(245, 158, 11, 0.012) 55%, transparent);
+  }
+  .mc-head {
+    display: flex;
+    align-items: baseline;
+    gap: 13px;
+    margin: 0 0 12px;
+  }
+  .chip {
+    padding: 1px 7px;
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    border-radius: 4px;
+    color: var(--ej-amber-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-micro);
+    font-weight: var(--ej-fw-head);
+    letter-spacing: var(--ej-track-key);
+  }
+  .month {
+    color: var(--ej-text-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-label);
+    font-weight: var(--ej-fw-head);
+    letter-spacing: 0.18em;
+  }
+  .rule {
+    flex: 1;
+    height: 1px;
+    background: rgba(245, 158, 11, 0.14);
+    transform: translateY(-3px);
+  }
+  .summary {
+    margin: 0;
+    color: var(--ej-text-2);
+    font-family: var(--ej-serif);
+    font-size: var(--ej-fs-lede);
+    font-style: italic;
+    font-weight: var(--ej-fw-body);
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+  .bullets {
+    display: grid;
+    gap: 6px;
+    margin-top: 13px;
+  }
+  .b-row {
+    display: flex;
+    align-items: baseline;
+    gap: 11px;
+  }
+  .b-dot {
+    flex-shrink: 0;
+    width: 14px;
+    text-align: center;
+    color: var(--ej-amber-2);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-label);
+    font-weight: var(--ej-fw-head);
+  }
+  .b-text {
+    color: var(--ej-mut);
+    font-family: var(--ej-mono);
+    font-size: var(--ej-fs-meta);
+    line-height: 1.6;
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+  @media (max-width: 560px) {
+    .mc {
+      padding: 18px 16px 16px;
+    }
+  }
+</style>
