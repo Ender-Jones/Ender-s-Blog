@@ -1,21 +1,21 @@
 # About 页的全部文案入口 — 改这里即可, 每段都是你的声音, 随意重写.
 
 lead: >-
-  A kid who wanted to be a scientist — still on the road, now teaching
-  machines how a body feels.
+  A kid who wanted to be a scientist,
+  now teaching machines how a body feels.
 
 paras:
   - >-
     I am a PhD candidate in Tokyo/Chiba. My research asks a simple question:
-    can a machine tell how stressed you are just by looking? The notebook
+    can a machine tell how stressed you are just by looking? The blog
     catches me mid-turn — from reading pulse and skin signals out of video,
     toward asking whether the big vision-language models can learn to feel
     any of it.
   - >-
     Before the research there was writing, and before the writing there was
-    a long detour — the essay below tells that part better than a bio can.
-    I write in three languages, think mostly in two, and keep the important
-    things in one place: this notebook.
+    a long road — the essay below starts the story, and its 2025 predecessor
+    keeps the harder chapters. I write in three languages, think mostly in
+    two, and keep the important things in one place: this blog.
 
 essay_link:
   label: read “Who Am I?” — the longer answer
@@ -23,7 +23,7 @@ essay_link:
 
 # 站点的三重身份(dotted rows)
 notebook:
-  - key: research notebook
+  - key: research log
     value: methods, metrics, honest negative results
   - key: personal archive
     value: essays and poems, kept against forgetting
@@ -44,5 +44,5 @@ system:
 
 colophon:
   - "Astro · Cloudflare Pages · type set in Source Serif Pro, Noto Sans & Fira Code"
-  - "theme: vital signs in a darkroom — chrome stays gray, only living signals glow"
+  - "theme: a long exposure — chrome stays gray, only living signals glow"
   - "built in the open; the build gates its own content"
