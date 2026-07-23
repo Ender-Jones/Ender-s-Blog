@@ -27,22 +27,20 @@ papers:
     venue: 审计 → 期刊 §motivation
     anchor: ispacs-2026
     abstract: >-
-      审计远程光电容积描记(rPPG)在受试者真正紧张时的表现 — 运动、表情与自主神经
-      负荷, 恰恰在最要紧的时刻劣化信号. 这份审计比它的会场活得久: 如今它成了
+      审计远程光电容积描记(rPPG)在受试者真正紧张时的表现 — 运动、表情与自主神经负荷, 恰恰在最要紧的时刻劣化信号. 这份审计比它的会场活得久: 如今它成了
       期刊版的动机一节.
     contribution: 搭建审计流水线与运动伪影分析.
     links: {}
-  - status: 撰写中
+  - status: 审核中
     tone: amber
     title: The journal version — reproducible, fully open
-    dek: 严格协议, 完整消融, 诚实的阴性结果.
+    dek: 新架构, 严格协议, 完整消融.
     venue: IEEE J-BHI · 目标
     anchor: ieee-j-bhi
     abstract: >-
-      这条线的汇总陈述: 忠实复现基线, 在受试者级划分与多随机种子下做防泄漏的
-      重新评估, 并诚实诊断这份数据到底支持、不支持多细的压力等级 — 以可复现
+      这条线的汇总陈述: 忠实复现基线, 优秀的新架构设计, 在受试者级划分与多随机种子下做防泄漏的重新评估, 并诚实诊断这份数据到底支持、不支持多细的压力等级 — 以可复现
       为写作目标, 发布即完全开源.
-    contribution: 正在写 — 逐日进展在 worklog 上.
+    contribution: 新模型, 在新测试协议下SOTA性能
     links: {}
 
 metric:

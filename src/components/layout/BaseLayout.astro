@@ -55,7 +55,10 @@ const ogImageAbs = Astro.site ? new URL(ogImage, Astro.site).href : ogImage;
     <meta property="og:image" content={ogImageAbs} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#030305" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {/* 站点只有一张脸: 图标全部出自 public/img/author/ang.JPG(与 Hero/About/console 同一张).
+        照片做不了 SVG, 所以走 PNG + ico 后备; 换头像时四个尺寸一起重出. */}
+    <link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicons/favicon-96x96.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png" />
     <link rel="icon" href="/assets/img/favicons/favicon.ico" sizes="any" />
     <link rel="apple-touch-icon" href="/assets/img/favicons/apple-touch-icon.png" />
   </head>

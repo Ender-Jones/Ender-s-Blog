@@ -35,18 +35,17 @@ papers:
       the journal version.
     contribution: Built the audit pipeline and the motion-artifact analysis.
     links: {}
-  - status: In writing
+  - status: Under review
     tone: amber
     title: The journal version — reproducible, fully open
-    dek: Strict protocol, full ablations, honest negative results.
+    dek: New architecture, Strict protocol, full ablations.
     venue: IEEE J-BHI · target
     anchor: ieee-j-bhi
     abstract: >-
-      The consolidated account: a faithful reproduction of the baseline, a
-      leakage-safe re-evaluation under subject-level splits and multiple seeds,
+      The consolidated account: a faithful reproduction of the baseline, new architecture, with a leakage-safe re-evaluation under subject-level splits and multiple seeds,
       and an honest diagnostic of what fine-grained stress levels the data can
       and cannot support — written to be reproduced, fully open on release.
-    contribution: In writing now — the day-by-day trail is on the worklog.
+    contribution: New architecture, SOTA under new protocol.
     links: {}
 
 metric:
