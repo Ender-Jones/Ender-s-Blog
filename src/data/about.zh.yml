@@ -23,7 +23,7 @@ essay_link:
 # 站点的三重身份(dotted rows)
 notebook:
   - key: 研究日志
-    value: 方法、指标、诚实的阴性结果
+    value: 方法, 指标, 诚实的阴性结果
   - key: 个人档案
     value: 散文和诗, 收着不让忘掉
   - key: 证明
@@ -41,6 +41,6 @@ system:
   link: /worklog/
 
 colophon:
-  - "Astro · Cloudflare Pages · 字体: Source Serif Pro、Noto Sans 与 Fira Code"
+  - "Astro · Cloudflare Pages · 字体: Source Serif Pro, Noto Sans 与 Fira Code"
   - "主题: 一场长曝光 — 底色守灰, 只让活着的信号发光"
   - "在公开中搭建; 构建自己检查自己的内容"
