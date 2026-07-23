@@ -41,6 +41,19 @@
 | 研究方向/hero 措辞变化 | `home.yml` hero + `zh.yml` hero **成对** | splash 问候也在 home.yml |
 | "现在在干什么"变了 | **不改 yml** — NOW 行走 worklog(console 正门) | home.yml `status` 只在投稿日动 |
 
+## 词汇约定: post 与 essay 各管一件事(2026-07-23 定)
+
+混用会难维护, 所以把界线写死:
+
+- **essay = 体裁**, 与 poem / research-note / field-report 并列, 就是 frontmatter 的
+  `kind:`. 它决定 chip 颜色, `/posts/` 的筛选按钮, 以及中文的「随笔」. **不要换成 post** —
+  换了四类就塌成一类.
+- **post = 一篇具体的文章**, 泛指时用它. 例: "the post below starts the story" /
+  "下面这篇 post 讲的是开头".
+- 一句话判别: 能不能替换成 poem? 能, 那位置该用 essay(它在和别的体裁并列); 不能, 用 post.
+- ⚠ 描述整个文集时别用 essays(书架上还有诗和笔记)— 用 writing / 文章.
+  主页 hero 曾写 "a shelf of essays", 已改 "a shelf of writing".
+
 ## 坑与注意
 
 - **数据 yml 没有 schema 运行时校验**(2026-07-22 核实): zod `.strict()` 只管 content
