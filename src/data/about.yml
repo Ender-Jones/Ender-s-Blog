@@ -8,26 +8,26 @@ paras:
   - >-
     I am a PhD candidate in Tokyo/Chiba. My research asks a simple question:
     can a machine tell how stressed you are just by looking? The blog
-    catches me mid-turn — from reading pulse and skin signals out of video,
-    toward asking whether the big vision-language models can learn to feel
-    any of it.
+    catches me mid-turn — from reading pulse and expression out of video,
+    toward asking whether large vision-language models can be taught to feel
+    what a person feels.
   - >-
     Before the research there was writing, and before the writing there was
-    a long road — the essay below starts the story, and its 2025 predecessor
-    keeps the harder chapters. I write in three languages, think mostly in
-    two, and keep the important things in one place: this blog.
+    a long road — the post below starts the story, and its 2025 version
+    covers a harder stretch of it. I write in three languages, think mostly
+    in two, and keep the important things in one place: this blog.
 
 essay_link:
-  label: read “Who Am I?” — the longer answer
+  label: read “Who Am I?” — the longer answer to who I am
   href: /posts/who-am-i/
 
 # 站点的三重身份(dotted rows)
 notebook:
   - key: research log
-    value: methods, metrics, honest negative results
-  - key: personal archive
-    value: essays and poems, kept against forgetting
-  - key: proof
+    value: methods, metrics, how the work is actually going
+  - key: personal blog
+    value: essays and poems, such as they are, kept against forgetting
+  - key: proof of effort
     value: one line a day says the work continued
 
 # ADHD 方法论短节(将来独立成文, 这里只带过)
@@ -35,14 +35,15 @@ system:
   title: One line against forgetting
   body: >-
     The worklog exists because my working memory can't be trusted with a whole
-    day. One line at capture, a small ritual at close, git as the spine: done
-    beats todo, dropping a task is a decision rather than a failure, and blank
-    days count against nothing. A longer essay on this system is coming; until
-    then, the worklog itself is the demonstration.
+    day. One line when I capture it, a small ritual at the end of each day to
+    sum it up, git as the spine: done beats todo, dropping a task is a decision
+    and not something to feel guilty about, and blank days owe nobody anything.
+    A longer post on this system is coming; until then, the worklog itself is
+    the demonstration.
   link_label: watch it run →
   link: /worklog/
 
 colophon:
-  - "Astro · Cloudflare Pages · type set in Source Serif Pro, Noto Sans & Fira Code"
+  - "Astro · Cloudflare Pages · type set in Source Serif Pro, Noto Sans, Noto Sans SC & Fira Code"
   - "theme: a long exposure — chrome stays gray, only living signals glow"
   - "built in the open; the build gates its own content"

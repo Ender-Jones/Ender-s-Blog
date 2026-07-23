@@ -53,7 +53,7 @@ quotes:
   - id: sartre-liberte
     text: "L’homme est condamné à être libre."
     trans: "Man is condemned to be free."
-    trans_zh: "人是被判处了自由的."
+    trans_zh: "人被判处自由."
     source: "Sartre, L’existentialisme est un humanisme"
     lang: fr
   - id: rousseau-mensonges
@@ -95,7 +95,7 @@ quotes:
   - id: kafka-suenden
     text: "Es gibt zwei menschliche Hauptsünden, aus welchen sich alle anderen ableiten: Ungeduld und Lässigkeit."
     trans: "There are two cardinal human sins from which all others derive: impatience and indolence."
-    trans_zh: "人有两种主要的罪, 其余一切都由它们派生: 急躁与懈怠."
+    trans_zh: "人有两大主罪 — 急躁与懈怠, 其余一切都由这两样派生."
     source: "Kafka, Zürauer Aphorismen"
     lang: de
   - id: descartes-ames
@@ -204,7 +204,7 @@ quotes:
     lang: en
   - id: hobbes-method
     text: "The first cause of absurd conclusions I ascribe to the want of method."
-    trans_zh: "荒谬结论的头一个成因, 我归于方法的欠缺."
+    trans_zh: "荒谬的结论, 头一个成因是缺乏方法."
     source: "Hobbes, Leviathan"
     lang: en
   - id: pliny-amor
