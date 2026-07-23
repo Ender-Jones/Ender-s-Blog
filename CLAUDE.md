@@ -188,6 +188,15 @@ site-wide copy sweep retired the "notebook" framing. Nothing on the site is know
 **Standing red line**: no public résumé/CV download on the site, no photos of the author beyond
 the avatar, and every outbound link passes a privacy check before it ships.
 
+**Site is live at https://enderjones.com** (2026-07-23): noindex dropped, sitemap live, robots
+in place, Access gates `/console/` + `/api/*` on both hostnames, the commit wall refreshes on
+every build. The old V2 project no longer holds the domain — archive that repo when convenient.
+
+**Pending Ender's call** (nothing blocking): the Chinese copy review found eight
+translation-ese spots, all in `about.zh.yml` (full list in Claude's memory
+`content-refresh-2026-07`); the research page says `Under review` and `SOTA under new protocol`
+while the manuscript is still in the professor's hands (see memory `research-state`).
+
 **The day a custom domain lands** (see Deployment → Go-live checklist above): drop noindex +
 sitemap + 04:00 cron + activity refresh.
 
