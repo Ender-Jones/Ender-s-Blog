@@ -1,6 +1,7 @@
 # 每日 04:00 JST(19:00 UTC)触发 CF Pages 重建 — commit 墙与 NOW 行的"几天前"保持新鲜.
-# 依赖 repo secret CF_DEPLOY_HOOK(CF Pages → Settings → Builds & deployments → Deploy hooks).
-# secret 未配置时静默跳过, 不红叉.
+# 依赖 repo secret CF_DEPLOY_HOOK(CF Pages → 项目 → Settings → Build → Deploy hooks, 指向 main).
+# 挂了会吵: secret 缺失或 curl 失败都红叉 → GitHub 按你的通知设置发邮件;
+# 另配 repo secret NTFY_URL(https://ntfy.sh/<你的topic>)就再推一条手机通知, 不配就只有邮件.
 name: Nightly rebuild
 
 on:
@@ -19,7 +20,25 @@ jobs:
           HOOK: ${{ secrets.CF_DEPLOY_HOOK }}
         run: |
           if [ -z "$HOOK" ]; then
-            echo "CF_DEPLOY_HOOK not configured — skipping."
+            echo "::error::CF_DEPLOY_HOOK is not configured — nothing was rebuilt."
+            exit 1
+          fi
+          curl -fsS --max-time 30 --retry 3 --retry-delay 10 -X POST "$HOOK" > /dev/null
+          echo "rebuild triggered."
+
+      - name: Push a failure notification (ntfy)
+        if: failure()
+        env:
+          NTFY_URL: ${{ secrets.NTFY_URL }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$NTFY_URL" ]; then
+            echo "NTFY_URL not configured — email only."
             exit 0
           fi
-          curl -fsS -X POST "$HOOK" > /dev/null && echo "rebuild triggered."
+          curl -fsS \
+            -H 'Title: Blog nightly rebuild failed' \
+            -H 'Priority: high' \
+            -H 'Tags: warning' \
+            -d "The 04:00 JST Cloudflare rebuild did not fire. $RUN_URL" \
+            "$NTFY_URL" > /dev/null

@@ -125,8 +125,9 @@ git config core.hooksPath hooks   # one-time: pre-commit content check runs on h
 
 ## Deployment
 
-**Phase 1 — live**: https://ender-s-blog.pages.dev/ (Cloudflare **Pages**, tracks GitHub `main`,
-rebuilds on every push). Site carries `noindex`, no custom domain yet.
+**Phase 1 — live**: Cloudflare **Pages**, tracks GitHub `main`, rebuilds on every push. First
+address was https://ender-s-blog.pages.dev/ (still resolves); the custom domain landed
+2026-07-23 → https://enderjones.com, and `noindex` came off the same day.
 
 <details><summary>How it was set up (reference; needed again on a rebuild or account switch)</summary>
 
@@ -147,19 +148,23 @@ AUD/team domain live in `wrangler.toml`'s `[vars]`, the only real secret is the
 Pages Secret `GITHUB_TOKEN` (rotates yearly, see `docs/MAINTENANCE.md`). Behavior contract:
 `docs/CONSOLE.md`.
 
-**Go-live checklist (the day a custom domain lands):**
-1. Set `GITHUB_TOKEN` in the CF build environment (reads contributions) so the commit wall is
-   fresh on every build; run `npm run activity:cache` once by hand first.
-2. Daily 04:00 JST scheduled rebuild (deploy hook + GitHub Actions cron).
-3. Drop `noindex` from the homepage; add a sitemap (`@astrojs/sitemap` + the real domain in
-   `astro.config`).
-4. Check the giscus theme.
+**Go-live checklist — worked through 2026-07-23** (kept as a record; needed again on an account
+switch):
+1. ✅ `GITHUB_TOKEN` in the CF build environment (reads contributions) — the commit wall now
+   refreshes on every build, `npm run activity:cache` is wired into the build chain.
+2. ✅ Daily 04:00 JST rebuild — `.github/workflows/nightly-rebuild.yml` calls a Cloudflare
+   deploy hook kept in the repo secret `CF_DEPLOY_HOOK` (added 2026-07-23). A missing secret or
+   a failed call red-crosses now instead of exiting zero — the old silent skip is exactly why
+   this sat half-configured unnoticed — and a failed run also pushes a phone notification
+   through ntfy (repo secret `NTFY_URL`).
+3. ✅ `noindex` dropped; sitemap live (`@astrojs/sitemap` + the real domain in `astro.config`).
+4. ✅ giscus theme set to `transparent_dark`.
 
 ## TODO (current, roughly by urgency; delete a line once it's done)
 
 Fonts are final (V2 trio, Lexend rejected, type-lab removed). Site is live. Left:
 
-Content is current as of 2026-07-22: zh mirrors done (posts + Research + About), who-am-i
+Content is current as of 2026-07-23: zh mirrors done (posts + Research + About), who-am-i
 rewritten, the prompt post's model takes redone with the 2025 snapshot frozen in place, and the
 site-wide copy sweep retired the "notebook" framing. Nothing on the site is knowingly stale.
 
@@ -177,8 +182,8 @@ site-wide copy sweep retired the "notebook" framing. Nothing on the site is know
      model comparison.
    - Formula (2026-07-12, from the ghostty cheatsheet that held his own attention): clear-intent
      query × weak-competition SERP × above-the-fold answer × evergreen × genuinely his territory.
-   - ⚠ Site is still `noindex`, so ranking payoff waits for the custom domain — the first post's
-     real job is to test whether the formula works at all.
+   - The site has been indexable since 2026-07-23, so the payoff is finally measurable — the
+     first post's real job is to test whether the formula works at all.
 
 **Co-written**
 2. ADHD worklog methodology essay (pays off the About page's "a longer essay is coming" — the
@@ -192,13 +197,11 @@ the avatar, and every outbound link passes a privacy check before it ships.
 in place, Access gates `/console/` + `/api/*` on both hostnames, the commit wall refreshes on
 every build. The old V2 project no longer holds the domain — archive that repo when convenient.
 
-**Pending Ender's call** (nothing blocking): the Chinese copy review found eight
-translation-ese spots, all in `about.zh.yml` (full list in Claude's memory
-`content-refresh-2026-07`); the research page says `Under review` and `SOTA under new protocol`
-while the manuscript is still in the professor's hands (see memory `research-state`).
-
-**The day a custom domain lands** (see Deployment → Go-live checklist above): drop noindex +
-sitemap + 04:00 cron + activity refresh.
+**Settled 2026-07-23, don't reopen**: the eight translation-ese spots the Chinese copy review
+flagged in `about.zh.yml` stay as written — Ender read the list and ruled them fine. The
+research page keeps `Under review` and `SOTA under new protocol` while the manuscript sits with
+the professor; Claude raised the mismatch twice and it is Ender's call. Full lists live in
+Claude's memory `content-refresh-2026-07` / `research-state`.
 
 **Low priority**
 3. Pass over on a real mobile device; photography section design; expand `quotes.yml`;
