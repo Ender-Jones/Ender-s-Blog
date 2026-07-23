@@ -167,12 +167,19 @@ html.ej-splash-active .reveal {
   transition: color 120ms ease;
 }
 
+/* 引导点: 不用 border-dotted(浏览器画成 1px 细虚线, 点阵还在两端被切成半个),
+   改用可控圆点; background-position 靠右 = 点阵从值那一端起排, 挨着值永远是一颗整点,
+   长度变化时只在左端增减 — 这才是"顺着排版动态显示"该有的样子. */
 .ej-dotrow > .lead {
   flex: 1;
   min-width: 14px;
-  border-bottom: 1px dotted rgba(255, 255, 255, 0.11);
-  transform: translateY(-3px);
-  transition: border-color 120ms ease;
+  height: 2px;
+  align-self: center;
+  background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.24) 1px, transparent 1.3px);
+  background-size: 6px 2px;
+  background-repeat: repeat-x;
+  background-position: right center;
+  transition: background-image 120ms ease;
 }
 
 .ej-dotrow:hover > .k {
@@ -180,7 +187,7 @@ html.ej-splash-active .reveal {
 }
 
 .ej-dotrow:hover > .lead {
-  border-bottom-color: rgba(255, 255, 255, 0.22);
+  background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.45) 1px, transparent 1.3px);
 }
 
 /* —— 按钮词汇(全站统一, 最多这几种; tone 用 --btn-tone/--btn-tone-rgb 换色) ——

@@ -37,7 +37,7 @@ const nowRows = [
     <section class="reveal" style="--reveal-i: 0;">
       <p class="ej-kicker">ABOUT — WHO KEEPS THIS BLOG</p>
       <h1 class="ej-h1">About.<span class="ej-caret" aria-hidden="true"></span></h1>
-      <p class="lead">{data.lead}</p>
+      <p class="bio-lead">{data.lead}</p>
       <div class="intro">
         <span class="portrait" aria-hidden="true"></span>
         <div class="paras">
@@ -130,7 +130,9 @@ const nowRows = [
 </script>
 
 <style>
-  .lead {
+  /* ⚠ 别改回 .lead: 点线引导点也叫 .lead(global 的 .ej-dotrow > .lead),
+     同名会把 34ch/斜体/28px 压到点线上 — NOW 卡的值曾因此右缘参差(2026-07-23 修). */
+  .bio-lead {
     margin: 22px 0 0;
     max-width: 34ch;
     color: var(--ej-text-2);
