@@ -35,7 +35,21 @@ export async function onRequestGet(context) {
     )
     .bind(today)
     .all();
-  return json({ day: today, closed, effectiveDay, lines: results, staleDays: stale.map((r) => r.day) });
+  // carry-over 实时源: 最近一个 < effectiveDay 且有已归档(committed) next 的日子及其 next 行 —
+  // 直接读 D1, 不必等站点重建. 前端再与构建期快照(含手写历史的 next)取日期更新的一个.
+  const carryDay = await db
+    .prepare("SELECT MAX(day) AS d FROM lines WHERE type = 'next' AND deleted = 0 AND committed = 1 AND day < ?")
+    .bind(effectiveDay)
+    .first();
+  let carry = null;
+  if (carryDay?.d) {
+    const { results: nx } = await db
+      .prepare("SELECT text FROM lines WHERE type = 'next' AND deleted = 0 AND committed = 1 AND day = ? ORDER BY id")
+      .bind(carryDay.d)
+      .all();
+    carry = { date: carryDay.d, texts: nx.map((r) => r.text) };
+  }
+  return json({ day: today, closed, effectiveDay, lines: results, staleDays: stale.map((r) => r.day), carry });
 }
 
 export async function onRequestPost(context) {

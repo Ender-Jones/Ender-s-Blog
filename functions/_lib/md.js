@@ -21,9 +21,12 @@ export function composeDay(day, rows, energy) {
   for (const r of rows) (by[normalizeType(r.type)] ??= []).push(r.text);
   let md = `\n## ${day}\n`;
   if (energy) md += `<!-- energy: ${energy} -->\n`;
+  let first = true;
   for (const [type, title] of SECTIONS) {
     if (!by[type]?.length) continue;
-    md += `\n### ${title}\n`;
+    // 第一节紧跟标题/energy(与手写一致), 其后每节前空一行
+    md += `${first ? '' : '\n'}### ${title}\n`;
+    first = false;
     for (const text of by[type]) md += `- ${text}\n`;
   }
   return md;

@@ -59,7 +59,16 @@ export async function onRequestPost(context) {
     return json({ error: `github read failed (${getRes.status})` }, 502);
   }
 
-  const updated = content.replace(/\s*$/, '\n') + section;
+  // worklog 文件是倒序的(最新一天在顶部) — 新块插到第一个日块之前, 日块之间用 --- 分隔,
+  // 与手写格式一字不差. 没有已存在日块时(每月第一天/新档)追加到 frontmatter 后.
+  const anchor = content.search(/^## \d{4}-\d{2}-\d{2}/m);
+  const updated =
+    anchor === -1
+      ? content.replace(/\s*$/, '\n') + section
+      : content.slice(0, anchor).replace(/\s*$/, '\n') +
+        section.replace(/^\n+/, '') +
+        '\n---\n' +
+        content.slice(anchor);
   const putRes = await fetch(`${GH_API}/repos/${repo}/contents/${path}`, {
     method: 'PUT',
     headers,

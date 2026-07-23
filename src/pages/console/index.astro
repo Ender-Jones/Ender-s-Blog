@@ -225,7 +225,8 @@ const consoleData = {
   let closingStale: string | null = null; // 补关模式: 正在补关的那一天
   const viewDay = () => closingStale ?? effectiveDay;
 
-  // carry-over = 逻辑日"今天之前"最近一天的 next
+  // carry-over 首屏/离线占位: 构建快照里"今天之前"最近一天的 next.
+  // loadDay 拿到 server 的 effectiveDay 与 D1 实时 carry 后会重算(见下), 覆盖此占位.
   const carrySource = RAW.nextDays.find((d) => d.date < today);
   const DATA = {
     carry: carrySource?.texts ?? [],
@@ -804,6 +805,17 @@ const consoleData = {
     effectiveDay = (data.effectiveDay as string) ?? (data.day as string);
     staleDays = (data.staleDays as string[]) ?? [];
     let rows = data.lines as { id: number; type: string; text: string; created_at: string }[];
+
+    // carry-over 重算: 基准是 effectiveDay(关日即翻页后 = 明天), 不是 today —— 否则刚关那天的
+    // next 会被 "< today" 排除. 取构建快照(含手写历史)与 D1 实时(刚关日, 不等重建)里日期更新的一个.
+    {
+      type Carry = { date: string; texts: string[] };
+      const snap = (RAW.nextDays.find((d) => d.date < effectiveDay) ?? null) as Carry | null;
+      const live: Carry | null = data.carry?.texts?.length ? (data.carry as Carry) : null;
+      const pick = [snap, live].filter((c): c is Carry => !!c).sort((a, b) => (a.date < b.date ? 1 : -1))[0];
+      DATA.carry = pick?.texts ?? [];
+      DATA.carryFrom = pick?.date ?? '';
+    }
 
     state.entries = [];
     state.usedCarry = [];
