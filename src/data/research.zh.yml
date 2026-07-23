@@ -69,7 +69,7 @@ timeline:
     label: KICS 短文 — EDA 增强的 CCT-LSTM 发表
     tone: pink
   - when: "2025"
-    label: 博士课程开始 — 信息学, 情感计算方向
+    label: 博士课程开始 — 信息学, 深度学习 / 情感计算方向
     tone: gray
   # 红线同 research.yml: 时间线只挂经过隐私复核的外链
   - when: "2023"

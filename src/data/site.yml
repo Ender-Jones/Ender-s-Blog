@@ -7,7 +7,7 @@ location: Tokyo, Japan            # About 页 base 行
 
 identity:
   role_detail: PhD Candidate · AI / Deep learning   # About 页 role 行
-  focus: Temporal data · video-based DL · stress estimation → VLM/MLLM   # About 页 focus 行(求职定位: 现在的方法身份 + 转向的目的地)
+  focus: Temporal data · stress estimation · VLM/MLLM   # About 页 focus 行(求职定位: 方法身份 + 转向的目的地; 短到不破点线节奏)
   signals:                        # Research 页头 signals 行
     - rPPG
     - EDA

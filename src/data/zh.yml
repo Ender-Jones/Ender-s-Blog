@@ -1,9 +1,9 @@
 # /zh/ 中文主页 + /zh/writing/ 列表页的文案入口 — 这是你的声音, 随意重写.
 splash:
-  greeting: 你好, 我是 Ender Jones.
+  greeting: 我是 Ender Jones.
 
 hero:
-  kicker: 情感计算 — 东京 / 千叶
+  kicker: 深度学习 / 情感计算 — 东京 / 千叶
   claim: 教机器读懂身体的感受
   claim_em: 感受   # claim 的强调尾词(EN 版斜体末词的中文对应; 必须是 claim 的结尾)
   body: >-

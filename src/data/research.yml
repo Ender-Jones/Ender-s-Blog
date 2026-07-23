@@ -76,7 +76,7 @@ timeline:
     label: KICS short paper — EDA-augmented CCT-LSTM published
     tone: pink
   - when: "2025"
-    label: PhD course started — informatics, affective computing line
+    label: PhD course started — informatics, deep learning for affect
     tone: gray
   # 红线(2026-07-11): 时间线只挂经过隐私复核的外链, 新条目默认不带 link.
   - when: "2023"

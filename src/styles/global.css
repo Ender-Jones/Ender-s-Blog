@@ -19,7 +19,7 @@
 /* 汉字没有真斜体: 浏览器会把它机械地倾斜(伪斜), 大号衬线下尤其难看 —
    splash 问候、hero 的强调尾词、About 的 lead 全中招. 关掉合成即可:
    有真斜体的字面(Source Serif Pro 的 300/400 italic)照常斜, 没有的(Noto Sans SC)保持直立.
-   于是「你好, 我是 Ender Jones.」里只有拉丁部分是斜的 — 这正是中文排版该有的样子. */
+   于是「我是 Ender Jones.」里只有拉丁部分是斜的 — 这正是中文排版该有的样子. */
 html {
   font-synthesis-style: none;
 }
