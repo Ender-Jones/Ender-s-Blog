@@ -5,8 +5,9 @@
 interface Props {
   langAlt?: string;
   lang?: 'en' | 'zh';
+  neutral?: boolean; // 语言中立页(worklog/archive): 内容只有英文, 但 nav 要保留读者的语言偏好
 }
-const { langAlt, lang } = Astro.props;
+const { langAlt, lang, neutral } = Astro.props;
 const path = Astro.url.pathname;
 const isActive = (href: string) => path === href || path.startsWith(href);
 // zh 文章在 /posts/zh/ 下, 不带 /zh/ 前缀 → 语言要由 frontmatter 显式给, 着陆页才靠路径推断
@@ -30,9 +31,17 @@ const links = isZh
 // 单一动作钮: 永远只显示"另一种语言", 点了必切 — 状态展示式双钮会出现"点当前语言=白刷新"
 const altHref = isZh ? (langAlt ?? '/') : (langAlt ?? '/zh/');
 const homeHref = isZh ? '/zh/' : '/';
+// neutral 页 SSR 成英文 nav(构建期不知客户端偏好); 每个链接带上 zh 对应 URL, 客户端脚本
+// 在读者偏好为中文时改写 href/lang-a/logo. worklog 两语同址, 映射保持 /worklog/.
+const zhHref: Record<string, string> = {
+  '/posts/': '/zh/writing/',
+  '/research/': '/zh/research/',
+  '/about/': '/zh/about/',
+  '/worklog/': '/worklog/',
+};
 ---
 
-<nav>
+<nav data-neutral={neutral ? '' : undefined}>
   <div class="inner">
     <a class="logo" href={homeHref} data-route={`→ ${homeHref} — home`}>
       <span class="name">Ender Jones</span>
@@ -40,13 +49,41 @@ const homeHref = isZh ? '/zh/' : '/';
     </a>
     <div class="right">
       {links.map((l) => (
-        <a class:list={['link', `tone-${l.tone}`, { active: isActive(l.href) }]} href={l.href} data-route={l.route}>{l.label}</a>
+        <a class:list={['link', `tone-${l.tone}`, { active: isActive(l.href) }]} href={l.href} data-href-zh={neutral ? zhHref[l.href] : undefined} data-route={l.route}>{l.label}</a>
       ))}
       <span class="divider" aria-hidden="true"></span>
       <a class="lang-a" href={altHref} data-lang-target={isZh ? 'en' : 'zh'} data-route={isZh ? '→ english' : '→ 中文'}>{isZh ? 'EN' : '中'}</a>
     </div>
   </div>
 </nav>
+
+{neutral && (
+  <script is:inline>
+    {/* 语言中立页(worklog): SSR 是英文 nav. 读者偏好中文时(点过语言钮存了 ej-lang, 或浏览器
+        中文且没表达过偏好 —— 与主页自动检测同一判据), 就地把链接/语言钮/logo 改写成 zh 语境,
+        这样进 worklog 不丢中文, 从 worklog 点别的页也回中文. 链接文字是 chrome, 保持英文. */}
+    (function () {
+      var nav = document.querySelector('nav[data-neutral]');
+      if (!nav) return;
+      var pref = null;
+      try { pref = localStorage.getItem('ej-lang'); } catch (e) {}
+      if (!pref) pref = /^zh/i.test(navigator.language || '') ? 'zh' : 'en';
+      if (pref !== 'zh') return;
+      nav.querySelectorAll('a[data-href-zh]').forEach(function (a) {
+        a.setAttribute('href', a.getAttribute('data-href-zh'));
+      });
+      var la = nav.querySelector('.lang-a');
+      if (la) {
+        la.textContent = 'EN';
+        la.setAttribute('href', '/');
+        la.setAttribute('data-lang-target', 'en');
+        la.setAttribute('data-route', '→ english');
+      }
+      var logo = nav.querySelector('.logo');
+      if (logo) logo.setAttribute('href', '/zh/');
+    })();
+  </script>
+)}
 
 <script>
   // 语言开关点击 = 用户表达偏好, 记住它(EN 主页的自动检测只在无偏好时按浏览器语言跳 /zh/)
