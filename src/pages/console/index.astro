@@ -91,8 +91,8 @@ const consoleData = {
 
         <div class="ej-card card carry" id="c-carry-card" hidden>
           <div class="carry-head">
-            <span class="carry-label">CARRY-OVER — NEXT FROM <span id="c-carry-from"></span></span>
-            <span class="carry-hint">zero-thought resume</span>
+            <span class="carry-label"><span id="c-carry-mode">CARRY-OVER</span> — NEXT FROM <span id="c-carry-from"></span></span>
+            <span class="carry-hint" id="c-carry-hint">zero-thought resume</span>
           </div>
           <div id="c-carry"></div>
         </div>
@@ -114,10 +114,11 @@ const consoleData = {
             <a class="file-path" id="c-path" href="/worklog/archive/" data-route="→ /worklog/archive/ — every week ever logged">content/worklogs/….md</a>
             <span class="file-meta"><span>D1 · draft</span><span class="diff" id="c-diff">+0 −0</span></span>
           </div>
-          <!-- 回看区(压暗) = 当月文件已提交的日子; live 区(亮) = D1 草稿. 默认钉在底部. -->
+          <!-- live 区(亮) = D1 草稿在上, 回看区(压暗) = 当月已提交的日子在下 — 月文件是倒序的
+               (最新在顶), close 会把草稿 prepend 到文件顶部, 预览从上往下读就是 close 后的文件. -->
           <div class="md" id="c-md">
-            <div class="md-past" id="c-md-past"></div>
             <div id="c-md-live"></div>
+            <div class="md-past" id="c-md-past"></div>
           </div>
           <div class="commit">
             <div class="ritual" id="c-ritual" hidden>
@@ -381,16 +382,32 @@ const consoleData = {
 
   const renderCarry = () => {
     const card = $('c-carry-card');
-    // 关日即翻页: 今日已关就藏 carry 卡(旧"关日当晚卡复活"边界就此消失); 补关模式也不分诊 —
-    // 那一天的分诊时刻已经过去了, 直接进仪式.
-    if (!DATA.carry.length || todayClosed || closingStale) {
+    // 补关模式不分诊(那一天的分诊时刻已经过去了, 直接进仪式). EARLY START 不再整卡隐藏 —
+    // 改为只读 SAVE POINT: 刚关日的 next 立刻可见, 但不给出口按钮("刚立的 next 不在同夜分诊"
+    // 原则照旧); 04:00 整页刷新后自然转回可分诊的 CARRY-OVER.
+    if (!DATA.carry.length || closingStale) {
       card.hidden = true;
       return;
     }
+    const readOnly = todayClosed;
     card.hidden = false;
+    $('c-carry-mode').textContent = readOnly ? 'SAVE POINT' : 'CARRY-OVER';
+    $('c-carry-hint').textContent = readOnly ? 'returns for triage at 04:00' : 'zero-thought resume';
     $('c-carry-from').textContent = DATA.carryFrom;
     const box = $('c-carry');
     box.textContent = '';
+    if (readOnly) {
+      DATA.carry.forEach((text) => {
+        const row = document.createElement('div');
+        row.className = 'carry-row';
+        const t = document.createElement('span');
+        t.className = 'carry-text';
+        t.textContent = text;
+        row.append(t);
+        box.append(row);
+      });
+      return;
+    }
     DATA.carry.forEach((text, i) => {
       const used = state.usedCarry.includes(i);
       const dropped = state.droppedCarry.includes(i);
@@ -450,11 +467,11 @@ const consoleData = {
     return div;
   };
 
-  // 钉底: 默认贴着底部(live 块); 手动上滚读过去后, render 不回拽
+  // 钉顶: 默认贴着顶部(live 草稿块 — 文件倒序, 顶部才是最新); 手动下滚读过去后, render 不回拽
   const mdBox = $('c-md');
   let mdPinned = true;
   mdBox.addEventListener('scroll', () => {
-    mdPinned = mdBox.scrollHeight - mdBox.scrollTop - mdBox.clientHeight < 40;
+    mdPinned = mdBox.scrollTop < 40;
   });
 
   // 灰色回看区 = 视图日所在月文件的构建期快照; 只在月份切换时重建(每次按键的 render 不碰它)
@@ -477,7 +494,7 @@ const consoleData = {
     const lines = mdLines();
     for (const line of lines) box.append(mdLineEl(line));
     $('c-diff').textContent = `+${lines.length} −0`;
-    if (mdPinned) mdBox.scrollTop = mdBox.scrollHeight;
+    if (mdPinned) mdBox.scrollTop = 0;
   };
 
   const renderCommit = () => {
@@ -781,13 +798,16 @@ const consoleData = {
     });
 
   // ---- 时钟与日期条(日期/星期/文件路径归 renderDate 管, 随视图切换) ----
-  if (DATA.lastNote) {
+  // last note: 先渲快照值, loadDay 拿到 D1 实时 lastClosed 后合并重渲(刚 close 完不再显示旧日)
+  const renderLast = () => {
+    if (!DATA.lastNote) return;
     const ago = Math.max(
       0,
       Math.round((new Date(`${today}T12:00:00Z`).getTime() - new Date(`${DATA.lastNote}T12:00:00Z`).getTime()) / 86400_000),
     );
     $('c-last').textContent = `last note ${DATA.lastNote} · ${ago}d ago`;
-  }
+  };
+  renderLast();
   const tick = () => {
     $('c-clock').textContent = jstClock();
     // 04:00 真正翻日: 空闲时(没在打字/仪式没开)整页刷新 — EARLY START 解锁, 日期条翻页
@@ -816,6 +836,11 @@ const consoleData = {
       DATA.carry = pick?.texts ?? [];
       DATA.carryFrom = pick?.date ?? '';
     }
+
+    // last note 同理取快照与 D1 实时里更新的一个(ISO 日期字符串比较即可)
+    const lastClosed = data.lastClosed as string | null;
+    if (lastClosed && lastClosed > DATA.lastNote) DATA.lastNote = lastClosed;
+    renderLast();
 
     state.entries = [];
     state.usedCarry = [];

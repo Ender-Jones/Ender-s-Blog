@@ -49,7 +49,17 @@ export async function onRequestGet(context) {
       .all();
     carry = { date: carryDay.d, texts: nx.map((r) => r.text) };
   }
-  return json({ day: today, closed, effectiveDay, lines: results, staleDays: stale.map((r) => r.day), carry });
+  // last note 实时源: 最近一个已归档的日子 — 头部 "last note … · Nd ago" 不再等站点重建
+  const last = await db.prepare('SELECT MAX(day) AS d FROM lines WHERE committed = 1 AND deleted = 0').first();
+  return json({
+    day: today,
+    closed,
+    effectiveDay,
+    lines: results,
+    staleDays: stale.map((r) => r.day),
+    carry,
+    lastClosed: last?.d ?? null,
+  });
 }
 
 export async function onRequestPost(context) {

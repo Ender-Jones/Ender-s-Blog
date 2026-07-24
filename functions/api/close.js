@@ -59,16 +59,15 @@ export async function onRequestPost(context) {
     return json({ error: `github read failed (${getRes.status})` }, 502);
   }
 
-  // worklog 文件是倒序的(最新一天在顶部) — 新块插到第一个日块之前, 日块之间用 --- 分隔,
-  // 与手写格式一字不差. 没有已存在日块时(每月第一天/新档)追加到 frontmatter 后.
-  const anchor = content.search(/^## \d{4}-\d{2}-\d{2}/m);
-  const updated =
-    anchor === -1
-      ? content.replace(/\s*$/, '\n') + section
-      : content.slice(0, anchor).replace(/\s*$/, '\n') +
-        section.replace(/^\n+/, '') +
-        '\n---\n' +
-        content.slice(anchor);
+  // worklog 文件是倒序的(最新一天在顶部) — 新块插到第一个日期更旧的日块之前, 即按日期序就位
+  // (关最新日 = 置顶; 补关旧日 = 落回它该在的中段). 日块之间用 --- 分隔, 与手写格式一字不差.
+  // 没有更旧的日块(补关全月最旧日)就落到文件尾; 全新月文件直接接 frontmatter 后.
+  const block = section.replace(/^\n+/, '');
+  const headings = [...content.matchAll(/^## (\d{4}-\d{2}-\d{2})/gm)];
+  const older = headings.find((m) => m[1] < day);
+  const updated = older
+    ? content.slice(0, older.index).replace(/\s*$/, '\n') + block + '\n---\n' + content.slice(older.index)
+    : content.replace(/\s*$/, '\n') + (headings.length ? '\n---\n' : '\n') + block;
   const putRes = await fetch(`${GH_API}/repos/${repo}/contents/${path}`, {
     method: 'PUT',
     headers,
